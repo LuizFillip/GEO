@@ -34,6 +34,7 @@ def map_features(ax):
     
     
 def map_boundaries(ax, lon, lat):
+
     
     ax.set_extent([lon.min, lon.max, 
                    lat.min, lat.max], 
@@ -49,7 +50,7 @@ def map_boundaries(ax, lon, lat):
                             lat.stp), 
                   crs = ccrs.PlateCarree())
     
-    axs.set(ylabel = 'Latitude (°)', 
+    ax.set(ylabel = 'Latitude (°)', 
             xlabel = 'Longitude (°)') 
         
 def marker_sites(axs):
@@ -105,43 +106,37 @@ def equator(ax,
 
 
 
-ncols, nrows = 1, 1
-heigth, width = 8, 6
 
-
-fig, axs = plt.subplots(figsize = (heigth, width), 
-                       ncols = ncols, 
-                       nrows = nrows, 
+fig, axs = plt.subplots(figsize = (8, 6), 
                        subplot_kw = {'projection': 
                                      ccrs.PlateCarree()})
 s.config_labels()
 
 map_features(axs)
 
-
-lat = limits(min = -40.0, max = 10, stp = 10)
-lon = limits(min = -80, max = -30, stp = 10)
-
-#lat = limits(min = -90.0, max = 90, stp = 15)
-#lon = limits(min = -180, max = 180, stp = 30)
-
     
+lat = limits(min = -40.0, max = 10, stp = 10)
+lon = limits(min = -80, max = -30, stp = 10)    
+
 map_boundaries(axs, lon, lat)
+
 marker_sites(axs)
 
 
-infile = "database/dips/"
-
-_, _, files = next(os.walk(infile))
 
 
 
-#for filename in files:
-filename = files[2]
-args = dict(linewidths = 2, colors = "red",
-            levels = [-30, -20, -10, 0])
-
-year = filename.replace(".txt", "")
-axs.set(title = f"Inclinação - {year}")
-equator(axs, infile + filename, **args)
+def plot_dips():
+    infile = "database/dips/"
+    
+    _, _, files = next(os.walk(infile))
+    
+    #for filename in files:
+    filename = files[2]
+    args = dict(linewidths = 2, colors = "red",
+                levels = [-30, -20, -10, 0])
+    
+    year = filename.replace(".txt", "")
+    axs.set(title = f"Inclinação - {year}")
+    equator(axs, infile + filename, **args)
 
