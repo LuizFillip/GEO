@@ -33,6 +33,11 @@ def year_fraction(date):
 def colatitude(latitude):
     return (np.pi / 2) - latitude
 
+
+def convert_to_dip(table):
+    return np.rad2deg(np.arctan(np.tan(np.deg2rad(table)) * 0.5))
+
+
 def dip(inclination):
    """Latitude inlicação magnética (dip) """
    return np.degrees(np.arctan(0.5*np.tan(

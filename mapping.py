@@ -1,6 +1,5 @@
 import cartopy.feature as cf
 import cartopy.crs as ccrs
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import os
@@ -17,10 +16,10 @@ class limits(object):
 def map_features(ax):
     
     states_provinces = cf.NaturalEarthFeature(
-                        category='cultural',
-                        name='admin_1_states_provinces_lines',
-                        scale='50m',
-                        facecolor='none')
+                        category = 'cultural',
+                        name = 'admin_1_states_provinces_lines',
+                        scale = '50m',
+                        facecolor = 'none')
     
     args = dict(edgecolor = 'black', lw = 1)
     
@@ -56,8 +55,9 @@ def map_boundaries(ax, lon, lat):
 def marker_sites(axs):
     sites = {
             'Fortaleza': {'lat': -3.73, 'lon': -38.522}, 
-             'Sao luis': {'lat': -2.53, 'lon': -44.296}, 
-             'Cariri':   {"lat": -7.38, 'lon': -36.528}
+            # 'Sao luis': {'lat': -2.53, 'lon': -44.296}, 
+             'Cariri':   {"lat": -7.38, 'lon': -36.528}, 
+             "Cajazeiras": {"lat": -6.9, 'lon': -38.6}
              }
     
     for key in sites.keys():
@@ -67,17 +67,17 @@ def marker_sites(axs):
         axs.plot(lon, lat, 
                  marker = "o", markersize = 8)
         
-        axs.text(lon + 1, lat, key, 
+        axs.text(lon, lat, key, 
                  transform = ccrs.PlateCarree())
-def equator(ax, 
-            infile, 
+def mag_equator(ax, 
+            infile = "database/GEO/dip_2013.txt", 
             label = True,
             **args):
     
     """Plotting geomagnetic equator"""
     
-    df = pd.read_csv(infile, 
-                     index_col = 0)
+    
+    df = pd.read_csv(infile, index_col = 0)
 
     pivot = pd.pivot_table(df, 
                            columns = "lon", 
@@ -88,7 +88,7 @@ def equator(ax,
                     pivot.index, 
                     pivot.values, 
                     transform = ccrs.PlateCarree(), 
-                    **args)
+                    levels = 0, lw = 2)
     
     cs.cmap.set_over('red')
     
@@ -105,28 +105,7 @@ def equator(ax,
                   manual = manual_locations)
 
 
-
-
-fig, axs = plt.subplots(figsize = (8, 6), 
-                       subplot_kw = {'projection': 
-                                     ccrs.PlateCarree()})
-s.config_labels()
-
-map_features(axs)
-
-    
-lat = limits(min = -40.0, max = 10, stp = 10)
-lon = limits(min = -80, max = -30, stp = 10)    
-
-map_boundaries(axs, lon, lat)
-
-marker_sites(axs)
-
-
-
-
-
-def plot_dips():
+def plot_dips(axs):
     infile = "database/dips/"
     
     _, _, files = next(os.walk(infile))
@@ -138,5 +117,21 @@ def plot_dips():
     
     year = filename.replace(".txt", "")
     axs.set(title = f"Inclinação - {year}")
-    equator(axs, infile + filename, **args)
+    mag_equator(axs, infile + filename, **args)
 
+def quick_map(axs, *args):
+
+    s.config_labels()
+    
+    map_features(axs)
+    
+    lat = limits(min = -10.0, max = -3, stp = 1)
+    lon = limits(min = -40, max = -32, stp = 1)    
+    
+    map_boundaries(axs, lon, lat)
+    
+    marker_sites(axs)
+    
+    mag_equator(axs, label = False, *args)
+    
+    return axs
