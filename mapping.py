@@ -52,14 +52,8 @@ def map_boundaries(ax, lon, lat):
     ax.set(ylabel = 'Latitude (°)', 
             xlabel = 'Longitude (°)') 
         
-def marker_sites(axs):
-    sites = {
-            'Fortaleza': {'lat': -3.73, 'lon': -38.522}, 
-            # 'Sao luis': {'lat': -2.53, 'lon': -44.296}, 
-             'Cariri':   {"lat": -7.38, 'lon': -36.528}, 
-             "Cajazeiras": {"lat": -6.9, 'lon': -38.6}
-             }
-    
+def marker_sites(axs, sites):
+ 
     for key in sites.keys():
         coords = sites[key]
         lon = coords["lon"]
@@ -118,20 +112,20 @@ def plot_dips(axs):
     year = filename.replace(".txt", "")
     axs.set(title = f"Inclinação - {year}")
     mag_equator(axs, infile + filename, **args)
+    
 
-def quick_map(axs, *args):
+
+def quick_map(axs, lon_lims, lat_lims):
 
     s.config_labels()
     
     map_features(axs)
     
-    lat = limits(min = -10.0, max = -3, stp = 1)
-    lon = limits(min = -40, max = -32, stp = 1)    
+    lat = limits(**lat_lims)
+    lon = limits(**lon_lims)    
     
     map_boundaries(axs, lon, lat)
-    
-    marker_sites(axs)
-    
-    mag_equator(axs, label = False, *args)
+   
+    mag_equator(axs, label = False)
     
     return axs
