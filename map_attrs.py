@@ -56,7 +56,7 @@ def circle_range(
                       edgecolor = 'black', color = color,
                       alpha = 0.2, label = 'radius')
     
-def get_receivers_in_range(path_json, sites, ax = None):
+def get_receivers_in_range(path_json, sites = sites, ax = None):
 
     dat = json.load(open(path_json)) 
     
