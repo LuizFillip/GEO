@@ -7,7 +7,7 @@ from GEO.map_attrs import get_receivers_in_range, circle_range, sites
     
 def plot_map(sites):
     fig, ax = plt.subplots(
-        figsize = (8, 8), 
+        figsize = (5, 5), 
         subplot_kw = {'projection': ccrs.PlateCarree()}
         )
     
@@ -48,7 +48,7 @@ def plot_circles_ranges(
 def plot_brazil_receivers(sites):
     fig, ax = plot_map(sites)
     
-    path_json = "D:\\database\\json\\2013\\300.json"
+    path_json = "database/GNSS/json/2013/001.json"
     
     plot_circles_ranges(
             ax, 
@@ -57,4 +57,22 @@ def plot_brazil_receivers(sites):
             )
     get_receivers_in_range(path_json, sites, ax = ax)
 
+fig, ax = plt.subplots(
+    figsize = (10, 10), 
+    subplot_kw = {'projection': ccrs.PlateCarree()}
+    )
 
+
+lat_lims = dict(min = -40, 
+                max = 10, 
+                stp = 5)
+
+lon_lims = dict(min = -80, 
+                max = -30, 
+                stp = 5)    
+
+quick_map(ax, lon_lims, lat_lims)
+
+path_json = "database/GNSS/json/2013/001.json"
+
+get_receivers_in_range(path_json, sites, ranged = False, ax = ax)

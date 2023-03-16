@@ -63,41 +63,17 @@ def marker_sites(axs, sites):
         
         axs.text(lon, lat, key, 
                  transform = ccrs.PlateCarree())
-def mag_equator(ax, 
-            infile = "database/GEO/dip_2013.txt", 
-            label = True,
-            **args):
+def mag_equator(ax):
     
     """Plotting geomagnetic equator"""
     
-    
+    infile = "database/GEO/dip_2013.txt"
     df = pd.read_csv(infile, index_col = 0)
+    lons = df["lon"].values
+    lats = df["lat"].values
 
-    pivot = pd.pivot_table(df, 
-                           columns = "lon", 
-                           index = "lat", 
-                           values = "i")
+    ax.plot(lons, lats, color = "r", lw = 2)
     
-    cs = ax.contour(pivot.columns, 
-                    pivot.index, 
-                    pivot.values, 
-                    transform = ccrs.PlateCarree(), 
-                    levels = 0, lw = 2)
-    
-    cs.cmap.set_over('red')
-    
-    if label:
-        x = -55
-        manual_locations = [(x, -10), 
-                            (x, -15), 
-                            (x, -20), 
-                            (x, -25)]
-        
-        ax.clabel(cs, 
-                  inline = 8, 
-                  fontsize = 15, 
-                  manual = manual_locations)
-
 
 def plot_dips(axs):
     infile = "database/dips/"
@@ -126,6 +102,6 @@ def quick_map(axs, lon_lims, lat_lims):
     
     map_boundaries(axs, lon, lat)
    
-    mag_equator(axs, label = False)
+    mag_equator(axs)
     
     return axs

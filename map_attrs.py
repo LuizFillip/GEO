@@ -55,8 +55,20 @@ def circle_range(
     ax.add_geometries(geoms, crs=ccrs.PlateCarree(), 
                       edgecolor = 'black', color = color,
                       alpha = 0.2, label = 'radius')
+
+
     
-def get_receivers_in_range(path_json, sites = sites, ax = None):
+def get_receivers_in_range(
+        path_json, 
+        sites = sites, 
+        ranged = False, 
+        ax = None
+        ):
+    
+    args = dict(marker = "o", 
+                color = "k", 
+                markersize = 7
+                )
 
     dat = json.load(open(path_json)) 
     
@@ -72,16 +84,11 @@ def get_receivers_in_range(path_json, sites = sites, ax = None):
             for site in sites.keys():
                 clat, clon = tuple(sites[site].values())
                 
-                if find_range(lon, lat, clon, clat):
+                if ranged and find_range(lon, lat, clon, clat):
                     out.append(coords["filename"])
-                    if ax is not None:
-                        ax.plot(
-                            lon, 
-                            lat, 
-                            marker = "o", 
-                            color = "k", 
-                            markersize = 7
-                            )
+                    ax.plot(lon, lat, **args) 
+                else:
+                    ax.plot(lon, lat, **args)
         except:
             pass
     return out
