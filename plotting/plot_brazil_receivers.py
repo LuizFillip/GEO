@@ -56,23 +56,26 @@ def plot_brazil_receivers(sites):
             radius = 500
             )
     get_receivers_in_range(path_json, sites, ax = ax)
+    
+    
+def main():
 
-fig, ax = plt.subplots(
-    figsize = (10, 10), 
-    subplot_kw = {'projection': ccrs.PlateCarree()}
-    )
-
-
-lat_lims = dict(min = -40, 
-                max = 10, 
-                stp = 5)
-
-lon_lims = dict(min = -80, 
-                max = -30, 
-                stp = 5)    
-
-quick_map(ax, lon_lims, lat_lims)
-
-path_json = "database/GNSS/json/2013/001.json"
-
-get_receivers_in_range(path_json, sites, ranged = False, ax = ax)
+    fig, ax = plt.subplots(
+        figsize = (10, 10), 
+        subplot_kw = {'projection': ccrs.PlateCarree()}
+        )
+    
+    
+    lat_lims = dict(min = -40, 
+                    max = 10, 
+                    stp = 5)
+    
+    lon_lims = dict(min = -80, 
+                    max = -30, 
+                    stp = 5)    
+    
+    quick_map(ax, lon_lims, lat_lims)
+    
+    path_json = "database/GNSS/json/2013/001.json"
+    
+    get_receivers_in_range(path_json, sites, ranged = False, ax = ax)
