@@ -1,11 +1,6 @@
 import pyIGRF
 from GEO.conversions import year_fraction
 import datetime as dt
-## Laitudes e longitudes
-
-date = dt.datetime(2002, 10, 11)
-
-
 
 coords = {"car": (-7.38, -36.528),  # Cariri
           "for": (-3.73, -38.522),  # Fortaleza
@@ -39,6 +34,9 @@ def run_igrf(
     return d, i 
 
 def main():
+    
+    date = dt.datetime(2002, 10, 11)
+
 
     print(run_igrf(
             date, 
