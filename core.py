@@ -10,7 +10,7 @@ coords = {"car": (-7.38, -36.528),  # Cariri
           "cgg": (-20.5, -54.7)}     # Campo Grande
 
 def run_igrf(
-        date, 
+        date = 2013, 
         site = "car", 
         alt = 250, 
         ):
@@ -23,7 +23,7 @@ def run_igrf(
         
     lat, lon = coords[site]
     
-    #lon += 360
+    lon += 360
     
     d, i, h, x, y, z, f = pyIGRF.igrf_value(
         lat, lon, 
@@ -31,15 +31,13 @@ def run_igrf(
         year = frac_year
         )
     
+    print()
+    
     return d, i 
 
 def main():
     
     date = dt.datetime(2002, 10, 11)
 
-
-    print(run_igrf(
-            date, 
-            site = "car", 
-            alt = 250, 
-            ))
+print(360 -44.296)
+   

@@ -34,15 +34,24 @@ lat_range = np.linspace(-20 * np.pi / 180, 0, 100)
     
     
 y = np.zeros((len(lat_range), 2))
+
 y[0] = y0
 
 for i in range(len(lat_range) - 1):
+    
     k1 = f(lat_range[i], y[i])
-    k2 = f(lat_range[i] + 0.5 * (lat_range[i + 1] - lat_range[i]), y[i] + 0.5 * (lat_range[i + 1] - lat_range[i]) * k1)
-    k3 = f(lat_range[i] + 0.5 * (lat_range[i + 1] - lat_range[i]), y[i] + 0.5 * (lat_range[i + 1] - lat_range[i]) * k2)
-    k4 = f(lat_range[i + 1], y[i] + (lat_range[i + 1] - lat_range[i]) * k3)
+    
+    k2 = f(lat_range[i] + 0.5 * 
+           (lat_range[i + 1] - lat_range[i]), 
+           y[i] + 0.5 * (lat_range[i + 1] - lat_range[i]) * k1)
+    k3 = f(lat_range[i] + 0.5 * 
+           (lat_range[i + 1] - lat_range[i]), 
+           y[i] + 0.5 * (lat_range[i + 1] - lat_range[i]) * k2)
+    k4 = f(lat_range[i + 1], y[i] + 
+           (lat_range[i + 1] - lat_range[i]) * k3)
 
-    y[i + 1] = y[i] + (lat_range[i + 1] - lat_range[i]) / 6 * (k1 + 2 * k2 + 2 * k3 + k4)
+    y[i + 1] = (y[i] + (lat_range[i + 1] - lat_range[i]) / 6 * 
+                (k1 + 2 * k2 + 2 * k3 + k4))
 
 
 # Extract the heights corresponding to the desired apex height
