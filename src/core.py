@@ -1,6 +1,6 @@
 import pyIGRF
-from GEO.conversions import year_fraction
 import datetime as dt
+import time
 
 coords = {
     "car": (-7.38, -36.528),  # Cariri
@@ -11,6 +11,36 @@ coords = {
     "ccb": (-9.5,  -54.8),    # Cachimbo
     "cgg": (-20.5, -54.7)     # Campo Grande
     }     
+
+def year_fraction(date):
+    
+    "Return years in fraction (like julian date) "
+
+   # returns seconds since epoch
+    def sinceEpoch(date): # returns seconds since epoch
+        return time.mktime(date.timetuple())
+    
+    s = sinceEpoch
+    
+    year = date.year
+    start_year = dt.datetime(
+        year = year, 
+        month = 1, 
+        day = 1
+        )
+    
+    next_year = dt.datetime(
+        year = year + 1, 
+        month = 1, 
+        day = 1
+        )
+    
+    elapsed = s(date) - s(start_year)
+    duration = s(next_year) - s(start_year)
+    fraction = elapsed / duration
+    
+    return round(date.year + fraction, 2)
+
 
 def run_igrf(
         date = 2013, 
@@ -36,9 +66,3 @@ def run_igrf(
 
     return d, i 
 
-def main():
-    
-    date = dt.datetime(2002, 10, 11)
-
-print(360 -44.296)
-   
