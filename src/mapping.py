@@ -3,7 +3,7 @@ import cartopy.crs as ccrs
 import numpy as np
 import pandas as pd
 import os
-import setup as s
+import settings as s
 
 
 class limits(object):

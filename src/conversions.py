@@ -1,5 +1,5 @@
 import numpy as np
-import datetime
+import datetime as dt
 import time
 import spacepy.coordinates as coord
 from spacepy.time import Ticktock
@@ -15,16 +15,21 @@ def year_fraction(date):
     s = sinceEpoch
     
     year = date.year
-    startOfThisYear = datetime.datetime(year = year, 
-                                        month = 1, 
-                                        day = 1)
-    startOfNextYear = datetime.datetime(year = year + 1, 
-                                        month = 1, 
-                                        day = 1)
+    start_year = dt.datetime(
+        year = year, 
+        month = 1, 
+        day = 1
+        )
     
-    yearElapsed = s(date) - s(startOfThisYear)
-    yearDuration = s(startOfNextYear) - s(startOfThisYear)
-    fraction = yearElapsed / yearDuration
+    next_year = dt.datetime(
+        year = year + 1, 
+        month = 1, 
+        day = 1
+        )
+    
+    elapsed = s(date) - s(start_year)
+    duration = s(next_year) - s(start_year)
+    fraction = elapsed / duration
     
     return round(date.year + fraction, 2)
 
@@ -33,15 +38,14 @@ def year_fraction(date):
 def colatitude(latitude):
     return (np.pi / 2) - latitude
 
-
 def convert_to_dip(table):
     return np.rad2deg(np.arctan(np.tan(np.deg2rad(table)) * 0.5))
 
-
 def dip(inclination):
    """Latitude inlicação magnética (dip) """
-   return np.degrees(np.arctan(0.5*np.tan(
-       np.radians(inclination)) / 2))
+   return np.degrees(np.arctan(0.5 * np.tan(
+       np.radians(inclination)) / 2)
+       )
 
 def geo2mag(geo_lat, geo_lon, date):
     """
@@ -50,7 +54,7 @@ def geo2mag(geo_lat, geo_lon, date):
     
     Re = 6378.0 #mean Earth radius in kilometers
      
-    cvals = coord.Coords([float(300 + Re), 
+    cvals = coord.Coords([float(Re), 
                           float(geo_lat), 
                           float(geo_lon)], 
                          'GEO', 'sph', 
@@ -65,6 +69,7 @@ def geo2mag(geo_lat, geo_lon, date):
     mag_lon = dat_coords[2]
     
     return (mag_lat, mag_lon)
+
 
 def mag2geo(mag_lat, mag_lon, date):
     
@@ -99,9 +104,22 @@ def main():
     mag_lat = 0
     mag_lon = -40
     
-    date = datetime.datetime(2014, 1, 1)
+    date = dt.datetime(2014, 1, 1)
     geo_lat, geo_lon = mag2geo(mag_lat, mag_lon, date)
     
     
-    print(geo2mag(geo_lat, geo_lon, date))
+    geo_lat = -7.5
+    geo_lon = -54.8
+    date = dt.datetime(2012, 1, 1)    
     
+    mlats = np.rad2deg(np.linspace(0, 0.08734835, 50))
+    date = dt.datetime(2014, 1, 1)
+    glats = []
+    for lat in mlats:
+        geo_lat, _ = mag2geo(lat, 0, date)
+        glats.append(geo_lat)
+    
+    print(mag2geo(lat, 0, date))
+    
+main()
+        
