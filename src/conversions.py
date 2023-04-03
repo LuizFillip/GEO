@@ -4,9 +4,6 @@ import spacepy.coordinates as coord
 from spacepy.time import Ticktock
 
 
-
-
-
 def colatitude(latitude):
     return (np.pi / 2) - latitude
 
@@ -56,7 +53,7 @@ def mag2geo(mag_lat, mag_lon, date):
     date = date.strftime("%Y-%m-%dT%H:%M")
     
     cvals = coord.Coords([float(300 + r), 
-                          float(mag_lat), 
+                          float(mag_lat), #
                           float(mag_lon)], 
                          'MAG', 'sph', 
                          ['Re','deg','deg'])
@@ -69,27 +66,16 @@ def mag2geo(mag_lat, mag_lon, date):
     geo_lat = dat_coords[1]
     geo_lon = dat_coords[2]
     
-    return (geo_lat, geo_lon)
+    return geo_lat, geo_lon
 
 def main():
-
-    mag_lat = 0
-    mag_lon = -40
+  
+    date = dt.datetime(2013, 1, 1)
     
-    date = dt.datetime(2014, 1, 1)
-    geo_lat, geo_lon = mag2geo(mag_lat, mag_lon, date)
+    glat, glon  = -2.53, -44.296
     
+    mlat, mlon = geo2mag(glat, glon, date)
     
-    geo_lat = -7.5
-    geo_lon = -54.8
-    date = dt.datetime(2012, 1, 1)    
+    print(mlat, mlon)
     
-    mlats = np.rad2deg(np.linspace(0, 0.08734835, 50))
-    date = dt.datetime(2014, 1, 1)
-    glats = []
-    for lat in mlats:
-        geo_lat, _ = mag2geo(lat, 0, date)
-        glats.append(geo_lat)
-    
-    print(mag2geo(lat, 0, date))
             
