@@ -66,3 +66,13 @@ def run_igrf(
 
     return d, i 
 
+from GEO.src.conversions import dip
+
+d, i = run_igrf(
+        date = 2013, 
+        site = "saa", 
+        alt = 300, 
+        )
+
+
+print(dip(i), i)

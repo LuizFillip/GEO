@@ -2,6 +2,7 @@ from GEO.mapping import quick_map, marker_sites
 import cartopy.crs as ccrs
 import matplotlib.pyplot as plt
 from GEO.map_attrs import get_receivers_in_range, circle_range, sites
+from GEO.src.core import run_igrf, coords
 
 
     

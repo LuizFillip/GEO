@@ -76,6 +76,9 @@ def main():
     
     mlat, mlon = geo2mag(glat, glon, date)
     
-    print(mlat, mlon)
+    print("geografic coords: {glat}, {glon}")
+    
+    glat, glon = mag2geo(0, mlon, date)
+    
     
             

@@ -72,8 +72,10 @@ def mag_equator(ax):
     lons = df["lon"].values
     lats = df["lat"].values
 
-    ax.plot(lons, lats, color = "r", lw = 2)
-    
+    ax.plot(lons, lats, color = "r", lw = 1)
+    return df
+
+
 
 def plot_dips(axs):
     infile = "database/dips/"
@@ -102,6 +104,6 @@ def quick_map(axs, lon_lims, lat_lims):
     
     map_boundaries(axs, lon, lat)
    
-    mag_equator(axs)
+    df = mag_equator(axs)
     
-    return axs
+    return axs, df
