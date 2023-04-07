@@ -1,6 +1,8 @@
 import pyIGRF
 import datetime as dt
 import time
+import numpy as np
+
 
 coords = {
     "car": (-7.38, -36.528),  # Cariri
@@ -66,13 +68,32 @@ def run_igrf(
 
     return d, i 
 
-from GEO.src.conversions import dip
-
-d, i = run_igrf(
-        date = 2013, 
-        site = "saa", 
-        alt = 300, 
-        )
-
-
-print(dip(i), i)
+def compute_meridian(
+        lon = -60, 
+        max_lat = 20,
+        delta = 1.0, 
+        alt = 0, 
+        year = 2013
+        ):
+    
+    xx = []
+    yy = []
+    
+    for lat in np.arange(-max_lat, max_lat)[::-1]:
+        d, i, h, x, y, z, f = pyIGRF.igrf_value(
+            lat, 
+            lon, 
+            alt = alt, 
+            year = year
+            )
+       
+        new_point_x = lon - delta * np.tan(np.radians(d))
+        new_point_y = lat - delta
+        
+        xx.extend([lon, new_point_x])
+        yy.extend([lat, new_point_y])
+                
+        lon = new_point_x
+        lat = new_point_y
+        
+    return list(dict.fromkeys(xx)), list(dict.fromkeys(yy))
