@@ -2,7 +2,7 @@ import pyIGRF
 import datetime as dt
 import time
 import numpy as np
-
+import pandas as pd
 
 coords = {
     "car": (-7.38, -36.528),  # Cariri
@@ -98,3 +98,12 @@ def compute_meridian(
         
     return (np.array(list(dict.fromkeys(xx))), 
             np.array(list(dict.fromkeys(yy))))
+
+
+def load_equator(infile = "database/GEO/dip_2013.txt"):
+
+    df = pd.read_csv(infile, index_col = 0)
+   
+    return df.values
+
+load_equator()
