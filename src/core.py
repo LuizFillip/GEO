@@ -96,4 +96,5 @@ def compute_meridian(
         lon = new_point_x
         lat = new_point_y
         
-    return list(dict.fromkeys(xx)), list(dict.fromkeys(yy))
+    return (np.array(list(dict.fromkeys(xx))), 
+            np.array(list(dict.fromkeys(yy))))

@@ -27,9 +27,10 @@ def map_features(ax):
     ax.add_feature(cf.COASTLINE, **args) 
     ax.add_feature(cf.BORDERS, linestyle='-', **args)
     
-    ax.gridlines(color = 'grey', 
-                 linestyle = '--', 
-                 crs = ccrs.PlateCarree())
+    # ax.gridlines(color = 'grey', 
+    #              linestyle = '--', 
+    #              crs = ccrs.PlateCarree())
+    return ax
     
     
 def map_boundaries(ax, lon, lat):
@@ -49,8 +50,9 @@ def map_boundaries(ax, lon, lat):
                             lat.stp), 
                   crs = ccrs.PlateCarree())
     
-    ax.set(ylabel = 'Latitude (°)', 
-            xlabel = 'Longitude (°)') 
+    ax.set(ylabel = 'Latitude (°)',  xlabel = 'Longitude (°)') 
+    
+    return ax
         
 def marker_sites(axs, sites):
  
@@ -72,7 +74,8 @@ def mag_equator(ax):
     lons = df["lon"].values
     lats = df["lat"].values
 
-    ax.plot(lons, lats, color = "r", lw = 1)
+    ax.plot(lons, lats, color = "r", lw = 1, 
+            label = "Equador\n geomagnético")
     return df
 
 

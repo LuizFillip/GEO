@@ -1,20 +1,16 @@
 import pyIGRF
 import numpy as np
 import pandas as pd
-from GEO.conversions import  year_fraction
 import matplotlib.pyplot as plt
 
 
 def run_igrf(
-        date, 
+        year, 
         step_lon = 5, 
         step_lat = 1, 
         alt = 250
         ):
-    if isinstance(date, int):
-        year = date
-    else:
-        year = year_fraction(date)
+
     out = []
     for lat in np.arange(-90, 90 + step_lat, step_lat):
         for lon in np.arange(-180, 180 + step_lon, step_lon):
@@ -37,9 +33,9 @@ def save_df(df, year):
               header = True)        
 
 def get_dip(date = 2013, 
-            step_lon = 5, 
-            step_lat = 1, 
-            alt = 250):   
+            step_lon = 0.5, 
+            step_lat = 0.5, 
+            alt = 300):   
      
     df = run_igrf(date, 
                 step_lon = step_lon, 
