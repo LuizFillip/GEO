@@ -45,39 +45,48 @@ def year_fraction(date):
 
 
 def run_igrf(
-        date = 2013, 
+        year = 2013, 
         site = "car", 
         alt = 250, 
         ):
-    
-    if isinstance(date, dt.datetime):
-        frac_year = year_fraction(date)
-    else:
-        frac_year = float(date)
-        
-        
+         
     lat, lon = coords[site]
     
-    lon += 360
+    #lon += 360
     
     d, i, h, x, y, z, f = pyIGRF.igrf_value(
         lat, lon, 
         alt = alt, 
-        year = frac_year
+        year = year
         )
 
     return d, i 
 
+
+def middle(array, m = 0):
+    return array[int((len(array) - 1) /2) - m]
+
+def intersection_in_geo_equator(eq, xx, yy):
+    
+    lon_cond = (eq[:, 0] > xx[0]) & (eq[:, 0] < xx[-1]) 
+    lat_cond = (eq[:, 1] < yy[0]) & (eq[:, 1] > yy[-1])
+    
+    ds = eq[np.where(lat_cond & lon_cond), :][0]
+
+    return tuple(middle(ds, m = 1))
+
 def compute_meridian(
         lon = -60, 
         max_lat = 20,
-        delta = 1.0, 
         alt = 0, 
-        year = 2013
+        year = 2013,
+        align_to_equator = True
         ):
     
     xx = []
     yy = []
+    
+    delta = 1.0
     
     for lat in np.arange(-max_lat, max_lat)[::-1]:
         d, i, h, x, y, z, f = pyIGRF.igrf_value(
@@ -90,14 +99,24 @@ def compute_meridian(
         new_point_x = lon - delta * np.tan(np.radians(d))
         new_point_y = lat - delta
         
-        xx.extend([lon, new_point_x])
-        yy.extend([lat, new_point_y])
-                
         lon = new_point_x
         lat = new_point_y
         
-    return (np.array(list(dict.fromkeys(xx))), 
-            np.array(list(dict.fromkeys(yy))))
+        xx.append(lon)
+        yy.append(lat)
+        
+    if align_to_equator:
+    
+        eq = load_equator()
+    
+        nx, ny = intersection_in_geo_equator(eq, xx, yy)
+        xx += abs(nx - middle(xx))
+        yy += abs(ny - middle(yy))
+        
+        return xx, yy
+    
+    else:
+        return xx, yy
 
 
 def load_equator(infile = "database/GEO/dip_2013.txt"):
@@ -106,4 +125,3 @@ def load_equator(infile = "database/GEO/dip_2013.txt"):
    
     return df.values
 
-load_equator()
