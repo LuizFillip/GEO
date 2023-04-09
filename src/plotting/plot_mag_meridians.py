@@ -8,9 +8,6 @@ import numpy as np
 from FluxTube.src.mag import Apex
 from GEO.src.conversions import dip
 
-def apex_heights(amin = 200, amax = 400, step = 50):
-    return np.arange(amin, amax + step, step)
-
 def plot_mag_meridians(
         lon_start = -48, 
         alt = 300, 
@@ -27,22 +24,15 @@ def plot_mag_meridians(
     
     s.config_labels(fontsize = 15)
     
-    lat_lims = dict(min = -15, max = 15, stp = 5)
-    lon_lims = dict(min = -75, max = -30, stp = 10)    
+    lat_lims = dict(min = -30, max = 15, stp = 5)
+    lon_lims = dict(min = -100, max = -30, stp = 10)    
     
     quick_map(ax, lon_lims, lat_lims)
       
     max_mlat = Apex(alt).apex_lat_base(base = 150)
     
-    site = "saa"
-    glon, glat = coords[site][::-1]
-    
-    d, i = run_igrf(site = site)
 
-    #lon_start = glon + delta_lon -43
-    
-
-    xx, yy  = compute_meridian(
+    x, y  = compute_meridian(
         lon = lon_start, 
         alt = alt, 
         max_lat = np.degrees(max_mlat),
@@ -51,16 +41,45 @@ def plot_mag_meridians(
             )
     
     
-    ax.plot(xx, yy, lw = 2, label = f"{alt} km")
-    ax.plot(glon, glat,
-            marker = "^", 
-            markersize = 10,
-            linestyle = "none",
-            color = "b",
-            label = "São luis")
+    ax.plot(x, y, lw = 2, label = f"{alt} km")
+    
+    glon, glat = coords["saa"][::-1]
+    
+    d, i = run_igrf(site = "saa")
+    print(d, i)
+    
+    ax.scatter(
+        glon, glat,
+        marker = "^", 
+        s = 50,
+        color = "b",
+        label = "São luis")
+    
+    
+    glon, glat = coords["jic"][::-1]
+    
+    ax.scatter(
+        glon, glat,
+        marker = "^", 
+        s = 50,
+        label = "Jicamarca")
+    
+    d, i = run_igrf(site = "jic")
+    
+    x, y  = compute_meridian(
+        lon = glon + d, 
+        alt = alt, 
+        max_lat = np.degrees(max_mlat),
+        year = year, 
+        align_to_equator = False
+            )
+    
+    
+    ax.plot(x, y, lw = 2, label = f"{alt} km")
+    
 
     ax.legend(
-        ncol = 1, loc = "lower right"
+        ncol = 1, loc = "best"
         )
     
     return fig, ax  
