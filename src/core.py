@@ -4,6 +4,9 @@ import time
 import numpy as np
 import pandas as pd
 from scipy.signal import argrelmin
+from intersect import intersection
+
+
 
 sites = {
     "car": {"coords": (-7.38, -36.528), 
@@ -64,30 +67,21 @@ def run_igrf(
         ):
          
     lat, lon = sites[site]["coords"]
-    name = sites[site]["name"]
         
     d, i, h, x, y, z, f = pyIGRF.igrf_value(
-        lat, lon, 
+        lat, 
+        lon, 
         alt = alt, 
         year = year
         )
 
     return d, i 
 
-
-def middle(array, m = 0):
-    return array[int((len(array) - 1) /2) - m]
-
-
-
-
 def compute_distance(x, y, x0, y0):
     
     def distance(x, y, x0, y0):
-        d_x = x - x0
-        d_y = y - y0
-        dis = np.sqrt( d_x**2 + d_y**2 )
-        return dis
+        return np.sqrt(pow(x - x0, 2) + 
+                       pow(y - y0, 2))
     
     # compute distance
     dis = distance(x, y, x0, y0)
@@ -95,7 +89,8 @@ def compute_distance(x, y, x0, y0):
     # find the minima
     min_idxs = argrelmin(dis)[0]
     # take the minimum
-    glob_min_idx = min_idxs[np.argmin(dis[min_idxs])]
+    glob_min_idx = min_idxs[
+        np.argmin(dis[min_idxs])]
     
     # coordinates and distance
     min_x = x[glob_min_idx]
@@ -104,45 +99,7 @@ def compute_distance(x, y, x0, y0):
     
     return min_x, min_y, min_d
 
-def find_closest(arr, val):
-   idx = np.abs(arr - val).argmin()
-   return idx
 
-def intersection_in_equator(eq, xx, yy):
-    
-    lon_cond = (eq[:, 0] > xx[0]) & (eq[:, 0] < xx[-1]) 
-    lat_cond = (eq[:, 1] < yy[0]) & (eq[:, 1] > yy[-1])
-    
-    ds = eq[np.where(lat_cond & lon_cond), :][0]
-
-    return tuple(middle(ds, m = 0))
-
-
-def align_to_site(x, y, glon):
-    mx, my = middle(x), middle(y)
-    eq = load_equator()
-    
-    idx = find_closest(eq[:, 0], glon)
-    nx, ny = tuple(eq[idx, :])
-    
-    x -= abs(nx - mx)
-    y -= abs(ny - my)
-    
-    return x, y
-
-def align_to_equator(x, y, glon, glat):
-    
-    eq = load_equator()
-    
-    min_x, min_y, min_d = compute_distance(
-        eq[:, 0], eq[:, 1], glon, glat)
-    
-    delta_lon = abs(min_x - glon)
-    delta_lat = abs(min_y - glat)
-
-    x -= delta_lon
-    y += delta_lat
-    return x, y
 
 def compute_meridian(
         lon = -60, 
@@ -156,7 +113,8 @@ def compute_meridian(
     
     delta = 1
 
-    range_lats = np.arange(-max_lat, max_lat, delta)[::-1]
+    range_lats = np.arange(-max_lat, max_lat, 
+                           delta)[::-1]
     
     for lat in range_lats:
         d, i, h, x, y, z, f = pyIGRF.igrf_value(
@@ -178,16 +136,105 @@ def compute_meridian(
     return xx, yy
 
 
-def load_equator(infile = "database/GEO/dip_2013.txt"):
+def compute_all_meridians(
+        max_lat = 40, 
+        year = 2013, 
+        alt = 300
+        ):
+    out = []
 
-    df = pd.read_csv(infile, index_col = 0)
-   
-    return df.values
+    for lon in np.arange(-120, -30, 1):
+        
+        x, y = compute_meridian(
+            lon = lon, 
+            alt = alt, 
+            max_lat = max_lat,
+            year = year
+                )   
+        out.append([x, y])
+                
+    return np.array(out)
+
+
+def find_closest_meridian(
+        glon, 
+        glat, 
+        year = 2013, 
+        alt = 300
+        ):
+    
+    arr = compute_all_meridians(
+            max_lat = 40, 
+            year = year, 
+            alt = alt
+            )
+    
+    out = {}
+    
+    for num in range(arr.shape[0]):
+        x, y = arr[num][0], arr[num][1]
+        
+        min_x, min_y, min_d = compute_distance(
+            x, y, glon, glat)
+            
+        out[num] = min_d
+    
+    closest = min(out, key = out.get)
+    
+    return arr[closest][0], arr[closest][1]
+
+def load_equator(
+        infile = "database/GEO/dip_2013.txt"
+        ):
+    return pd.read_csv(infile, index_col = 0).values
+
+
+def find_closest(arr, val):
+   idx = np.abs(arr - val).argmin()
+   return idx
+
+
+
+def limit_hemisphere(
+        x, y, rlat, 
+        hemisphere = "south"
+        ):
+    
+    eq = load_equator()
+    # Find intersection point between
+    # equator and merian
+    nx, ny = intersection( eq[:, 0], eq[:, 1], x, y)
+    
+    # find meridian indexes (x and y) 
+    # where cross the equator and upper limit
+    eq_x = find_closest(x, nx)    
+    eq_y = find_closest(y, ny)
+
+    # create a line above of intersection point 
+    # with radius from apex latitude 
+    if hemisphere == "south":
+        end = find_closest(y, ny - rlat)
+        set_x = x[eq_x: end]
+        set_y = y[eq_y: end]
+    
+    elif hemisphere == "north":
+        start = find_closest(y, ny + rlat)
+        set_x = x[start: eq_x + 1]
+        set_y = y[start: eq_y + 1]
+        
+    else:
+        end = find_closest(y, ny - rlat)
+        start = find_closest(y, ny + rlat)
+        set_x = x[start: end]
+        set_y = y[start: end]
+        
+    return set_x, set_y
 
 def test_on_map():    
-    year = 2013
+  
     
     from GEO.src.mapping import quick_map
+    from GEO.src.plotting.plot_mag_meridians import plot_all_meridians, plot_sites
     import cartopy.crs as ccrs
     import matplotlib.pyplot as plt
     import settings as s
@@ -203,40 +250,41 @@ def test_on_map():
     s.config_labels(fontsize = 15)
     
     lat_lims = dict(min = -30, max = 15, stp = 5)
-    lon_lims = dict(min = -100, max = -30, stp = 10) 
-    
+    lon_lims = dict(min = -90, max = -30, stp = 10) 
+     
     quick_map(ax, lon_lims, lat_lims)
     
-    site = "car"
-    
-    glat, glon = sites[site]["coords"]
-    name = sites[site]["name"]
-    
-    ax.scatter(glon, glat,
-        marker = "^", 
-        s = 100,
-        color = "r",
-        label = name)
-    
-    alt = 300        
-    max_mlat = Apex(alt).apex_lat_base(base = 150)
-    
-    d, i = run_igrf(site = site)
-        
-    x, y  = compute_meridian(
-        lon = glon, 
-        alt = alt, 
-        max_lat = np.degrees(max_mlat),
-        year = year
-            )
-    
-    x, y = align_to_site(x, y, glon)
-    
-    x, y = align_to_equator(x, y, glon, glat)
-    
-    ax.plot(x, y, lw = 2, label = f"{alt} km")
-
+    plot_sites(ax)
     ax.legend(loc = "upper right")
     
+    year = 2013
+    alt = 300
+ 
+    site = "saa"
+    glat, glon = sites[site]["coords"]
     
+    x, y = find_closest_meridian(glon, glat)
+    
+    ax.plot(x, y, "--", lw = 1,
+            color = "k")
+    
+        
+    mlat = Apex(alt).apex_lat_base(base = 150)
+    
+ 
+
+    rlat = np.degrees(mlat)
+    
+    x, y = find_closest_meridian(glon, glat)
+
+    x1, y2 = limit_hemisphere(
+            x, y, rlat, 
+            hemisphere = "north"
+            )
+    
+    ax.plot(x1, y2, color = "r")
+
 test_on_map()
+
+
+
