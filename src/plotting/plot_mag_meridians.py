@@ -5,9 +5,6 @@ import matplotlib.pyplot as plt
 import settings as s
 from utils import save_plot
 import numpy as np
-from FluxTube.src.mag import Apex
-
-
 
 def plot_all_meridians(
          ax, 
@@ -47,7 +44,7 @@ def plot_sites(ax):
 def plot_mag_meridians(
         alt = 300, 
         max_lat = 10, 
-        year = 2013
+        year = 2013,
         ):
     
     fig, ax = plt.subplots(
@@ -63,11 +60,8 @@ def plot_mag_meridians(
     lon_lims = dict(min = -100, max = -30, stp = 10)    
     
     quick_map(ax, lon_lims, lat_lims)
-    
-    
-    #max_mlat = Apex(alt).apex_lat_base(base = 150)
-    
-    alt = 300
+        
+   
     plot_all_meridians(
              ax, 
              slon = -100, 
@@ -84,27 +78,18 @@ def plot_mag_meridians(
     ax.set(title = f"{alt} km - {year}")
     ax.legend(ncol = 1, loc = "upper right")
     
+    plt.show()
+    
     return fig, ax  
 
 
 #save_plot(plot_mag_meridians)
 
-#fig, ax = plot_mag_meridians()
+
+plot_mag_meridians()
 
 
 
-fig, ax = plt.subplots(
-    figsize = (8, 8), 
-    dpi = 300, 
-    subplot_kw = 
-    {'projection': ccrs.PlateCarree()}
-    )
-
-
-lat_lims = dict(min = -10, max = 10, stp = 5)
-lon_lims = dict(min = -50, max = -40, stp = 10)    
-
-quick_map(ax, lon_lims, lat_lims)
 
 
 

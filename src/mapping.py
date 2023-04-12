@@ -1,7 +1,7 @@
 import cartopy.feature as cf
 import cartopy.crs as ccrs
 import numpy as np
-import pandas as pd
+from GEO.src.core import load_equator
 import os
 import settings as s
 
@@ -13,7 +13,7 @@ class limits(object):
         self.stp = kwargs['stp']
          
 
-def map_features(ax):
+def map_features(ax, grid = False):
     
     states_provinces = cf.NaturalEarthFeature(
                         category = 'cultural',
@@ -25,11 +25,15 @@ def map_features(ax):
     
     ax.add_feature(states_provinces, **args)
     ax.add_feature(cf.COASTLINE, **args) 
-    ax.add_feature(cf.BORDERS, linestyle='-', **args)
+    ax.add_feature(cf.BORDERS, linestyle = '-', **args)
     
-    # ax.gridlines(color = 'grey', 
-    #              linestyle = '--', 
-    #              crs = ccrs.PlateCarree())
+    if grid:
+    
+        ax.gridlines(
+            color = 'grey', 
+            linestyle = '--', 
+            crs = ccrs.PlateCarree()
+            )
     return ax
     
     
@@ -65,18 +69,21 @@ def marker_sites(axs, sites):
         
         axs.text(lon, lat, key, 
                  transform = ccrs.PlateCarree())
+        
+
 def mag_equator(ax):
     
     """Plotting geomagnetic equator"""
     
-    infile = "database/GEO/dip_2013.txt"
-    df = pd.read_csv(infile, index_col = 0)
-    lons = df["lon"].values
-    lats = df["lat"].values
-
-    ax.plot(lons, lats, color = "r", lw = 1, 
-            label = "Equador\n geomagnético")
-    return df
+    eq = load_equator()
+   
+    ax.plot(
+        eq[:, 0], 
+        eq[:, 1], 
+        color = "r", 
+        lw = 1
+        )
+    return ax
 
 
 
@@ -107,6 +114,8 @@ def quick_map(axs, lon_lims, lat_lims):
     
     map_boundaries(axs, lon, lat)
    
-    df = mag_equator(axs)
+    mag_equator(axs)
     
-    return axs, df
+    return axs
+
+# 

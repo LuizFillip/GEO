@@ -8,20 +8,23 @@ def run_igrf(
         year, 
         step_lon = 5, 
         step_lat = 1, 
-        alt = 250
+        alt = 250,
+        cols = ["lat", "lon", "d", "i"]
         ):
 
     out = []
     for lat in np.arange(-90, 90 + step_lat, step_lat):
         for lon in np.arange(-180, 180 + step_lon, step_lon):
-            d, i, h, x, y, z, f = pyIGRF.igrf_value(lat, lon, 
-                                                    alt= alt, 
-                                                    year = year)
+            
+            d, i, h, x, y, z, f = pyIGRF.igrf_value(
+                lat, lon, 
+                alt= alt, 
+                year = year
+                )
             
             out.append([lat, lon, d, i])
             
-    return pd.DataFrame(out, 
-                        columns = ["lat", "lon", "d", "i"])
+    return pd.DataFrame(out, columns = cols)
  
 
 def save_df(df, year):
@@ -33,8 +36,8 @@ def save_df(df, year):
               header = True)        
 
 def get_dip(date = 2013, 
-            step_lon = 0.5, 
-            step_lat = 0.5, 
+            step_lon = 0.1, 
+            step_lat = 0.1, 
             alt = 300):   
      
     df = run_igrf(date, 
@@ -58,4 +61,4 @@ def get_dip(date = 2013,
     v = p.vertices
     return pd.DataFrame({"lon": v[:,0], "lat": v[:,1]})
 
-save_df(get_dip(), year = 2013)
+#save_df(get_dip(), year = 2013)
