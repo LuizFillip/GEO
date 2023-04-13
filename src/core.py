@@ -213,16 +213,16 @@ def limit_hemisphere(
     # with radius from apex latitude 
     if hemisphere == "south":
         end = find_closest(y, ny - rlat)
-        set_x = x[eq_x: end]
-        set_y = y[eq_y: end]
+        set_x = x[eq_x: end+ 1]
+        set_y = y[eq_y: end + 1]
     
     elif hemisphere == "north":
         start = find_closest(y, ny + rlat)
-        set_x = x[start: eq_x]
-        set_y = y[start: eq_y]
+        set_x = x[start: eq_x + 1]
+        set_y = y[start: eq_y + 1]
         
     else:
-        end = find_closest(y, ny - rlat) 
+        end = find_closest(y, ny - rlat) + 1
         start = find_closest(y, ny + rlat)
         set_x = x[start: end]
         set_y = y[start: end]
