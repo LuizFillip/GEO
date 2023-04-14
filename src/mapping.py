@@ -4,7 +4,7 @@ import numpy as np
 from GEO.src.core import load_equator
 import os
 import settings as s
-
+import matplotlib.pyplot as plt
 
 class limits(object):
     def __init__(self, **kwargs):
@@ -103,7 +103,7 @@ def plot_dips(axs):
     
 
 
-def quick_map(axs, lon_lims, lat_lims):
+def map_attrs(axs, lon_lims, lat_lims):
 
     s.config_labels()
     
@@ -118,4 +118,25 @@ def quick_map(axs, lon_lims, lat_lims):
     
     return axs
 
-# 
+lat_lims = dict(min = -15, max = 15, stp = 5)
+lon_lims = dict(min = -55, max = -35, stp = 5) 
+
+def quick_map(
+        lat_lims = lat_lims, 
+        lon_lims = lon_lims
+        ):    
+      
+    fig, ax = plt.subplots(
+        figsize = (8, 8), 
+        dpi = 300,  
+        subplot_kw = 
+        {'projection': ccrs.PlateCarree()}
+        )
+    
+    s.config_labels(fontsize = 15)
+     
+    map_attrs(ax, lon_lims, lat_lims)
+            
+    return fig, ax 
+
+    

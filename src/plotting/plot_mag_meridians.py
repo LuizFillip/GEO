@@ -61,7 +61,7 @@ def plot_mag_meridians(
     
     quick_map(ax, lon_lims, lat_lims)
         
-   
+    
     plot_all_meridians(
              ax, 
              slon = -100, 
@@ -72,26 +72,22 @@ def plot_mag_meridians(
              year = 2013
              )
     
-    quick_map(ax, lon_lims, lat_lims)
-        
     plot_sites(ax)
+    
+        
+    
     ax.set(title = f"{alt} km - {year}")
     ax.legend(ncol = 1, loc = "upper right")
     
     plt.show()
     
-    return fig, ax  
+    return fig 
 
 
 #save_plot(plot_mag_meridians)
 
 
-plot_mag_meridians()
+fig = plot_mag_meridians()
 
 
-
-
-
-
-
-
+fig.savefig("meridians.png")
