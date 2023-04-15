@@ -1,11 +1,49 @@
 from FluxTube.src.mag import Apex
-from GEO.src.core import (find_closest_meridian, 
-                          limit_hemisphere, 
-                          sites)
+import pyIGRF
+from GEO.src.core import (
+    load_equator, 
+    find_closest, 
+    compute_distance, 
+    sites)
 import numpy as np
 import pandas as pd
 from scipy.interpolate import CubicSpline
+from intersect import intersection
 
+def limit_hemisphere(
+        x, y, rlat, 
+        hemisphere = "south"
+        ):
+    
+    eq = load_equator()
+    # Find intersection point between
+    # equator and merian
+    nx, ny = intersection( eq[:, 0], eq[:, 1], x, y)
+    
+    # find meridian indexes (x and y) 
+    # where cross the equator and upper limit
+    eq_x = find_closest(x, nx)  
+    eq_y = find_closest(y, ny)  
+
+    # create a line above of intersection point 
+    # with radius from apex latitude 
+    if hemisphere == "south":
+        end = find_closest(y, ny - rlat)
+        set_x = x[eq_x: end+ 1]
+        set_y = y[eq_y: end + 1]
+    
+    elif hemisphere == "north":
+        start = find_closest(y, ny + rlat)
+        set_x = x[start: eq_x + 1]
+        set_y = y[start: eq_y + 1]
+        
+    else:
+        end = find_closest(y, ny - rlat) + 1
+        start = find_closest(y, ny + rlat)
+        set_x = x[start: end]
+        set_y = y[start: end]
+        
+    return set_x, set_y
 
 def save_ranges_over_meridian(
          x, y,
@@ -50,6 +88,90 @@ def save_ranges_over_meridian(
         ) 
      return df
  
+
+def compute_meridian(
+        lon = -60, 
+        max_lat = 20,
+        alt = 0, 
+        year = 2013,
+        delta = 1
+        ):
+    
+    xx = []
+    yy = []
+    
+    range_lats = np.arange(
+        -max_lat, max_lat, delta
+        )[::-1]
+    
+    for lat in range_lats:
+        d, i, h, x, y, z, f = pyIGRF.igrf_value(
+            lat, 
+            lon, 
+            alt = alt, 
+            year = year
+            )
+       
+        new_point_x = lon - delta * np.tan(np.radians(d))
+        new_point_y = lat - delta
+        
+        lon = new_point_x
+        lat = new_point_y
+        
+        xx.append(lon)
+        yy.append(lat)
+            
+    return xx, yy
+
+
+def compute_all_meridians(
+        max_lat = 40, 
+        year = 2013, 
+        alt = 300
+        ):
+    out = []
+
+    for lon in np.arange(-120, -30, 1):
+        
+        x, y = compute_meridian(
+            lon = lon, 
+            alt = alt, 
+            max_lat = max_lat,
+            year = year
+                )   
+        out.append([x, y])
+                
+    return np.array(out)
+
+
+def find_closest_meridian(
+        glon, 
+        glat, 
+        year = 2013, 
+        alt = 300,
+        max_lat = 40
+        ):
+    
+    arr = compute_all_meridians(
+            max_lat = max_lat, 
+            year = year, 
+            alt = alt
+            )
+    
+    out = {}
+    
+    for num in range(arr.shape[0]):
+        x, y = arr[num][0], arr[num][1]
+        
+        min_x, min_y, min_d = compute_distance(
+            x, y, glon, glat)
+            
+        out[num] = min_d
+    
+    closest = min(out, key = out.get)
+    
+    return arr[closest][0], arr[closest][1]
+ 
     
 def save_meridians(site = "saa"):
     
@@ -70,51 +192,19 @@ def save_meridians(site = "saa"):
                  set_hemis = col,
                  )
 
-def get_meridian_interpol(site = "saa"):
+def get_meridian_interpol(site = "saa", factor = 3):
     
     glat, glon = sites[site]["coords"]
     x, y = find_closest_meridian(glon, glat)
     
     spl = CubicSpline(x, y)
     
-    new_lon = np.linspace(x[0], x[-1], len(x) * 3)    
+    new_lon = np.linspace(x[0], x[-1], len(x) * factor)    
     new_lat = spl(new_lon)
     
     return np.round(new_lon, 3), np.round(new_lat, 3)
-import iri2016 as iri
-import datetime as dt
 
-def get_ionos(dn, zeq, glat, glon):
-    ds = iri.IRI(dn, [zeq, zeq, 1], glat, glon)
-    
-    ne = ds["ne"].values[0]
-    Te = ds["Te"].values[0]
-    return ne, Te
 
-dn = dt.datetime(2013, 1, 1, 21, 0)
-heights = np.arange(200, 505, 5)
-
-out = []
-
-for h in heights:
-
-    rlat = Apex(h).apex_lat_base(base = 150)
-    
-    x, y = get_meridian_interpol(site = "saa")
-    
-    glon, glat = limit_hemisphere(
-            x, y, np.degrees(rlat), 
-            hemisphere = "south")
-             
-    mlat_range = np.linspace(0, -rlat, len(glon))
-    
-    out1 = []
-    out.append(sum(out1))
-    
-    for i, mlat in enumerate(mlat_range):
         
-        zeq = Apex(h).apex_height(mlat)
-        
-        ne, te = get_ionos(dn, zeq, glat[i], glon[i])
-        
-        out1.append(ne)
+
+
