@@ -17,7 +17,7 @@ def limit_hemisphere(
     
     eq = load_equator()
     # Find intersection point between
-    # equator and merian
+    # equator and meridian
     nx, ny = intersection( eq[:, 0], eq[:, 1], x, y)
     
     # find meridian indexes (x and y) 
@@ -29,7 +29,7 @@ def limit_hemisphere(
     # with radius from apex latitude 
     if hemisphere == "south":
         end = find_closest(y, ny - rlat)
-        set_x = x[eq_x: end+ 1]
+        set_x = x[eq_x: end + 1]
         set_y = y[eq_y: end + 1]
     
     elif hemisphere == "north":
@@ -192,7 +192,10 @@ def save_meridians(site = "saa"):
                  set_hemis = col,
                  )
 
-def get_meridian_interpol(site = "saa", factor = 3):
+def get_meridian_interpol(
+        site = "saa", 
+        factor = 3
+        ):
     
     glat, glon = sites[site]["coords"]
     x, y = find_closest_meridian(glon, glat)
