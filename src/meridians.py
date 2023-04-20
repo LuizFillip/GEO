@@ -32,16 +32,27 @@ def find_closest(arr, val):
    idx = np.abs(arr - val).argmin()
    return idx
 
+
+def intersec_with_equator(x, y):
+     """
+     Find intersection point between equator and meridian line 
+     """
+     eq = load_equator()
+     
+     nx, ny = intersection(eq[:, 0], eq[:, 1], x, y)
+     return nx.item(), ny.item()
+
 def limit_hemisphere(
-        x, y, rlat, 
+        x, y, 
+        nx, ny, 
+        rlat = 0, 
         hemisphere = "south"
         ):
     
-    eq = load_equator()
-    # Find intersection point between
-    # equator and meridian
-    nx, ny = intersection(eq[:, 0], eq[:, 1], x, y)
+    """
+    Get range limits in each hemisphere by radius 
     
+    """    
     # find meridian indexes (x and y) 
     # where cross the equator and upper limit
     eq_x = find_closest(x, nx)  
@@ -156,6 +167,8 @@ class meridians:
         
         return x, y 
     
+
+    
     @staticmethod
     def interpolate(x, y, factor = 3):
              
@@ -167,19 +180,26 @@ class meridians:
         return np.round(new_lon, 3), np.round(new_lat, 3)
         
         
-        
-def main():
-    date = dt.datetime(2013, 1, 1, 1, 21)
-    
-    glat, glon = sites["saa"]["coords"]
-    
-    from GEO import quick_map
-    
-    fig, ax = quick_map()
+def save_meridian(date, glon, glat):
     
     m = meridians(date)
-    
-    x, y = m.closest_from_site(glon, glat)
-    
-    ax.plot(x, y)
 
+    x, y = m.closest_from_site(glon, glat)
+
+    nx, ny = intersec_with_equator(x, y)
+    
+    dic = {"mx": x.tolist(), 
+           "my": y.tolist(), 
+           "nx": nx, 
+           "ny": ny}
+    
+    import json
+    
+    with open('GEO/src/meridian.json', 'w') as fp:
+        json.dump(dic, fp)
+        
+date = dt.datetime(2013, 1, 1, 1, 21)
+
+glat, glon = sites["saa"]["coords"]
+
+save_meridian(date, glon, glat)
