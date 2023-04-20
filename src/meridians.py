@@ -1,14 +1,36 @@
-from FluxTube.src.mag import Apex
 import pyIGRF
-from GEO.src.core import (
-    load_equator, 
-    find_closest, 
-    compute_distance, 
-    sites)
+from GEO import load_equator, sites, year_fraction
 import numpy as np
-import pandas as pd
 from scipy.interpolate import CubicSpline
 from intersect import intersection
+from scipy.signal import argrelmin
+import datetime as dt
+
+
+def compute_distance(x, y, x0, y0):
+    
+    def distance(x, y, x0, y0):
+        return np.sqrt(pow(x - x0, 2) + 
+                       pow(y - y0, 2))
+    
+    # compute distance
+    dis = distance(x, y, x0, y0)
+    
+    # find the minima
+    min_idxs = argrelmin(dis)[0]
+    # take the minimum
+    glob_min_idx = min_idxs[np.argmin(dis[min_idxs])]
+    
+    # coordinates and distance
+    min_x = x[glob_min_idx]
+    min_y = y[glob_min_idx]
+    min_d = dis[glob_min_idx]
+    
+    return min_x, min_y, min_d
+
+def find_closest(arr, val):
+   idx = np.abs(arr - val).argmin()
+   return idx
 
 def limit_hemisphere(
         x, y, rlat, 
@@ -18,7 +40,7 @@ def limit_hemisphere(
     eq = load_equator()
     # Find intersection point between
     # equator and meridian
-    nx, ny = intersection( eq[:, 0], eq[:, 1], x, y)
+    nx, ny = intersection(eq[:, 0], eq[:, 1], x, y)
     
     # find meridian indexes (x and y) 
     # where cross the equator and upper limit
@@ -45,169 +67,119 @@ def limit_hemisphere(
         
     return set_x, set_y
 
-def save_ranges_over_meridian(
-         x, y,
-         amin = 200, 
-         amax = 700, 
-         step = 5, 
-         base = 150,
-         set_hemis = "south"
-         ):
- 
-     out = []
-     heights = np.arange(amin, amax + step, step)
-          
-     for alt in heights:
-         
-         mlat = Apex(alt).apex_lat_base(base = base)
-         
-         rlat = np.degrees(mlat)
-         
-         x1, y1 = limit_hemisphere(
-                 x, y, rlat, 
-                 hemisphere = set_hemis
-                 )
 
-         
-         idx = np.ones(len(x1)) * alt
-         mlats = np.ones(len(x1)) * rlat
-         
-         out.append(pd.DataFrame(
-             {
-                 "lon": x1, 
-                 "lat": y1, 
-                 "rlat": mlats
-              }, 
-             index = idx)
-             )
-     
-     df = pd.concat(out)
-     df.to_csv(
-        f"ranges_{set_hemis}.txt",
-        index = True
-        ) 
-     return df
- 
 
-def compute_meridian(
-        lon = -60, 
-        max_lat = 20,
-        alt = 0, 
-        year = 2013,
-        delta = 1
-        ):
-    
-    xx = []
-    yy = []
-    
-    range_lats = np.arange(
-        -max_lat, max_lat, delta
-        )[::-1]
-    
-    for lat in range_lats:
-        d, i, h, x, y, z, f = pyIGRF.igrf_value(
-            lat, 
-            lon, 
-            alt = alt, 
-            year = year
-            )
-       
-        new_point_x = lon - delta * np.tan(np.radians(d))
-        new_point_y = lat - delta
         
-        lon = new_point_x
-        lat = new_point_y
+class meridians:
+    
+    
+    def __init__(
+            self, 
+            date, 
+            alt_mag = 300,
+            max_lat = 40, 
+            delta = 1):
         
-        xx.append(lon)
-        yy.append(lat)
+        if isinstance(date, (dt.datetime, dt.date)):
+            yy = year_fraction(date)
+        else:
+            yy = date 
+        
+        self.year = yy
+        self.alt_mag = alt_mag
+        self.max_lat = max_lat
+        self.delta = delta
+        
+    def compute(self, lon = -60):
+        
+        xx = []
+        yy = []
+        
+        range_lats = np.arange(
+            -self.max_lat, self.max_lat, self.delta)[::-1]
+        
+        for lat in range_lats:
+            d, i, h, x, y, z, f = pyIGRF.igrf_value(
+                lat, 
+                lon, 
+                alt = self.alt_mag, 
+                year = self.year
+                )
+           
+            new_point_x = lon - self.delta * np.tan(np.radians(d))
+            new_point_y = lat - self.delta
             
-    return xx, yy
-
-
-def compute_all_meridians(
-        max_lat = 40, 
-        year = 2013, 
-        alt = 300
-        ):
-    out = []
-
-    for lon in np.arange(-120, -30, 1):
-        
-        x, y = compute_meridian(
-            lon = lon, 
-            alt = alt, 
-            max_lat = max_lat,
-            year = year
-                )   
-        out.append([x, y])
+            lon = new_point_x
+            lat = new_point_y
+            
+            xx.append(lon)
+            yy.append(lat)
                 
-    return np.array(out)
+        return xx, yy
+    
+    def range_meridians(
+            self, 
+            lmin = -120, 
+            lmax = -30):
+        out = []
 
-
-def find_closest_meridian(
-        glon, 
-        glat, 
-        year = 2013, 
-        alt = 300,
-        max_lat = 40
-        ):
-    
-    arr = compute_all_meridians(
-            max_lat = max_lat, 
-            year = year, 
-            alt = alt
-            )
-    
-    out = {}
-    
-    for num in range(arr.shape[0]):
-        x, y = arr[num][0], arr[num][1]
-        
-        min_x, min_y, min_d = compute_distance(
-            x, y, glon, glat)
+        for lon in np.arange(lmin, lmax, self.delta):
             
-        out[num] = min_d
+            x, y = self.compute(lon)
+                    
+            out.append([x, y])
+                    
+        return np.array(out)
     
-    closest = min(out, key = out.get)
-    
-    return arr[closest][0], arr[closest][1]
- 
-    
-def save_meridians(site = "saa"):
-    
-    glat, glon = sites[site]["coords"]
-    x, y = find_closest_meridian(glon, glat)
-    
-    for col in ["south", "north", "both"]:
-    
-        save_ranges_over_meridian(
-                 x, 
-                 y,
-                 ax = None,
-                 amin = 200, 
-                 amax = 500, 
-                 step = 5, 
-                 base = 150,
-                 save = True,
-                 set_hemis = col,
-                 )
-
-def get_meridian_interpol(
-        site = "saa", 
-        factor = 3
-        ):
-    
-    glat, glon = sites[site]["coords"]
-    x, y = find_closest_meridian(glon, glat)
-    
-    spl = CubicSpline(x, y)
-    
-    new_lon = np.linspace(x[0], x[-1], len(x) * factor)    
-    new_lat = spl(new_lon)
-    
-    return np.round(new_lon, 3), np.round(new_lat, 3)
-
-
+    def closest_from_site(
+            self, glon, glat, interpol = True
+            ):
         
-
+        arr = self.range_meridians()
+        
+        out = {}
+        
+        for num in range(arr.shape[0]):
+            x, y = arr[num][0], arr[num][1]
+            
+            min_x, min_y, min_d = compute_distance(
+                x, y, glon, glat)
+                
+            out[num] = min_d
+        
+        closest = min(out, key = out.get)
+        
+        x, y = arr[closest][0], arr[closest][1]
+        
+        if interpol:
+            x, y = self.interpolate(x, y)
+        
+        return x, y 
+    
+    @staticmethod
+    def interpolate(x, y, factor = 3):
+             
+        spl = CubicSpline(x, y)
+        
+        new_lon = np.linspace(x[0], x[-1], len(x) * factor)    
+        new_lat = spl(new_lon)
+        
+        return np.round(new_lon, 3), np.round(new_lat, 3)
+        
+        
+        
+def main():
+    date = dt.datetime(2013, 1, 1, 1, 21)
+    
+    glat, glon = sites["saa"]["coords"]
+    
+    from GEO import quick_map
+    
+    fig, ax = quick_map()
+    
+    m = meridians(date)
+    
+    x, y = m.closest_from_site(glon, glat)
+    
+    ax.plot(x, y)
 
