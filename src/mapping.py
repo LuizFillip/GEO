@@ -1,8 +1,7 @@
 import cartopy.feature as cf
 import cartopy.crs as ccrs
 import numpy as np
-from GEO.src.core import load_equator
-import os
+from GEO import load_equator
 import settings as s
 import matplotlib.pyplot as plt
 
@@ -84,23 +83,6 @@ def mag_equator(ax):
         lw = 1
         )
     return ax
-
-
-
-def plot_dips(axs):
-    infile = "database/dips/"
-    
-    _, _, files = next(os.walk(infile))
-    
-    #for filename in files:
-    filename = files[2]
-    args = dict(linewidths = 2, colors = "red",
-                levels = [-30, -20, -10, 0])
-    
-    year = filename.replace(".txt", "")
-    axs.set(title = f"Inclinação - {year}")
-    mag_equator(axs, infile + filename, **args)
-    
 
 
 def map_attrs(axs, lon_lims, lat_lims):
