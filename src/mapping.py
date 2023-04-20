@@ -1,7 +1,7 @@
 import cartopy.feature as cf
 import cartopy.crs as ccrs
 import numpy as np
-from GEO import load_equator
+from .core import load_equator
 import settings as s
 import matplotlib.pyplot as plt
 
@@ -53,18 +53,19 @@ def map_boundaries(ax, lon, lat):
                             lat.stp), 
                   crs = ccrs.PlateCarree())
     
-    ax.set(ylabel = 'Latitude (°)',  xlabel = 'Longitude (°)') 
+    ax.set(ylabel = 'Latitude (°)',  
+           xlabel = 'Longitude (°)') 
     
     return ax
-        
+
 def marker_sites(axs, sites):
  
     for key in sites.keys():
-        coords = sites[key]
-        lon = coords["lon"]
-        lat = coords["lat"]
-        axs.plot(lon, lat, 
-                 marker = "o", markersize = 8)
+        lat, lon = sites[key]["coords"]
+        axs.scatter(
+            lon, lat, 
+            c = 100, 
+            marker = "o")
         
         axs.text(lon, lat, key, 
                  transform = ccrs.PlateCarree())

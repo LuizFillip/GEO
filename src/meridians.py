@@ -1,37 +1,28 @@
 import pyIGRF
-from GEO import load_equator, sites, year_fraction
+from .core import load_equator, sites, year_fraction
 import numpy as np
 from scipy.interpolate import CubicSpline
 from intersect import intersection
 from scipy.signal import argrelmin
 import datetime as dt
-
+import json
 
 def compute_distance(x, y, x0, y0):
     
-    def distance(x, y, x0, y0):
-        return np.sqrt(pow(x - x0, 2) + 
-                       pow(y - y0, 2))
+    dis = np.sqrt(pow(x - x0, 2) + pow(y - y0, 2))
     
-    # compute distance
-    dis = distance(x, y, x0, y0)
-    
-    # find the minima
     min_idxs = argrelmin(dis)[0]
-    # take the minimum
-    glob_min_idx = min_idxs[np.argmin(dis[min_idxs])]
+    min_idx = min_idxs[np.argmin(dis[min_idxs])]
     
-    # coordinates and distance
-    min_x = x[glob_min_idx]
-    min_y = y[glob_min_idx]
-    min_d = dis[glob_min_idx]
+    min_x = x[min_idx]
+    min_y = y[min_idx]
+    min_d = dis[min_idx]
     
     return min_x, min_y, min_d
 
 def find_closest(arr, val):
    idx = np.abs(arr - val).argmin()
    return idx
-
 
 def intersec_with_equator(x, y):
      """
@@ -167,8 +158,6 @@ class meridians:
         
         return x, y 
     
-
-    
     @staticmethod
     def interpolate(x, y, factor = 3):
              
@@ -180,7 +169,12 @@ class meridians:
         return np.round(new_lon, 3), np.round(new_lat, 3)
         
         
-def save_meridian(date, glon, glat):
+def save_meridian(
+        date, 
+        glon, 
+        glat, 
+        save_in = 'GEO/src/meridian.json'
+        ):
     
     m = meridians(date)
 
@@ -188,18 +182,19 @@ def save_meridian(date, glon, glat):
 
     nx, ny = intersec_with_equator(x, y)
     
-    dic = {"mx": x.tolist(), 
-           "my": y.tolist(), 
-           "nx": nx, 
-           "ny": ny}
+    dic = {
+        "mx": x.tolist(), 
+        "my": y.tolist(), 
+        "nx": nx, 
+        "ny": ny
+        }
     
-    import json
-    
-    with open('GEO/src/meridian.json', 'w') as fp:
+    with open(save_in, 'w') as fp:
         json.dump(dic, fp)
         
-date = dt.datetime(2013, 1, 1, 1, 21)
-
-glat, glon = sites["saa"]["coords"]
-
-save_meridian(date, glon, glat)
+def main():
+    date = dt.datetime(2013, 1, 1, 1, 21)
+    
+    glat, glon = sites["saa"]["coords"]
+    
+    save_meridian(date, glon, glat)

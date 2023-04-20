@@ -1,5 +1,6 @@
-from GEO.src.core import compute_meridian, sites
-from GEO.src.mapping import quick_map
+from ..core import sites
+from ..meridians import meridians
+from ..mapping import quick_map
 import cartopy.crs as ccrs
 import matplotlib.pyplot as plt
 import settings as s
@@ -15,6 +16,11 @@ def plot_all_meridians(
          alt = 300, 
          year = 2013
          ):
+    
+    
+     m = meridians(year)
+     
+     arr = m.range_meridians()
  
      for lon in np.arange(slon, elon, step):
          
@@ -87,7 +93,4 @@ def plot_mag_meridians(
 #save_plot(plot_mag_meridians)
 
 
-fig = plot_mag_meridians()
 
-
-fig.savefig("meridians.png")

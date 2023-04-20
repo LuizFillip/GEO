@@ -1,11 +1,7 @@
 from GEO.src.mapping import quick_map
 from FluxTube.src.mag import Apex
-from GEO.src.core import (
-    find_closest_meridian, 
-    limit_hemisphere, 
-    load_equator, 
-    sites    )
-from GEO.src.meridians import get_meridian_interpol
+from ..core import sites  
+from ..meridians import meridians
 from intersect import intersection
 import numpy as np
 
@@ -69,11 +65,30 @@ def plot_site_and_closest_meridian(
 
 
 def plot_apex_over_meridian():
+    date = dt.datetime(2013, 1, 1, 1, 21)
+
+    glat, glon = sites["saa"]["coords"]
+
+    from GEO import quick_map
+
     fig, ax = quick_map()
-    plot_site_and_closest_meridian(
-            ax, 
-            site = "saa")
-    
-    x, y = get_meridian_interpol(site = "saa")
-    
+
+    m = meridians(date)
+
+    x, y = m.closest_from_site(glon, glat)
+
     ax.plot(x, y)
+
+
+    nx, ny = intersec_with_equator(x, y)
+
+    print(nx, ny)
+
+    ax.scatter(nx, ny, s = 150)
+    rlat = 5
+    x1, y1 = limit_hemisphere(
+            x, y, nx, ny, rlat)
+
+    ax.plot(x1, y1, color = "b", lw = 2)
+
+

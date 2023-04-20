@@ -1,11 +1,7 @@
 import pyIGRF
 import datetime as dt
 import time
-import numpy as np
 import pandas as pd
-from scipy.signal import argrelmin
-
-
 
 sites = {
     "car": {"coords": (-7.38, -36.528), 
@@ -25,9 +21,6 @@ sites = {
     "jic": {"coords":(-11.95, -76.87), 
             "name": "Jicamarca"} 
     }     
-
-
-
 
 def year_fraction(date):
     
@@ -76,30 +69,6 @@ def run_igrf(
 
     return d, i 
 
-def compute_distance(x, y, x0, y0):
-    
-    def distance(x, y, x0, y0):
-        return np.sqrt(pow(x - x0, 2) + 
-                       pow(y - y0, 2))
-    
-    # compute distance
-    dis = distance(x, y, x0, y0)
-    
-    # find the minima
-    min_idxs = argrelmin(dis)[0]
-    # take the minimum
-    glob_min_idx = min_idxs[
-        np.argmin(dis[min_idxs])]
-    
-    # coordinates and distance
-    min_x = x[glob_min_idx]
-    min_y = y[glob_min_idx]
-    min_d = dis[glob_min_idx]
-    
-    return min_x, min_y, min_d
-
-
-
 
 def load_equator(
         infile = "database/GEO/dip_2013.txt"
@@ -107,9 +76,7 @@ def load_equator(
     return pd.read_csv(infile, index_col = 0).values
 
 
-def find_closest(arr, val):
-   idx = np.abs(arr - val).argmin()
-   return idx
+
 
 
 
