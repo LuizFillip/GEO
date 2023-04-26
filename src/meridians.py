@@ -41,7 +41,7 @@ def limit_hemisphere(
         ):
     
     """
-    Get range limits in each hemisphere by radius 
+    Get range limits in each hemisphere by radius (in degrees)
     
     """    
     # find meridian indexes (x and y) 
@@ -191,10 +191,54 @@ def save_meridian(
     
     with open(save_in, 'w') as fp:
         json.dump(dic, fp)
+
         
+def load_meridian(infile = "GEO/src/meridian.json"):
+    dat = json.load(open(infile))
+
+    x = np.array(dat["mx"])
+    y = np.array(dat["my"])
+
+    nx = dat["nx"]
+    ny = dat["ny"]
+    return nx, ny, x, y
+
+
+def interpolate(x, y, points = 30):
+         
+    spl = CubicSpline(x, y)
+    
+    new_lon = np.linspace(x[0], x[-1], points)    
+    new_lat = spl(new_lon)
+    
+    return np.round(new_lon, 3), np.round(new_lat, 3)
+
+
+def split_meridian(
+        rlat,
+        hemisphere = "north",
+        points = None):
+    
+    nx, ny, x, y = load_meridian()
+    
+    lon, lat = limit_hemisphere(
+            x, y, nx, ny, 
+            np.degrees(rlat), 
+            hemisphere = hemisphere
+            )
+    
+    if points is not None:
+        lon, lat = interpolate(
+            lon, lat, points = points
+            )
+
+    return lon, lat
+
+
 def main():
     date = dt.datetime(2013, 1, 1, 1, 21)
     
     glat, glon = sites["saa"]["coords"]
     
     save_meridian(date, glon, glat)
+    
