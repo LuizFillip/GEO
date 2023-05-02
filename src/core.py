@@ -3,7 +3,10 @@ import datetime as dt
 import time
 import pandas as pd
 
+
 sites = {
+    "cap": {"coords": (-22.7038, -45.0093), 
+            "name": "Cachoeira Paulista"},
     "car": {"coords": (-7.38, -36.528), 
             "name": "Cariri"},  
     "for": {"coords":  (-3.73, -38.522), 
