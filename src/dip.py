@@ -61,4 +61,9 @@ def get_dip(date = 2013,
     v = p.vertices
     return pd.DataFrame({"lon": v[:,0], "lat": v[:,1]})
 
-#save_df(get_dip(), year = 2013)
+
+def load_equator(
+        infile = "database/GEO/dip_2013.txt"
+        ):
+    return pd.read_csv(infile, index_col = 0).values
+

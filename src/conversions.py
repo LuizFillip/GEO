@@ -2,13 +2,39 @@ import numpy as np
 import datetime as dt
 import spacepy.coordinates as coord
 from spacepy.time import Ticktock
+import time
 
+def year_fraction(date):
+    
+    "Return years in fraction (like julian date) "
+
+   # returns seconds since epoch
+    def sinceEpoch(date): # returns seconds since epoch
+        return time.mktime(date.timetuple())
+    
+    s = sinceEpoch
+    
+    year = date.year
+    start_year = dt.datetime(
+        year = year, 
+        month = 1, 
+        day = 1
+        )
+    
+    next_year = dt.datetime(
+        year = year + 1, 
+        month = 1, 
+        day = 1
+        )
+    
+    elapsed = s(date) - s(start_year)
+    duration = s(next_year) - s(start_year)
+    fraction = elapsed / duration
+    
+    return round(date.year + fraction, 2)
 
 def colatitude(latitude):
     return (np.pi / 2) - latitude
-
-def convert_to_dip(table):
-    return np.rad2deg(np.arctan(np.tan(np.deg2rad(table)) * 0.5))
 
 def dip(inclination):
    """Latitude inlicação magnética (dip) """
@@ -70,15 +96,13 @@ def mag2geo(mag_lat, mag_lon, date):
 
 def main():
   
-    date = dt.datetime(2013, 1, 1)
+    date = dt.datetime(1994, 10, 1)
     
-    glat, glon  = -2.53, -44.296
+    glat, glon  = 0, -75
     
     mlat, mlon = geo2mag(glat, glon, date)
     
-    print("geografic coords: {glat}, {glon}")
-    
-    glat, glon = mag2geo(0, mlon, date)
-    
+    print(f"geografic coords: {mlat}, {mlon}")
+        
     
             

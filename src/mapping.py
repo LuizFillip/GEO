@@ -1,7 +1,7 @@
 import cartopy.feature as cf
 import cartopy.crs as ccrs
 import numpy as np
-from .core import load_equator
+from .dip import load_equator
 import settings as s
 import matplotlib.pyplot as plt
 
@@ -110,7 +110,7 @@ def quick_map(
         ):    
       
     fig, ax = plt.subplots(
-        figsize = (8, 8), 
+        figsize = (6, 6), 
         dpi = 300,  
         subplot_kw = 
         {'projection': ccrs.PlateCarree()}

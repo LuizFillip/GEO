@@ -4,12 +4,7 @@ import cartopy.crs as ccrs
 from GNSS.IPP import convert_coords
 import json 
 
-sites = {
-         'Fortaleza': {'lat': -3.73, 'lon': -38.522}, 
-         'Sao luis': {'lat': -2.53, 'lon': -44.296}, 
-        # "Cachoeira": {"lat": -22.7038, 'lon': -45.0093}, 
-         #"Santa Maria": {"lat": -29.6897, "lon": -53.8043}
-         }
+
 
 def find_range(x, y, clon, clat, radius = 500):
     
