@@ -1,29 +1,20 @@
-from GEO.mapping import quick_map, marker_sites
+from GEO import quick_map#, marker_sites
 import cartopy.crs as ccrs
 import matplotlib.pyplot as plt
-from GEO.map_attrs import get_receivers_in_range, circle_range, sites
-from GEO.src.core import run_igrf, coords
+#from GEO import get_receivers_in_range, circle_range, sites
+from GEO import run_igrf, sites
 
 
     
-def plot_map(sites):
+def plot_map():
     fig, ax = plt.subplots(
         figsize = (5, 5), 
         subplot_kw = {'projection': ccrs.PlateCarree()}
         )
     
     
-    lat_lims = dict(min = -10, 
-                    max = 5, 
-                    stp = 5)
-    
-    lon_lims = dict(min = -50, 
-                    max = -30, 
-                    stp = 5)    
     
     quick_map(ax, lon_lims, lat_lims)
-
-    marker_sites(ax, sites)
     
     return fig, ax 
 
@@ -56,27 +47,22 @@ def plot_brazil_receivers(sites):
             sites, 
             radius = 500
             )
-    get_receivers_in_range(path_json, sites, ax = ax)
+    #get_receivers_in_range(path_json, sites, ax = ax)
     
-    
-def main():
+  
+lat_lims = dict(min = -30, 
+                max = 0, 
+                stp = 5)
 
-    fig, ax = plt.subplots(
-        figsize = (10, 10), 
-        subplot_kw = {'projection': ccrs.PlateCarree()}
-        )
+lon_lims = dict(min = -60, 
+                max = -30, 
+                stp = 5)    
+
     
     
-    lat_lims = dict(min = -40, 
-                    max = 10, 
-                    stp = 5)
-    
-    lon_lims = dict(min = -80, 
-                    max = -30, 
-                    stp = 5)    
-    
-    quick_map(ax, lon_lims, lat_lims)
-    
-    path_json = "database/GNSS/json/2013/001.json"
-    
-    get_receivers_in_range(path_json, sites, ranged = False, ax = ax)
+fig, ax = quick_map(lat_lims = lat_lims, 
+          lon_lims = lon_lims)
+
+for site in ["car", "cap"]:
+    lat, lon = sites[site]["coords"]
+    ax.scatter(lon, lat, s = 40)
