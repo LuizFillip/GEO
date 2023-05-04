@@ -27,6 +27,30 @@ def circle_range(
     ax.add_geometries(geoms, crs=ccrs.PlateCarree(), 
                       edgecolor = 'black', color = color,
                       alpha = 0.2, label = 'radius')
+    
+def find_range(x, y, clon, clat, radius = 500):
+    
+    factor = radius / 111
+    
+    left_x = clon - factor
+    right_x = clon + factor
+    
+    down_y = clat - factor
+    up_y = clat + factor
+    
+    first = ((y < up_y) and (y > clat) and 
+             (x < right_x) and (x > clon))
+        
+    second = ((y < up_y) and (y > clat) and 
+              (x > left_x) and (x < clon))
+        
+    third = ((y > down_y) and (y < clat) and 
+             (x > left_x) and (x < clon))
+    
+    quarter = ((y > down_y) and (y < clat) and 
+               (x < right_x) and (x > clon))
+    
+    return any([first, second, third, quarter])
 
 def plot_brazil_receivers():
   
@@ -38,7 +62,8 @@ def plot_brazil_receivers():
                     max = -30, 
                     stp = 5)    
     
-        
+    
+    dat = json.load(open("coords.json"))
         
     fig, ax = quick_map(
         lat_lims = lat_lims, 
@@ -46,28 +71,29 @@ def plot_brazil_receivers():
     
     for site in ["car", "cap"]:
         s = sites[site]
-        lat, lon = s["coords"]
-        ax.scatter(lon, lat, s = 200, 
+        clat, clon = s["coords"]
+        ax.scatter(clon, clat, s = 200, 
                    marker = "^", 
                    label = s["name"])
         
-        circle_range(ax, lon, lat,
+        circle_range(ax, clon, clat,
                 radius = 500, 
                 color = "gray"
                 )
         
+        for key in ["eesc", "spfr", "rnna", "seaj"]: #dat.keys():
+            lon, lat = tuple(dat[key])
+        
+            #if find_range(lon, lat, clon, clat):
+            ax.text(lon + 0.3, lat, key.upper())
+            ax.scatter(lon, lat, 
+                       marker = "o", color = "r")
+        
+    
     ax.legend(loc = "lower right")
-    
-    dat = json.load(open("coords.json"))
-    
-    
-    for key in dat.keys():
-        lon, lat = tuple(dat[key])
-        
-        ax.scatter(lon, lat, 
-                   marker = "o", color = "r")
-        
-    
+
     ax.set(title = "15/01/2022")
     
     fig.savefig("meteor_stations.png", dpi = 400)
+    
+plot_brazil_receivers()
