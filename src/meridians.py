@@ -1,10 +1,13 @@
 import pyIGRF
-from .core import load_equator, sites, year_fraction
+from .core import sites
 import numpy as np
+from .conversions import year_fraction
+from .dip import load_equator
 from scipy.interpolate import CubicSpline
 from intersect import intersection
 from scipy.signal import argrelmin
 import datetime as dt
+
 import json
 
 def compute_distance(x, y, x0, y0):
