@@ -2,6 +2,24 @@ import pyIGRF
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from GEO import sites
+
+def dec_dip(
+        year = 2013, 
+        site = "car", 
+        alt = 250, 
+        ):
+         
+    lat, lon = sites[site]["coords"]
+        
+    d, i, h, x, y, z, f = pyIGRF.igrf_value(
+        lat, 
+        lon, 
+        alt = alt, 
+        year = year
+        )
+
+    return d, i 
 
 
 def run_igrf(
