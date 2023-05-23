@@ -2,7 +2,7 @@ import pyIGRF
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from GEO import sites
+from .core import sites
 
 def dec_dip(
         year = 2013, 
@@ -58,10 +58,12 @@ def get_dip(date = 2013,
             step_lat = 0.1, 
             alt = 300):   
      
-    df = run_igrf(date, 
-                step_lon = step_lon, 
-                step_lat = step_lat, 
-                alt = alt)
+    df = run_igrf(
+        date, 
+        step_lon = step_lon, 
+        step_lat = step_lat, 
+        alt = alt
+        )
     
     pivot = pd.pivot_table(
         df, 

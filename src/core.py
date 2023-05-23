@@ -1,7 +1,3 @@
-import pyIGRF
-
-
-
 sites = {
  'cap': {'name': 'Cachoeira Paulista', 'coords': (-22.7038, -45.0093)},
  'car': {'name': 'Cariri', 'coords': (-7.38, -36.528)},
@@ -23,30 +19,8 @@ sites = {
  'eus': {'name': 'Eusébio/CE', 'coords': (-3.89, -38.45)},
  'slz': {'name': 'São Luis', 'coords': (-2.53, -44.3)},
  'pil': {'name': 'Pilar', 'coords': (-31.7, -63.89)},
- 'ttb': {'name': 'Tatuoca', 'coords': (-1.205, -48.51)}}
-
-
-
-
-
-
-
-def run_igrf(
-        year = 2013, 
-        site = "car", 
-        alt = 250, 
-        ):
-         
-    lat, lon = sites[site]["coords"]
-        
-    d, i, h, x, y, z, f = pyIGRF.igrf_value(
-        lat, 
-        lon, 
-        alt = alt, 
-        year = year
-        )
-
-    return d, i 
+ 'ttb': {'name': 'Tatuoca', 'coords': (-1.205, -48.51)}
+ }
 
 
 
