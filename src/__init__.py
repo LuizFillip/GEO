@@ -1,5 +1,8 @@
-from .core import sites
-from .mapping import quick_map, map_attrs, mag_equator
+from .sites import sites
+from .mapping import (quick_map, 
+                      map_attrs, 
+                      mag_equator, 
+                      map_features)
 from .meridians import (
     limit_hemisphere, 
     split_meridian, 

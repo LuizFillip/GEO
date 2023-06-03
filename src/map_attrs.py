@@ -55,7 +55,7 @@ def circle_range(
     
 def get_receivers_in_range(
         path_json, 
-        sites = sites, 
+        sites,
         ranged = False, 
         ax = None
         ):

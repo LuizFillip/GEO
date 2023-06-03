@@ -1,7 +1,7 @@
 import cartopy.feature as cf
 import cartopy.crs as ccrs
 import numpy as np
-from .dip import load_equator
+import GEO as g
 import settings as s
 import matplotlib.pyplot as plt
 
@@ -75,7 +75,7 @@ def mag_equator(ax):
     
     """Plotting geomagnetic equator"""
     
-    eq = load_equator()
+    eq = g.load_equator()
    
     ax.plot(
         eq[:, 0], 

@@ -97,7 +97,7 @@ x,y=intersection(x1,y1,x2,y2)
     return xy0[:, 0], xy0[:, 1]
 
 
-if __name__ == '__main__':
+def main():
     import matplotlib.pyplot as plt
     # a piece of a prolate cycloid, and am going to find
     a, b = 1, 2
