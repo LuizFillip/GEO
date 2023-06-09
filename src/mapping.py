@@ -101,8 +101,8 @@ def map_attrs(axs, lon_lims, lat_lims):
     
     return axs
 
-lat_lims = dict(min = -15, max = 15, stp = 5)
-lon_lims = dict(min = -55, max = -35, stp = 5) 
+lat_lims = dict(min = -45, max = 15, stp = 5)
+lon_lims = dict(min = -80, max = -35, stp = 5) 
 
 def quick_map(
         lat_lims = lat_lims, 

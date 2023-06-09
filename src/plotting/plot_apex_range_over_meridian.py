@@ -1,9 +1,7 @@
-from GEO.src.mapping import quick_map
-from FluxTube.src.mag import Apex
-from ..core import sites  
-from ..meridians import meridians
+from GEO import quick_map, sites, load_equator
 from intersect import intersection
 import numpy as np
+from FluxTube import Apex
 
 def plot_ranges_for_each_apex(
          x, y,
@@ -40,9 +38,12 @@ def plot_site_and_closest_meridian(
       glat, glon = sites[site]["coords"]
       name = sites[site]["name"]
       
-      ax.scatter(glon, glat, s = 100, 
-                 label = name, 
-                 marker = "^")
+      ax.scatter(
+          glon, glat, 
+          s = 100, 
+          label = name, 
+          marker = "^"
+          )
       
       x, y = find_closest_meridian(glon, glat)
       
@@ -64,31 +65,17 @@ def plot_site_and_closest_meridian(
       return x, y
 
 
-def plot_apex_over_meridian():
-    date = dt.datetime(2013, 1, 1, 1, 21)
 
-    glat, glon = sites["saa"]["coords"]
+from GEO import quick_map
+import json
 
-    from GEO import quick_map
+fig, ax = quick_map()
 
-    fig, ax = quick_map()
+infile = "GEO/src/meridian.json"
 
-    m = meridians(date)
+dat = json.load(open(infile))
 
-    x, y = m.closest_from_site(glon, glat)
+x = np.array(dat['mx'])
+y = np.array(dat['my'])
 
-    ax.plot(x, y)
-
-
-    nx, ny = intersec_with_equator(x, y)
-
-    print(nx, ny)
-
-    ax.scatter(nx, ny, s = 150)
-    rlat = 5
-    x1, y1 = limit_hemisphere(
-            x, y, nx, ny, rlat)
-
-    ax.plot(x1, y1, color = "b", lw = 2)
-
-
+ax.plot(x, y, )

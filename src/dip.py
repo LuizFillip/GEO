@@ -2,7 +2,8 @@ import pyIGRF
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from .core import sites
+import GEO as gg
+
 
 def dec_dip(
         year = 2013, 
@@ -10,7 +11,7 @@ def dec_dip(
         alt = 250, 
         ):
          
-    lat, lon = sites[site]["coords"]
+    lat, lon = gg.sites[site]["coords"]
         
     d, i, h, x, y, z, f = pyIGRF.igrf_value(
         lat, 
@@ -87,3 +88,11 @@ def load_equator(
         ):
     return pd.read_csv(infile, index_col = 0).values
 
+def build_dataframe():
+    out = {}
+    for site in ['car', 'caj', 'saa']:
+        out[gg.sites[site]["name"]] = dec_dip(2013, site, 300)
+        
+    return pd.DataFrame(out, index = ['Declinação', 'Inclinação'])
+
+# build_dataframe()

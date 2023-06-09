@@ -1,8 +1,6 @@
 import pyIGRF
-from .core import sites
 import numpy as np
-from .conversions import year_fraction
-from .dip import load_equator
+import GEO as gg
 from scipy.interpolate import CubicSpline
 from intersect import intersection
 from scipy.signal import argrelmin
@@ -31,7 +29,7 @@ def intersec_with_equator(x, y):
      """
      Find intersection point between equator and meridian line 
      """
-     eq = load_equator()
+     eq = gg.load_equator()
      
      nx, ny = intersection(eq[:, 0], eq[:, 1], x, y)
      return nx.item(), ny.item()
@@ -86,7 +84,7 @@ class meridians:
             delta = 1):
         
         if isinstance(date, (dt.datetime, dt.date)):
-            yy = year_fraction(date)
+            yy = gg.year_fraction(date)
         else:
             yy = date 
         
@@ -237,11 +235,3 @@ def split_meridian(
 
     return lon, lat
 
-
-def main():
-    date = dt.datetime(2013, 1, 1, 1, 21)
-    
-    glat, glon = sites["saa"]["coords"]
-    
-    save_meridian(date, glon, glat)
-    
