@@ -9,14 +9,15 @@ from build import paths as p
 
 def plot_mapping_with_sites_locations():
     
-    fig, axs = plt.subplots(figsize = (10, 10),
-                           subplot_kw={'projection': ccrs.PlateCarree()})
+    fig, axs = plt.subplots(
+        figsize = (10, 10),
+        subplot_kw={'projection': ccrs.PlateCarree()}
+        )
 
     s.config_labels()
 
     m.map_features(axs)
 
-        
     lat = m.limits(min = -40.0, max = 10, stp = 10)
     lon = m.limits(min = -80, max = -30, stp = 10)    
 

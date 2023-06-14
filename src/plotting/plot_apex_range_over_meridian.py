@@ -66,16 +66,3 @@ def plot_site_and_closest_meridian(
 
 
 
-from GEO import quick_map
-import json
-
-fig, ax = quick_map()
-
-infile = "GEO/src/meridian.json"
-
-dat = json.load(open(infile))
-
-x = np.array(dat['mx'])
-y = np.array(dat['my'])
-
-ax.plot(x, y, )
