@@ -1,10 +1,6 @@
 import shapely.geometry as sgeom
 from cartopy.geodesic import Geodesic
 import cartopy.crs as ccrs
-from GNSS.IPP import convert_coords
-import json 
-
-
 
 def find_range(x, y, clon, clat, radius = 500):
     
@@ -53,40 +49,6 @@ def circle_range(
 
 
     
-def get_receivers_in_range(
-        path_json, 
-        sites,
-        ranged = False, 
-        ax = None
-        ):
-    
-    args = dict(marker = "o", 
-                color = "k", 
-                markersize = 7
-                )
-
-    dat = json.load(open(path_json)) 
-    
-    out = []
-    
-    for site, coords in dat.items():
-        try:
-            positions = coords["position"]
-            ox, oy, oz = tuple([float(f) for f in positions])
-            lon, lat, alt = convert_coords(ox, oy, oz, 
-                                           to_radians = False)
-            
-            for site in sites.keys():
-                clat, clon = tuple(sites[site].values())
-                
-                if ranged and find_range(lon, lat, clon, clat):
-                    out.append(coords["filename"])
-                    ax.plot(lon, lat, **args) 
-                else:
-                    ax.plot(lon, lat, **args)
-        except:
-            pass
-    return out
 
 
 def plot_square_area(ax, 
