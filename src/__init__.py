@@ -11,6 +11,9 @@ from .meridians import (
 from .dip import load_equator
 from .conversions import year_fraction
 from .dawn_dusk import dawn_dusk
+from .map_attrs import circle_range
+
 import settings as s
+
 
 s.config_labels()
