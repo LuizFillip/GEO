@@ -1,7 +1,7 @@
 import astral 
 from astral.sun import sun
 import pandas as pd
-
+from utils import dn2float
 
 def plot_lines(
         ax, date_list, 
@@ -11,7 +11,8 @@ def plot_lines(
         for regionF in dawn_dusk(dn,  
                     glat, 
                     glon, 
-                    twilightAngle = 18):
+                    twilightAngle = 18
+                    ):
         
             l2 = ax.axvline(regionF)
         
@@ -52,11 +53,6 @@ def dawn_dusk(
 
 
 
-def dn2float(arr):
-    return (arr.hour + 
-            arr.minute / 60 + 
-            arr.second / 3600)
-
 
 def twilights(
         dn, 
@@ -93,7 +89,7 @@ def run_years(
             f'{year}-12-31', 
             freq = '1D'
             ):
-        out.append(twilights(dn, twilightAngle = 18))
+        out.append(twilights(dn, twilightAngle = twilightAngle))
     
     return pd.concat(out)
 
@@ -106,7 +102,9 @@ def run_angles():
             year = year, 
             twilightAngle = angle
             )
-        df.to_csv(save_in + f'{2013}_{angle}.txt')
+        df.to_csv(
+            save_in + f'{2013}_{angle}.txt')
         
         
 
+run_angles()
