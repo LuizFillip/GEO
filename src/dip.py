@@ -95,4 +95,3 @@ def build_dataframe():
         
     return pd.DataFrame(out, index = ['Declinação', 'Inclinação'])
 
-# build_dataframe()

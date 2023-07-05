@@ -42,9 +42,11 @@ colors = ['red',  'blue', 'white']
 for i, site in enumerate(["car", "saa", 'caj']):
     s = sites[site]
     clat, clon = s["coords"]
-    ax.scatter(clon, clat, s = 200, 
+    ax.scatter(
+        clon, clat, s = 200, 
                marker = markers[i], 
-               label = f'{s["name"]} ({instrs[i]})')
+               label = f'{s["name"]} ({instrs[i]})'
+               )
    
         
     circle_range(

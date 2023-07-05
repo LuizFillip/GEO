@@ -106,17 +106,17 @@ lon_lims = dict(min = -80, max = -35, stp = 5)
 
 def quick_map(
         lat_lims = lat_lims, 
-        lon_lims = lon_lims
-        ):    
+        lon_lims = lon_lims,
+        figsize = (10, 10)):    
       
     fig, ax = plt.subplots(
-        figsize = (6, 6), 
+        figsize = figsize, 
         dpi = 300,  
         subplot_kw = 
         {'projection': ccrs.PlateCarree()}
         )
     
-    s.config_labels(fontsize = 15)
+    s.config_labels(fontsize = 20)
      
     map_attrs(ax, lon_lims, lat_lims)
             
