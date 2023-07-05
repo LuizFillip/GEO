@@ -1,22 +1,6 @@
 import astral 
 from astral.sun import sun
-import datetime as dt
-import matplotlib.pyplot as plt
-
-def dawn_dusk(dn,  
-            lat = -2.53, 
-            lon = -44.296, 
-            twilightAngle = 18):
-
-    observer = astral.Observer(latitude = lat, longitude = lon)
-    sun_phase = sun(observer, 
-                    dn, 
-                    dawn_dusk_depression = twilightAngle
-                    )
-    return sun_phase["dawn"], sun_phase["dusk"]
-
-date_list = [dt.datetime(2013, 1, 1), dt.datetime(2013, 1, 2)]
-
+import pandas as pd
 
 
 def plot_lines(
@@ -46,5 +30,83 @@ def plot_lines(
                      loc = "lower left", 
                      )        
     
+    return None
+
+def dawn_dusk(
+        dn,  
+        lat = -2.53, 
+        lon = -44.296, 
+        twilightAngle = 18
+        ):
+
+    observer = astral.Observer(
+        latitude = lat, 
+        longitude = lon
+        )
+    sun_phase = sun(
+        observer, 
+        dn, 
+        dawn_dusk_depression = twilightAngle
+        )
+    return sun_phase["dawn"], sun_phase["dusk"]
+
+
+
+def dn2float(arr):
+    return (arr.hour + 
+            arr.minute / 60 + 
+            arr.second / 3600)
+
+
+def twilights(
+        dn, 
+        lat = -2.53, 
+        lon = -44.296, 
+        twilightAngle = 18):
     
+    
+    times = sun(
+        astral.Observer(
+            latitude = lat, 
+            longitude = lon), 
+        dn, 
+        dawn_dusk_depression = twilightAngle
+                    
+        )
+    
+    del times['noon']
+    
+    for key in times.keys():
+        times[key] = dn2float(times[key])
+    
+    return pd.DataFrame(times, index = [dn])
+
+
+def run_years(
+        year = 2013, 
+        twilightAngle = 18
+        ):
+    
+    out = []
+    for dn in pd.date_range(
+            f'{year}-01-01', 
+            f'{year}-12-31', 
+            freq = '1D'
+            ):
+        out.append(twilights(dn, twilightAngle = 18))
+    
+    return pd.concat(out)
+
+def run_angles():
+    save_in = 'database/GEO/twilights/'
+    year = 2013
+    
+    for angle in [12, 18]:
+        df = run_years(
+            year = year, 
+            twilightAngle = angle
+            )
+        df.to_csv(save_in + f'{2013}_{angle}.txt')
+        
+        
 
