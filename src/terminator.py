@@ -176,16 +176,4 @@ def terminator(date, TwilightAngle):
     if id_lat:
         mc_lat[id_lat] = ma.masked
     
-    
-    
-    
-    
-    # delta_mask = lon_terminus - np.roll(lat_terminus, -1)        
-    # id = np.where(abs(delta_mask) > 180.)
-
-    # mc = ma.array(lat_terminus)
-    # mc[id] = ma.masked
-
-    # return lon_terminus, mc
     return mc_lon, mc_lat
-    # return lon_terminus, lat_terminus
