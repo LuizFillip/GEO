@@ -75,7 +75,6 @@ def limit_hemisphere(
         
 class meridians:
     
-    
     def __init__(
             self, 
             date, 
@@ -102,7 +101,7 @@ class meridians:
             -self.max_lat, self.max_lat, self.delta)[::-1]
         
         for lat in range_lats:
-            d, i, h, x, y, z, f = pyIGRF.igrf_value(
+            d, _, _, _, _, _, _ = pyIGRF.igrf_value(
                 lat, 
                 lon, 
                 alt = self.alt_mag, 
@@ -123,10 +122,16 @@ class meridians:
     def range_meridians(
             self, 
             lmin = -120, 
-            lmax = -30):
+            lmax = -30
+            ):
+        
         out = []
 
-        for lon in np.arange(lmin, lmax, self.delta):
+        for lon in np.arange(
+                lmin, 
+                lmax, 
+                self.delta
+                ):
             
             x, y = self.compute(lon)
                     
@@ -174,7 +179,7 @@ def save_meridian(
         date, 
         glon, 
         glat, 
-        save_in = 'GEO/src/meridian.json'
+        save_in = 'GEO/src/meridian_saa_2013.json'
         ):
     
     m = meridians(date)
@@ -192,6 +197,8 @@ def save_meridian(
     
     with open(save_in, 'w') as fp:
         json.dump(dic, fp)
+        
+    return dic
 
         
 def load_meridian(infile = "GEO/src/meridian.json"):
@@ -206,6 +213,10 @@ def load_meridian(infile = "GEO/src/meridian.json"):
 
 
 def interpolate(x, y, points = 30):
+    
+    """Interpolate the same number of points for different
+    ranges of meridians
+    """
          
     spl = CubicSpline(x, y)
     
