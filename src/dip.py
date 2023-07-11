@@ -95,3 +95,11 @@ def build_dataframe():
         
     return pd.DataFrame(out, index = ['Declinação', 'Inclinação'])
 
+def main():
+    for year in [2014, 2015]:
+        df = get_dip(year, 
+                    step_lon = 0.1, 
+                    step_lat = 0.1, 
+                    alt = 300)
+        
+        save_df(df, year)
