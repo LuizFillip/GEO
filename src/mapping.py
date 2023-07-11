@@ -71,11 +71,13 @@ def marker_sites(axs, sites):
                  transform = ccrs.PlateCarree())
         
 
-def mag_equator(ax):
+def mag_equator(ax, year = 2013):
     
     """Plotting geomagnetic equator"""
     
-    eq = g.load_equator()
+    infile = f'database/GEO/dip_{year}.txt'
+    
+    eq = g.load_equator(infile)
    
     ax.plot(
         eq[:, 0], 
@@ -86,7 +88,14 @@ def mag_equator(ax):
     return ax
 
 
-def map_attrs(axs, lon_lims, lat_lims):
+lat_lims = dict(min = -45, max = 15, stp = 5)
+lon_lims = dict(min = -80, max = -35, stp = 5) 
+
+def map_attrs(
+        axs, 
+        lon_lims = lon_lims, 
+        lat_lims = lat_lims
+        ):
 
     s.config_labels()
     
@@ -97,12 +106,8 @@ def map_attrs(axs, lon_lims, lat_lims):
     
     map_boundaries(axs, lon, lat)
    
-    mag_equator(axs)
-    
     return axs
 
-lat_lims = dict(min = -45, max = 15, stp = 5)
-lon_lims = dict(min = -80, max = -35, stp = 5) 
 
 def quick_map(
         lat_lims = lat_lims, 
@@ -119,6 +124,8 @@ def quick_map(
     s.config_labels(fontsize = 20)
      
     map_attrs(ax, lon_lims, lat_lims)
+    
+    mag_equator(ax)
             
     return fig, ax 
 
