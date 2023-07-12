@@ -21,7 +21,8 @@ def plot_lines(
                     glon, 
                     twilightAngle = 12):
         
-            l3 = ax.axvline(regionE, color = "blue")
+            l3 = ax.axvline(
+                regionE, color = "blue")
             
     
     
@@ -75,7 +76,7 @@ def twilights(
     return pd.DataFrame(times, index = [dn])
 
 
-def run_years(
+def run_days(
         year = 2013, 
         twilightAngle = 18
         ):
@@ -92,18 +93,27 @@ def run_years(
     
     return pd.concat(out)
 
-def run_angles(year = 2013):
-    save_in = 'database/GEO/twilights/'
+def run_years(angle = 0):
     
     
-    for angle in [0, 12, 18]:
-        df = run_years(
+    out = []
+    for year in [2013, 2014, 2015] :
+        out.append(
+            run_days(
             year = year, 
             twilightAngle = angle
             )
-        df.to_csv(
-            save_in + f'{year}_{angle}.txt')
+            )
+    return pd.concat(out)
+    
         
-def main():
-    for year in [2013, 2014, 2015]:
-        run_angles(year = year)
+def run_angles():
+    save_in = 'database/GEO/twilights/'
+    for angle in [0, 12, 18]:
+        df = run_years(angle = angle)
+        
+        df.to_csv(
+            save_in + f'{angle}.txt')
+        
+        
+# run_angles()
