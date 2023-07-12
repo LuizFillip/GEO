@@ -51,9 +51,6 @@ def dawn_dusk(
         )
     return sun_phase["dawn"], sun_phase["dusk"]
 
-
-
-
 def twilights(
         dn, 
         lat = -2.53, 
@@ -89,22 +86,24 @@ def run_years(
             f'{year}-12-31', 
             freq = '1D'
             ):
-        out.append(twilights(dn, twilightAngle = twilightAngle))
+        out.append(twilights(
+            dn, twilightAngle = twilightAngle)
+            )
     
     return pd.concat(out)
 
-def run_angles():
+def run_angles(year = 2013):
     save_in = 'database/GEO/twilights/'
-    year = 2013
     
-    for angle in [12, 18]:
+    
+    for angle in [0, 12, 18]:
         df = run_years(
             year = year, 
             twilightAngle = angle
             )
         df.to_csv(
-            save_in + f'{2013}_{angle}.txt')
+            save_in + f'{year}_{angle}.txt')
         
-        
-
-# run_angles()
+def main():
+    for year in [2013, 2014, 2015]:
+        run_angles(year = year)
