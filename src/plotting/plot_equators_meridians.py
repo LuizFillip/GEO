@@ -2,7 +2,10 @@ import cartopy.crs as ccrs
 import matplotlib.pyplot as plt
 import GEO as g
 
-def plot_equators_meridians():
+def plot_equators_meridians(
+        years = [2013, 2014, 2015],
+        site = 'saa'
+        ):
 
     fig, ax = plt.subplots(
         figsize = (8, 8), 
@@ -22,8 +25,7 @@ def plot_equators_meridians():
     g.map_boundaries(ax, lon, lat)
     
     
-    colors = ['k', 'b', 'g']
-    years = [2013, 2014, 2015]
+    colors = ['r', 'b', 'g']
     for i, year in enumerate(years):
         g.mag_equator(
             ax, 
@@ -31,5 +33,14 @@ def plot_equators_meridians():
             color = colors[i]
             )
         
+        nx, ny, x, y = g.load_meridian(year)
+        
+        ax.plot(x, y, lw = 2)
+        
+    glat, glon = g.sites['saa']['coords']
+    
+    ax.scatter(glon, glat, s = 200, label = 'São Luis')
+    
     ax.legend(years, loc = 'upper right')
     
+plot_equators_meridians([2013])
