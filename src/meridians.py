@@ -25,11 +25,12 @@ def find_closest(arr, val):
    idx = np.abs(arr - val).argmin()
    return idx
 
-def intersec_with_equator(x, y):
+def intersec_with_equator(x, y, year = 2013):
      """
-     Find intersection point between equator and meridian line 
+     Find intersection point between equator 
+     and meridian line 
      """
-     eq = gg.load_equator()
+     eq = gg.load_equator(year)
      
      nx, ny = intersection(eq[:, 0], eq[:, 1], x, y)
      return nx.item(), ny.item()
@@ -42,7 +43,8 @@ def limit_hemisphere(
         ):
     
     """
-    Get range limits in each hemisphere by radius (in degrees)
+    Get range limits in each hemisphere by 
+    radius (in degrees)
     
     """    
     # find meridian indexes (x and y) 
@@ -80,7 +82,8 @@ class meridians:
             date, 
             alt_mag = 300,
             max_lat = 40, 
-            delta = 1):
+            delta = 1
+            ):
         
         if isinstance(date, (dt.datetime, dt.date)):
             yy = gg.year_fraction(date)
@@ -178,15 +181,17 @@ class meridians:
 def save_meridian(
         date, 
         glon, 
-        glat, 
-        save_in = 'GEO/src/meridian_saa_2013.json'
+        glat
         ):
+    
+    year = date.year
+    save_in = f'database/GEO/meridians/saa_{year}.json'
     
     m = meridians(date)
 
     x, y = m.closest_from_site(glon, glat)
 
-    nx, ny = intersec_with_equator(x, y)
+    nx, ny = intersec_with_equator(x, y, year)
     
     dic = {
         "mx": x.tolist(), 
@@ -229,7 +234,8 @@ def interpolate(x, y, points = 30):
 def split_meridian(
         rlat,
         hemisphere = "north",
-        points = None):
+        points = None
+        ):
     
     nx, ny, x, y = load_meridian()
     
@@ -246,3 +252,15 @@ def split_meridian(
 
     return lon, lat
 
+from GEO import sites
+
+
+glat, glon = sites['saa']['coords']
+
+date = dt.datetime(2014, 1, 1)
+
+save_meridian(
+        date, 
+        glon, 
+        glat
+        )
