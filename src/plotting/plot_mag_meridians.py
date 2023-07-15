@@ -80,8 +80,6 @@ def plot_mag_meridians(
     
     plot_sites(ax)
     
-        
-    
     ax.set(title = f"{alt} km - {year}")
     ax.legend(ncol = 1, loc = "upper right")
     

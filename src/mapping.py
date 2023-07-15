@@ -14,7 +14,7 @@ class limits(object):
 
 def map_features(ax, grid = False):
     
-    states_provinces = cf.NaturalEarthFeature(
+    states = cf.NaturalEarthFeature(
                         category = 'cultural',
                         name = 'admin_1_states_provinces_lines',
                         scale = '50m',
@@ -22,7 +22,7 @@ def map_features(ax, grid = False):
     
     args = dict(edgecolor = 'black', lw = 1)
     
-    ax.add_feature(states_provinces, **args)
+    ax.add_feature(states, **args)
     ax.add_feature(cf.COASTLINE, **args) 
     ax.add_feature(cf.BORDERS, linestyle = '-', **args)
     
@@ -37,21 +37,28 @@ def map_features(ax, grid = False):
     
     
 def map_boundaries(ax, lon, lat):
+  
+    ax.set_extent(
+        [lon.min, lon.max, 
+        lat.min, lat.max], 
+        crs = ccrs.PlateCarree()
+        )
 
-    
-    ax.set_extent([lon.min, lon.max, 
-                   lat.min, lat.max], 
-                  crs = ccrs.PlateCarree())
+    ax.set_xticks(np.arange(
+        lon.min, 
+        lon.max + lon.stp, 
+        lon.stp
+        ), 
+        crs = ccrs.PlateCarree()
+        ) 
 
-    ax.set_xticks(np.arange(lon.min, 
-                            lon.max + lon.stp, 
-                            lon.stp), 
-                  crs = ccrs.PlateCarree()) 
-
-    ax.set_yticks(np.arange(lat.min, 
-                            lat.max + lat.stp, 
-                            lat.stp), 
-                  crs = ccrs.PlateCarree())
+    ax.set_yticks(np.arange(
+        lat.min, 
+        lat.max + lat.stp, 
+        lat.stp
+        ), 
+        crs = ccrs.PlateCarree()
+        )
     
     ax.set(ylabel = 'Latitude (°)',  
            xlabel = 'Longitude (°)') 
@@ -71,7 +78,7 @@ def marker_sites(axs, sites):
                  transform = ccrs.PlateCarree())
         
 
-def mag_equator(ax, year = 2013):
+def mag_equator(ax, year = 2013, color = 'r'):
     
     """Plotting geomagnetic equator"""
     
@@ -82,7 +89,7 @@ def mag_equator(ax, year = 2013):
     ax.plot(
         eq[:, 0], 
         eq[:, 1], 
-        color = "r", 
+        color = color, 
         lw = 1
         )
     return ax
@@ -93,12 +100,10 @@ lon_lims = dict(min = -80, max = -35, stp = 5)
 
 def map_attrs(
         axs, 
-        lon_lims = lon_lims, 
-        lat_lims = lat_lims
+        lon_lims, 
+        lat_lims
         ):
 
-    s.config_labels()
-    
     map_features(axs)
     
     lat = limits(**lat_lims)
