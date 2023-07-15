@@ -16,7 +16,7 @@ from .dip import load_equator
 from .conversions import year_fraction
 from .dawn_dusk import dawn_dusk
 from .map_attrs import circle_range
-
+from .split_regions import slip_array
 import settings as s
 
 
