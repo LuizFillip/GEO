@@ -78,13 +78,15 @@ def marker_sites(axs, sites):
                  transform = ccrs.PlateCarree())
         
 
-def mag_equator(ax, year = 2013, color = 'r'):
+def mag_equator(
+        ax, 
+        year = 2013, 
+        color = 'r'
+        ):
     
     """Plotting geomagnetic equator"""
-    
-    infile = f'database/GEO/dip_{year}.txt'
-    
-    eq = g.load_equator(infile)
+        
+    eq = g.load_equator(year)
    
     ax.plot(
         eq[:, 0], 

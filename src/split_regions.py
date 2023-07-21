@@ -1,11 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Jun 15 13:01:14 2023
-
-@author: Luiz
-"""
-
-
 lat_min = -10
 lat_max = -2
 lon_max = -32

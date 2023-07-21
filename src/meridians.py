@@ -5,7 +5,6 @@ from scipy.interpolate import CubicSpline
 from intersect import intersection
 from scipy.signal import argrelmin
 import datetime as dt
-
 import json
 
 def compute_distance(x, y, x0, y0):
@@ -111,7 +110,8 @@ class meridians:
                 year = self.year
                 )
            
-            new_point_x = lon - self.delta * np.tan(np.radians(d))
+            new_point_x = (lon - self.delta *
+                           np.tan(np.radians(d)))
             new_point_y = lat - self.delta
             
             lon = new_point_x
@@ -206,7 +206,9 @@ def save_meridian(
     return dic
 
         
-def load_meridian(infile = "GEO/src/meridian.json"):
+def load_meridian(year, site = 'saa'):
+    
+    infile = f"database/GEO/meridians/{site}_{year}.json"
     dat = json.load(open(infile))
 
     x = np.array(dat["mx"])
@@ -252,15 +254,15 @@ def split_meridian(
 
     return lon, lat
 
-from GEO import sites
+def main():
 
-
-glat, glon = sites['saa']['coords']
-
-date = dt.datetime(2014, 1, 1)
-
-save_meridian(
-        date, 
-        glon, 
-        glat
-        )
+    glat, glon = gg.sites['saa']['coords']
+    
+    date = dt.datetime(2015, 1, 1)
+    
+    save_meridian(
+            date, 
+            glon, 
+            glat
+            )
+# main()
