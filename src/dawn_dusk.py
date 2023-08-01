@@ -1,11 +1,20 @@
 import astral 
 from astral.sun import sun
 import pandas as pd
-from utils import dn2float
+import GEO as gg
+
+def dn2float(arr):
+    """Not sum an"""
+    return (arr.hour + 
+            arr.minute / 60 + 
+            arr.second / 3600)
 
 def plot_lines(
         ax, date_list, 
-        glat = -2.53, glon= -44.296):
+        site = 'saa'
+        ):
+    
+    glat, glon = gg.sites[site]['coords']
 
     for dn in date_list:
         for regionF in dawn_dusk(dn,  

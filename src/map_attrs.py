@@ -62,10 +62,12 @@ def plot_square_area(ax,
     
     ax.plot([lon_min, lon_max, 
              lon_max, lon_min, lon_min], 
-            [lat_min, lat_min, lat_max, lat_max, lat_min],
+            [lat_min, lat_min, 
+             lat_max, lat_max, lat_min],
              color='black', 
              linewidth = 4, 
              marker='.',
              transform=ccrs.PlateCarree(), 
              )
     return
+

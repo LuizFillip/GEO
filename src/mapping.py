@@ -2,7 +2,6 @@ import cartopy.feature as cf
 import cartopy.crs as ccrs
 import numpy as np
 import GEO as g
-import settings as s
 import matplotlib.pyplot as plt
 
 class limits(object):
@@ -127,9 +126,7 @@ def quick_map(
         subplot_kw = 
         {'projection': ccrs.PlateCarree()}
         )
-    
-    s.config_labels(fontsize = 20)
-     
+         
     map_attrs(ax, lon_lims, lat_lims)
     
     mag_equator(ax)

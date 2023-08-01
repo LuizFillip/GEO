@@ -121,7 +121,8 @@ def gc2gdlat(gclat):
 
     """
     WGS84_e2 = 0.006694379990141317  # WGS84 first eccentricity squared
-    return np.rad2deg(-np.arctan(np.tan(np.deg2rad(gclat)) / (WGS84_e2 - 1)))
+    return np.rad2deg(-np.arctan(np.tan(np.deg2rad(gclat)) 
+                                 / (WGS84_e2 - 1)))
 
 
 def subsol(datetime):

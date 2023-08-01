@@ -11,7 +11,10 @@ from .meridians import (
     limit_hemisphere, 
     split_meridian, 
     interpolate, 
-    load_meridian)
+    compute_distance,
+    load_meridian, 
+    find_closest
+    )
 from .dip import load_equator
 from .conversions import year_fraction
 from .dawn_dusk import dawn_dusk

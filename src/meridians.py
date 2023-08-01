@@ -31,7 +31,9 @@ def intersec_with_equator(x, y, year = 2013):
      """
      eq = gg.load_equator(year)
      
-     nx, ny = intersection(eq[:, 0], eq[:, 1], x, y)
+     nx, ny = intersection(
+         eq[:, 0], eq[:, 1], x, y
+         )
      return nx.item(), ny.item()
 
 def limit_hemisphere(
