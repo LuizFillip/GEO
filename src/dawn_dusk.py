@@ -1,7 +1,7 @@
 import astral 
 from astral.sun import sun
 import pandas as pd
-import GEO as gg
+import numpy as np
 
 def dn2float(arr):
     """Not sum an"""
@@ -9,39 +9,22 @@ def dn2float(arr):
             arr.minute / 60 + 
             arr.second / 3600)
 
-def plot_lines(
-        ax, date_list, 
-        site = 'saa'
-        ):
-    
-    glat, glon = gg.sites[site]['coords']
 
-    for dn in date_list:
-        for regionF in dawn_dusk(dn,  
-                    glat, 
-                    glon, 
-                    twilightAngle = 18
-                    ):
+def plot_terminators(ax, ds, dusk = True):
+    dates = np.unique(ds.index.date)[:-1]
+    
+    color = ["cyan", "k"]
+    if dusk:
+        dates = dates[-1]
+        color = color[-1]
+    for dn in dates:
+        for i, d in enumerate(dawn_dusk(dn)):
         
-            l2 = ax.axvline(regionF)
-        
-        for regionE in dawn_dusk(dn,  
-                    glat, 
-                    glon, 
-                    twilightAngle = 12):
-        
-            l3 = ax.axvline(
-                regionE, color = "blue")
+            ax.axvline(d, linestyle = "--", 
+                       color = color[i])
             
-    
-    
-    labels = ["300 km", "120 km"]
-    
-    ax.legend([l2, l3], labels, 
-                     loc = "lower left", 
-                     )        
-    
-    return None
+    return d
+
 
 def dawn_dusk(
         dn,  
@@ -65,7 +48,8 @@ def twilights(
         dn, 
         lat = -2.53, 
         lon = -44.296, 
-        twilightAngle = 18):
+        twilightAngle = 18
+        ):
     
     
     times = sun(
@@ -97,7 +81,8 @@ def run_days(
             freq = '1D'
             ):
         out.append(twilights(
-            dn, twilightAngle = twilightAngle)
+            dn, 
+            twilightAngle = twilightAngle)
             )
     
     return pd.concat(out)
@@ -122,7 +107,8 @@ def run_angles():
         df = run_years(angle = angle)
         
         df.to_csv(
-            save_in + f'{angle}.txt')
+            save_in + f'{angle}.txt'
+            )
         
         
 # run_angles()

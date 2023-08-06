@@ -14,16 +14,18 @@ class limits(object):
 def map_features(ax, grid = False):
     
     states = cf.NaturalEarthFeature(
-                        category = 'cultural',
-                        name = 'admin_1_states_provinces_lines',
-                        scale = '50m',
-                        facecolor = 'none')
+        category = 'cultural',
+        name = 'admin_1_states_provinces_lines',
+        scale = '50m',
+        facecolor = 'none'
+        )
     
     args = dict(edgecolor = 'black', lw = 1)
     
     ax.add_feature(states, **args)
     ax.add_feature(cf.COASTLINE, **args) 
-    ax.add_feature(cf.BORDERS, linestyle = '-', **args)
+    ax.add_feature(
+        cf.BORDERS, linestyle = '-', **args)
     
     if grid:
     
@@ -80,19 +82,21 @@ def marker_sites(axs, sites):
 def mag_equator(
         ax, 
         year = 2013, 
-        color = 'r'
+        degress = None
         ):
     
     """Plotting geomagnetic equator"""
         
     eq = g.load_equator(year)
-   
-    ax.plot(
-        eq[:, 0], 
-        eq[:, 1], 
-        color = color, 
-        lw = 1
-        )
+    x, y = eq[:, 0], eq[:, 1] 
+    ax.plot(x, y, color = 'r', lw = 2)
+    
+    if degress is not None:
+        ax.fill_between(x, 
+                        y + degress, 
+                        y - degress, 
+                        alpha = 0.3
+                        )
     return ax
 
 
@@ -118,7 +122,10 @@ def map_attrs(
 def quick_map(
         lat_lims = lat_lims, 
         lon_lims = lon_lims,
-        figsize = (10, 10)):    
+        figsize = (10, 10),
+        year = 2014,
+        degress = 10
+        ):    
       
     fig, ax = plt.subplots(
         figsize = figsize, 
@@ -129,7 +136,10 @@ def quick_map(
          
     map_attrs(ax, lon_lims, lat_lims)
     
-    mag_equator(ax)
+    mag_equator(ax, 
+                year = year, 
+                degress = degress
+                )
             
     return fig, ax 
 
