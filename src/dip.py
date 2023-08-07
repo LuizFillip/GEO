@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import GEO as gg
-
+import os
 
 def dec_dip(
         year = 2013, 
@@ -84,7 +84,7 @@ def get_dip(date = 2013,
 
 
 def load_equator(year):
-    infile = f'database/GEO/dips/dip_{year}.txt'
+    infile = os.getcwd() + f'/database/GEO/dips/dip_{year}.txt'
     return pd.read_csv(infile, index_col = 0).values
 
 def build_dataframe():
@@ -102,3 +102,5 @@ def main():
                     alt = 300)
         
         save_df(df, year)
+        
+    

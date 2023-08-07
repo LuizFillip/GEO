@@ -27,6 +27,7 @@ def delta_timezone(
         latitude = latitude
         )
     utc_time = dn.astimezone(pytz.utc)
+    # utc_time = dn.tz_localize(pytz.timezone("UTC"))
     local = dn.astimezone(location)
     
     
