@@ -4,6 +4,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import GEO as gg
 import os
+from tqdm import tqdm 
+
 
 def dec_dip(
         year = 2013, 
@@ -30,10 +32,13 @@ def run_igrf(
         alt = 250,
         cols = ["lat", "lon", "d", "i"]
         ):
-
+    
+    longitudes = np.arange(-180, 180 + step_lon, step_lon)
+    latitudes = np.arange(-90, 90 + step_lat, step_lat)
     out = []
-    for lat in np.arange(-90, 90 + step_lat, step_lat):
-        for lon in np.arange(-180, 180 + step_lon, step_lon):
+    for lat in latitudes:
+        for lon in tqdm(longitudes, 
+                        desc = str(lat)):
             
             d, i, h, x, y, z, f = pyIGRF.igrf_value(
                 lat, lon, 
@@ -46,13 +51,7 @@ def run_igrf(
     return pd.DataFrame(out, columns = cols)
  
 
-def save_df(df, year):
-
-    name_to_save = f"database/GEO/dip_{year}.txt"
-    df.to_csv(name_to_save,
-              sep = ",",
-              index = True, 
-              header = True)        
+ 
 
 def get_dip(date = 2013, 
             step_lon = 0.1, 
@@ -94,13 +93,23 @@ def build_dataframe():
         
     return pd.DataFrame(out, index = ['Declinação', 'Inclinação'])
 
+def save_df(df, year):
+
+    name_to_save = f"database/GEO/dips/dip_{year}.txt"
+    df.to_csv(name_to_save,
+              sep = ",",
+              index = True, 
+              header = True)       
+    
 def main():
-    for year in [2014, 2015]:
+    for year in [2016]:
         df = get_dip(year, 
                     step_lon = 0.1, 
                     step_lat = 0.1, 
                     alt = 300)
         
         save_df(df, year)
+        
+# main()
         
     
