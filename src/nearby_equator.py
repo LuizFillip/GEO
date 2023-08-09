@@ -16,7 +16,8 @@ def distance_from_equator(
 def stations_near_of_equator(
         year = 2015,
         distance = 6, 
-        extra_sts = ['ceeu', 'ceft', 'rnna', 'pbjp']
+        extra_sts = ['ceeu', 'ceft',
+                     'rnna', 'pbjp']
         ):
     
     infile = f'database/GEO/coords/{year}.json'
@@ -39,6 +40,4 @@ def stations_near_of_equator(
             
     return out + extra_sts
 
-list_stations = stations_near_of_equator()
 
-print(list_stations)

@@ -122,7 +122,7 @@ def map_attrs(
 def quick_map(
         lat_lims = lat_lims, 
         lon_lims = lon_lims,
-        figsize = (10, 10),
+        figsize = (8, 8),
         year = 2014,
         degress = 10
         ):    
