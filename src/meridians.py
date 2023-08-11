@@ -9,7 +9,8 @@ import json
 
 def compute_distance(x, y, x0, y0):
     
-    dis = np.sqrt(pow(x - x0, 2) + pow(y - y0, 2))
+    dis = np.sqrt(pow(x - x0, 2) + 
+                  pow(y - y0, 2))
     
     min_idxs = argrelmin(dis)[0]
     min_idx = min_idxs[np.argmin(dis[min_idxs])]
@@ -223,7 +224,8 @@ def load_meridian(year, site = 'saa'):
 
 def interpolate(x, y, points = 30):
     
-    """Interpolate the same number of points for different
+    """
+    Interpolate the same number of points for different
     ranges of meridians
     """
          
@@ -256,15 +258,19 @@ def split_meridian(
 
     return lon, lat
 
-def main():
+# def main():
+#     from GEO import sites
 
-    glat, glon = gg.sites['saa']['coords']
-    
-    date = dt.datetime(2015, 1, 1)
-    
-    save_meridian(
-            date, 
-            glon, 
-            glat
-            )
 # main()
+
+# glat, glon = gg.sites['saa']['coords']
+
+#     # glat, glon = sites['saa']['coords']
+    
+# date = dt.datetime(2017, 1, 1)
+
+# save_meridian(
+#         date, 
+#         glon, 
+#         glat
+#         )
