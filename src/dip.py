@@ -102,7 +102,7 @@ def save_df(df, year):
               header = True)       
     
 def main():
-    for year in range(2020, 2024):
+    for year in range(2021, 2023):
         df = get_dip(year, 
                     step_lon = 0.1, 
                     step_lat = 0.1, 

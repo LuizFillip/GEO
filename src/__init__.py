@@ -13,7 +13,8 @@ from .meridians import (
     interpolate, 
     compute_distance,
     load_meridian, 
-    find_closest
+    find_closest,
+    save_meridian
     )
 from .dip import load_equator
 from .conversions import year_fraction

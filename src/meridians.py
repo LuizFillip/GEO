@@ -258,20 +258,18 @@ def split_meridian(
 
     return lon, lat
 
-# def main():
-# from GEO import sites
-
-# main()
-
 
 # glat, glon = -2.53, -44.296
 
 #     # glat, glon = sites['saa']['coords']
     
-# date = dt.datetime(2020, 1, 1)
+# for year in [2021, 2022]:
+    
+#     date = dt.datetime(year, 1, 1)
+    
+#     save_meridian(
+#             date, 
+#             glon, 
+#             glat
+#             )
 
-# save_meridian(
-#         date, 
-#         glon, 
-#         glat
-#         )

@@ -24,4 +24,5 @@ sites = {
  'ttb': {'name': 'Tatuoca', 'coords': (-1.205, -48.51)}
  }
 
-
+# import datetime as dt
+# from GEO import save_meridian
