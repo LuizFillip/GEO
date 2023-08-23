@@ -1,7 +1,8 @@
 import astral 
 from astral.sun import sun
 import pandas as pd
-import numpy as np
+import GEO as gg
+from base import aware_dn
 
 def dn2float(arr):
     """Not sum an"""
@@ -9,21 +10,6 @@ def dn2float(arr):
             arr.minute / 60 + 
             arr.second / 3600)
 
-
-def plot_terminators(ax, ds, dusk = True):
-    dates = np.unique(ds.index.date)[:-1]
-    
-    color = ["cyan", "k"]
-    if dusk:
-        dates = dates[-1]
-        color = color[-1]
-    for dn in dates:
-        for i, d in enumerate(dawn_dusk(dn)):
-        
-            ax.axvline(d, linestyle = "--", 
-                       color = color[i])
-            
-    return d
 
 
 def dawn_dusk(
@@ -43,6 +29,24 @@ def dawn_dusk(
         dawn_dusk_depression = twilightAngle
         )
     return sun_phase["dawn"], sun_phase["dusk"]
+
+
+
+
+def sun_terminator(
+        dn, 
+        twilight_angle = 0, 
+        site = 'saa'
+        ):
+    glat, glon = gg.sites[site]['coords']
+    sun_phase = dawn_dusk(
+           dn,  
+           lat = glat, 
+           lon = glon, 
+           twilightAngle = twilight_angle
+           )
+    return aware_dn(sun_phase[1])
+
 
 def twilights(
         dn, 
@@ -67,7 +71,6 @@ def twilights(
         times[key] = dn2float(times[key])
     
     return pd.DataFrame(times, index = [dn])
-
 
 def run_days(
         year = 2013, 

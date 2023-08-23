@@ -51,11 +51,13 @@ def circle_range(
     
 
 
-def plot_square_area(ax, 
-                   lat_min = -12, 
-                   lat_max = -2, 
-                   lon_max = -32, 
-                   lon_min = -42):
+def plot_square_area(
+        ax, 
+        lat_min = -12, 
+        lat_max = -2, 
+        lon_max = -32, 
+        lon_min = -42
+        ):
     
     
     """Plotting square area by coords limits"""
@@ -69,5 +71,18 @@ def plot_square_area(ax,
              marker='.',
              transform=ccrs.PlateCarree(), 
              )
+    
+    
+    center_lat = (lat_max + lat_min) / 2
+    center_lon = (lon_max + lon_min) / 2
+
+    ax.scatter(center_lon, center_lat)
     return
 
+
+
+
+lat_min = -12 
+lat_max = -2 
+lon_max = -32
+lon_min = -42

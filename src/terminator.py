@@ -132,7 +132,9 @@ def terminator(date, TwilightAngle):
         )
 
     sun_lon = 15.0 * (ra - lm_sidereal_time)
-    scanAngle = np.arcsin((earthRadius / (sun_distance * 1.4956e11)) * np.sin(1.25663706))
+    scanAngle = np.arcsin(
+        (earthRadius / (sun_distance * 1.4956e11)
+         ) * np.sin(1.25663706))
     arc_dist = np.pi - 1.57080 - scanAngle + TwilightAngle * 0.017453295
     cdist = np.cos(arc_dist)		
     sdist = np.sin(arc_dist)
@@ -147,7 +149,9 @@ def terminator(date, TwilightAngle):
         cosll1 = np.cos(sun_lat * dg2rad)
 
         phi = np.arcsin(sinll1 * cdist + cosll1 * sdist * np.cos(az))
-        lam = (sun_lon * dg2rad) + np.arctan2(sdist * np.sin(az), cosll1*cdist - sinll1 * sdist * np.cos(az))
+        lam = (sun_lon * dg2rad) + np.arctan2(
+            sdist * np.sin(az), 
+            cosll1*cdist - sinll1 * sdist * np.cos(az))
 
         while lam < -np.pi: lam = lam + 2 * np.pi
         while lam > np.pi: lam = lam - 2 * np.pi
