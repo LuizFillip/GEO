@@ -56,7 +56,10 @@ def run_igrf(
 def get_dip(date = 2013, 
             step_lon = 0.1, 
             step_lat = 0.1, 
-            alt = 300):   
+            alt = 300
+            ):   
+    
+    print('[compute_dip]', date)
      
     df = run_igrf(
         date, 
@@ -111,5 +114,14 @@ def main():
         save_df(df, year)
         # 
 # main()
+
+# year= 2012
+
         
+# df = get_dip(year, 
+#             step_lon = 0.1, 
+#             step_lat = 0.1, 
+#             alt = 300)
+
+# save_df(df, year)
     
