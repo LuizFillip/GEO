@@ -11,7 +11,7 @@ def limit_hemisphere(
         y, 
         nx, ny, 
         rlat = 0, 
-        hemisphere = "south"
+        hemisphere = 'both'
         ):
     
     """
@@ -51,18 +51,20 @@ class meridians:
     
     def __init__(
             self, 
-            date, 
+            dn, 
             alt_mag = 300,
             max_lat = 40, 
             delta = 1
             ):
         
-        if isinstance(date, (dt.datetime, dt.date)):
-            yy = gg.year_fraction(date)
+        if isinstance(
+                dn, 
+                (dt.datetime, dt.date)):
+            date = gg.year_fraction(dn)
         else:
-            yy = date 
+            date = dn
         
-        self.year = yy
+        self.year = date
         self.alt_mag = alt_mag
         self.max_lat = max_lat
         self.delta = delta
@@ -83,8 +85,10 @@ class meridians:
                 year = self.year
                 )
            
-            new_point_x = (lon - self.delta *
-                           np.tan(np.radians(d)))
+            new_point_x = (
+                lon - self.delta *
+                np.tan(np.radians(d))
+                )
             new_point_y = lat - self.delta
             
             lon = new_point_x
@@ -177,7 +181,7 @@ def split_meridian(
         rlat,
         site = 'jic',
         year = 2013,
-        hemisphere = "north",
+        hemisphere = 'both',
         points = None
         ):
     
@@ -199,14 +203,4 @@ def split_meridian(
 
     return lon, lat
 
-# date = dt.datetime(2013, 1, 1)
-# site = 'jic'
-# glat, glon = gg.sites[site]['coords']
-# m = meridians(date)
-
-# x, y = m.closest_from_site(
-#     glon, 
-#     glat, 
-#     interpol = False
-#     )
 
