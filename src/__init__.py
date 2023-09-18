@@ -1,4 +1,6 @@
 from .sites_infos import sites
+from .conversions import year_fraction
+
 from .mapping import (
     limits,
     quick_map, 
@@ -9,15 +11,18 @@ from .mapping import (
     )
 from .meridians import (
     limit_hemisphere, 
-    split_meridian, 
-    interpolate, 
-    compute_distance,
-    load_meridian, 
-    find_closest,
+    meridians,
+    split_meridian,
     save_meridian
     )
+from .meridian_utils import (
+    interpolate, 
+    compute_distance,
+    intersec_with_equator,
+    load_meridian, 
+    find_closest
+    )
 from .dip import load_equator
-from .conversions import year_fraction
 from .dawn_dusk import dawn_dusk, sun_terminator
 from .map_attrs import circle_range
 from .split_regions import slip_array

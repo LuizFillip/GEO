@@ -1,44 +1,14 @@
 import pyIGRF
 import numpy as np
 import GEO as gg
-from scipy.interpolate import CubicSpline
-from intersect import intersection
-from scipy.signal import argrelmin
 import datetime as dt
 import json
 
-def compute_distance(x, y, x0, y0):
-    
-    dis = np.sqrt(pow(x - x0, 2) + 
-                  pow(y - y0, 2))
-    
-    min_idxs = argrelmin(dis)[0]
-    min_idx = min_idxs[np.argmin(dis[min_idxs])]
-    
-    min_x = x[min_idx]
-    min_y = y[min_idx]
-    min_d = dis[min_idx]
-    
-    return min_x, min_y, min_d
-
-def find_closest(arr, val):
-   idx = np.abs(arr - val).argmin()
-   return idx
-
-def intersec_with_equator(x, y, year = 2013):
-     """
-     Find intersection point between equator 
-     and meridian line 
-     """
-     eq = gg.load_equator(year)
-     
-     nx, ny = intersection(
-         eq[:, 0], eq[:, 1], x, y
-         )
-     return nx.item(), ny.item()
+MERIDIAN_PATH = 'WSL/meridians/'
 
 def limit_hemisphere(
-        x, y, 
+        x, 
+        y, 
         nx, ny, 
         rlat = 0, 
         hemisphere = "south"
@@ -51,24 +21,24 @@ def limit_hemisphere(
     """    
     # find meridian indexes (x and y) 
     # where cross the equator and upper limit
-    eq_x = find_closest(x, nx)  
-    eq_y = find_closest(y, ny)  
+    eq_x = gg.find_closest(x, nx)  
+    eq_y = gg.find_closest(y, ny)  
 
     # create a line above of intersection point 
     # with radius from apex latitude 
     if hemisphere == "south":
-        end = find_closest(y, ny - rlat)
+        end = gg.find_closest(y, ny - rlat)
         set_x = x[eq_x: end + 1]
         set_y = y[eq_y: end + 1]
     
     elif hemisphere == "north":
-        start = find_closest(y, ny + rlat)
+        start = gg.find_closest(y, ny + rlat)
         set_x = x[start: eq_x + 1]
         set_y = y[start: eq_y + 1]
         
     else:
-        end = find_closest(y, ny - rlat) + 1
-        start = find_closest(y, ny + rlat)
+        end = gg.find_closest(y, ny - rlat) + 1
+        start = gg.find_closest(y, ny + rlat)
         set_x = x[start: end]
         set_y = y[start: end]
         
@@ -146,7 +116,10 @@ class meridians:
         return np.array(out)
     
     def closest_from_site(
-            self, glon, glat, interpol = True
+            self, 
+            glon, 
+            glat, 
+            interpol = True
             ):
         
         arr = self.range_meridians()
@@ -156,7 +129,7 @@ class meridians:
         for num in range(arr.shape[0]):
             x, y = arr[num][0], arr[num][1]
             
-            min_x, min_y, min_d = compute_distance(
+            min_x, min_y, min_d = gg.compute_distance(
                 x, y, glon, glat)
                 
             out[num] = min_d
@@ -164,37 +137,26 @@ class meridians:
         closest = min(out, key = out.get)
         
         x, y = arr[closest][0], arr[closest][1]
-        
-        if interpol:
-            x, y = self.interpolate(x, y)
-        
+      
         return x, y 
     
-    @staticmethod
-    def interpolate(x, y, factor = 3):
-             
-        spl = CubicSpline(x, y)
-        
-        new_lon = np.linspace(x[0], x[-1], len(x) * factor)    
-        new_lat = spl(new_lon)
-        
-        return np.round(new_lon, 3), np.round(new_lat, 3)
-        
-        
+   
 def save_meridian(
         date, 
         glon, 
-        glat
+        glat, 
+        site = 'saa'
         ):
     
     year = date.year
-    save_in = f'database/GEO/meridians/saa_{year}.json'
+
+    name = f'{site}_{year}.json'
     
     m = meridians(date)
 
     x, y = m.closest_from_site(glon, glat)
 
-    nx, ny = intersec_with_equator(x, y, year)
+    nx, ny = gg.intersec_with_equator(x, y, year)
     
     dic = {
         "mx": x.tolist(), 
@@ -203,47 +165,26 @@ def save_meridian(
         "ny": ny
         }
     
-    with open(save_in, 'w') as fp:
+    with open(
+            MERIDIAN_PATH + name, 'w'
+            ) as fp:
         json.dump(dic, fp)
         
     return dic
 
         
-def load_meridian(year, site = 'saa'):
-    
-    infile = f"database/GEO/meridians/{site}_{year}.json"
-    dat = json.load(open(infile))
-
-    x = np.array(dat["mx"])
-    y = np.array(dat["my"])
-
-    nx = dat["nx"]
-    ny = dat["ny"]
-    return nx, ny, x, y
-
-
-def interpolate(x, y, points = 30):
-    
-    """
-    Interpolate the same number of points for different
-    ranges of meridians
-    """
-         
-    spl = CubicSpline(x, y)
-    
-    new_lon = np.linspace(x[0], x[-1], points)    
-    new_lat = spl(new_lon)
-    
-    return np.round(new_lon, 3), np.round(new_lat, 3)
-
-
 def split_meridian(
         rlat,
+        site = 'jic',
+        year = 2013,
         hemisphere = "north",
         points = None
         ):
     
-    nx, ny, x, y = load_meridian()
+    name = f'{site}_{year}.json'
+    nx, ny, x, y = gg.load_meridian(
+        MERIDIAN_PATH + name
+        )
     
     lon, lat = limit_hemisphere(
             x, y, nx, ny, 
@@ -252,24 +193,20 @@ def split_meridian(
             )
     
     if points is not None:
-        lon, lat = interpolate(
+        lon, lat =  gg.interpolate(
             lon, lat, points = points
             )
 
     return lon, lat
 
+# date = dt.datetime(2013, 1, 1)
+# site = 'jic'
+# glat, glon = gg.sites[site]['coords']
+# m = meridians(date)
 
-# glat, glon = -2.53, -44.296
-
-#     # glat, glon = sites['saa']['coords']
-    
-# for year in [2021, 2022]:
-    
-#     date = dt.datetime(year, 1, 1)
-    
-#     save_meridian(
-#             date, 
-#             glon, 
-#             glat
-#             )
+# x, y = m.closest_from_site(
+#     glon, 
+#     glat, 
+#     interpol = False
+#     )
 
