@@ -41,12 +41,27 @@ def delta_timezone(
 
 
 
-def test():
-    dn = dt.datetime(2014, 1, 1)
-    longitude = -40
+# def test():
+dn = dt.datetime(2017, 1, 2)
+
+
+
+# location = location_timezone(
+#     longitude, 
+#     latitude = 0
+#     )
+
+# delta = aware_dn(dn, tzinfo = pytz.utc)  - aware_dn(dn, tzinfo = location)
+
+# delta
+# import numpy as np 
+
+
+# for lon in np.arange(-80, -30, 10):
     
+#     delta = delta_timezone(
+#             dn, 
+#             lon 
+#             )
     
-    
-    delta_timezone(
-             dn, 
-             longitude) 
+#     print(lon, (dn - delta) - dn )

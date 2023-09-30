@@ -12,6 +12,7 @@ sites = {
  'rga': {'name': 'Rio Grande', 'coords': (-53.78, -67.7)},
  'sms': {'name': 'São Martinho da Serra', 
          'coords': (-29.53, -53.85)},
+ 'str': {'name': 'Santarem', 'coords': (-2.43, -54.7)},
  'tcm': {'name': 'Tucumán', 'coords': (-26.56, -64.88)},
  'sjc': {'name': 'São José Dos Campos', 'coords': (-23.19, -45.89)},
  'vss': {'name': 'Vassouras', 'coords': (-22.41, -43.66)},
@@ -23,4 +24,3 @@ sites = {
  'pil': {'name': 'Pilar', 'coords': (-31.7, -63.89)},
  'ttb': {'name': 'Tatuoca', 'coords': (-1.205, -48.51)}
  }
-

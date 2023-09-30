@@ -28,7 +28,7 @@ def dawn_dusk(
         dn, 
         dawn_dusk_depression = twilightAngle
         )
-    return sun_phase["dawn"], sun_phase["dusk"]
+    return aware_dn(sun_phase["dusk"])
 
 
 

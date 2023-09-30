@@ -4,13 +4,18 @@ import numpy as np
 import json  
 import GEO as gg
 from scipy.interpolate import CubicSpline
+import os 
+
 
 MERIDIAN_PATH = 'WSL/meridians/'
 
 def load_meridian(year, site = 'saa'):
-    
-    name = f'{site}_{year}.json'
-    dat = json.load(open(MERIDIAN_PATH + name))
+        
+    infile = os.path.join(
+        MERIDIAN_PATH, 
+        f'{site}_{year}.json'
+        )
+    dat = json.load(open(infile))
 
     x = np.array(dat["mx"])
     y = np.array(dat["my"])
