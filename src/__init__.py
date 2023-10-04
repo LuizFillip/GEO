@@ -29,3 +29,4 @@ from .split_regions import slip_array
 from .timezones import delta_timezone, location_timezone
 from .nearby_equator import stations_near_of_equator
 from .terminator import terminator
+from .haversine_distance import haversine_distance

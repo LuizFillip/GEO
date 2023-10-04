@@ -1,6 +1,5 @@
 sites = {
- 'cap': {'name': 'Cachoeira Paulista', 
-         'coords': (-22.7038, -45.0093)},
+ 'cap': {'name': 'Cachoeira Paulista', 'coords': (-22.7038, -45.0093)},
  'car': {'name': 'Cariri', 'coords': (-7.38, -36.528)},
  'for': {'name': 'Fortaleza', 'coords': (-3.73, -38.522)},
  'caj': {'name': 'Cajazeiras', 'coords': (-6.89, -38.56)},
@@ -10,8 +9,7 @@ sites = {
  'cgg': {'name': 'Campo Grande', 'coords': (-20.5, -54.7)},
  'jic': {'name': 'Jicamarca', 'coords': (-11.95, -76.87)},
  'rga': {'name': 'Rio Grande', 'coords': (-53.78, -67.7)},
- 'sms': {'name': 'São Martinho da Serra', 
-         'coords': (-29.53, -53.85)},
+ 'sms': {'name': 'São Martinho da Serra', 'coords': (-29.53, -53.85)},
  'str': {'name': 'Santarem', 'coords': (-2.43, -54.7)},
  'tcm': {'name': 'Tucumán', 'coords': (-26.56, -64.88)},
  'sjc': {'name': 'São José Dos Campos', 'coords': (-23.19, -45.89)},

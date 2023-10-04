@@ -39,13 +39,12 @@ def sun_terminator(
         site = 'saa'
         ):
     glat, glon = gg.sites[site]['coords']
-    sun_phase = dawn_dusk(
+    return dawn_dusk(
            dn,  
            lat = glat, 
            lon = glon, 
            twilightAngle = twilight_angle
            )
-    return aware_dn(sun_phase[1])
 
 
 def twilights(
