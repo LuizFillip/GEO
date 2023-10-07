@@ -33,16 +33,20 @@ def run_igrf(
         cols = ["lat", "lon", "d", "i"]
         ):
     
-    longitudes = np.arange(-180, 180 + step_lon, step_lon)
-    latitudes = np.arange(-90, 90 + step_lat, step_lat)
+    longitudes = np.arange(
+        -180, 180 + step_lon, step_lon
+        )
+    latitudes = np.arange(
+        -90, 90 + step_lat, step_lat
+        )
+    
     out = []
     for lat in latitudes:
-        for lon in tqdm(longitudes, 
-                        desc = str(lat)):
+        for lon in tqdm(longitudes, str(lat)):
             
-            d, i, h, x, y, z, f = pyIGRF.igrf_value(
+            d, i, _, _, _, _, _ = pyIGRF.igrf_value(
                 lat, lon, 
-                alt= alt, 
+                alt = alt, 
                 year = year
                 )
             
@@ -112,16 +116,4 @@ def main():
                     alt = 300)
         
         save_df(df, year)
-        # 
-# main()
-
-# year= 2012
-
         
-# df = get_dip(year, 
-#             step_lon = 0.1, 
-#             step_lat = 0.1, 
-#             alt = 300)
-
-# save_df(df, year)
-    

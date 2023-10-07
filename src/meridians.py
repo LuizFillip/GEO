@@ -97,7 +97,7 @@ class meridians:
             xx.append(lon)
             yy.append(lat)
                 
-        return xx, yy
+        return np.array(xx), np.array(yy)
     
     def range_meridians(
             self, 
