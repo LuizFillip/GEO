@@ -51,33 +51,20 @@ def get_limit_meridians(
         dn,
         lon = -50, 
         delta = 10,
-        max_lat = 30, 
+        lat_max = 30, 
         lat_min = -20
         ):
     xx, yy = gg.meridians(
         dn,
-        max_lat,
+        lat_max,
         delta = delta
         ).compute(lon)
-    
-    
-    xx1, yy1 = gg.meridians(
-        dn,
-        max_lat,
-        delta = delta
-        ).compute(lon + delta)
     
     
     xx, yy = filter_latitudes(
         xx, yy, 
         lat_min, 
-        lat_max = max_lat
+        lat_max 
         )
     
-    xx1, yy1 = filter_latitudes(
-        xx1, yy1, 
-        lat_min, 
-        lat_max = max_lat
-        )
-    
-    return xx, yy, xx1, yy1
+    return xx, yy
