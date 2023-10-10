@@ -92,11 +92,13 @@ def mag_equator(
     ax.plot(x, y, color = 'r', lw = 2)
     
     if degress is not None:
-        ax.fill_between(x, 
-                        y + degress, 
-                        y - degress, 
-                        alpha = 0.3
-                        )
+        ax.fill_between(
+            x, 
+            y + degress, 
+            y - degress, 
+            alpha = 0.2, 
+            color = 'tomato'
+            )
     return ax
 
 

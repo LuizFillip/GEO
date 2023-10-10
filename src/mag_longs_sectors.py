@@ -20,23 +20,29 @@ def filter_latitudes(
 def get_line_eq(x0, x1, y0, y1):
     return y0 - y1, x1 - x0, x0 * y1 - x1 * y0
 
-def filter_between_curves(x, y, xx, yy, xx1, yy1):
+def filter_between_curves(
+        x, y, xx, yy, xx1, yy1
+        ):
 
     ar, br, cr = get_line_eq(
-        xx[0], xx[-1], yy[0], yy[-1]
+        xx[0], xx[-1], 
+        yy[0], yy[-1]
         )
     
     mask1 = (
-        (x < xx[0]) | (x < xx[-1]) & 
+        (x < xx[0]) | 
+        (x < xx[-1]) & 
         (ar * x + br * y + cr <= 0)
         )
    
     ar, br, cr = get_line_eq(
-        xx1[0], xx1[-1], yy1[0], yy1[-1]
+        xx1[0], xx1[-1], 
+        yy1[0], yy1[-1]
         )
     
     mask2  = (
-        (x > xx1[-1]) | (x > xx1[0]) & 
+        (x > xx1[-1]) | 
+        (x > xx1[0]) & 
         (ar * x + br * y + cr >= 0)
         )
     
