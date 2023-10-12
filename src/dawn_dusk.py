@@ -3,6 +3,8 @@ from astral.sun import sun
 import pandas as pd
 import GEO as gg
 from base import aware_dn
+import datetime as dt
+
 
 def dn2float(arr):
     """Not sum an"""
@@ -28,7 +30,7 @@ def dawn_dusk(
         dn, 
         dawn_dusk_depression = twilightAngle
         )
-    return aware_dn(sun_phase["dusk"])
+    return aware_dn(sun_phase['dusk'])
 
 
 
@@ -39,12 +41,17 @@ def sun_terminator(
         site = 'saa'
         ):
     glat, glon = gg.sites[site]['coords']
-    return dawn_dusk(
+    
+    dusk = dawn_dusk(
            dn,  
            lat = glat, 
            lon = glon, 
            twilightAngle = twilight_angle
            )
+    if dusk < dn:
+        dusk += dt.timedelta(days = 1)
+        
+    return dusk
 
 
 def twilights(
@@ -77,41 +84,18 @@ def run_days(
         ):
     
     out = []
-    for dn in pd.date_range(
-            f'{year}-01-01', 
-            f'{year}-12-31', 
-            freq = '1D'
-            ):
-        out.append(twilights(
-            dn, 
-            twilightAngle = twilightAngle)
+    dn = dt.datetime(year, 1, 1, 0)
+    for day in range(365):
+        
+        delta = dt.timedelta(days = day)
+        
+        out.append(
+            twilights(
+                dn + delta, 
+                twilightAngle = twilightAngle
+                )
             )
     
     return pd.concat(out)
 
-def run_years(angle = 0):
-    
-    
-    out = []
-    for year in [2013, 2014, 2015] :
-        out.append(
-            run_days(
-            year = year, 
-            twilightAngle = angle
-            )
-            )
-    return pd.concat(out)
-    
-        
-def run_angles():
-    save_in = 'database/GEO/twilights/'
-    for angle in [0, 12, 18]:
-        df = run_years(angle = angle)
-        
-        df.to_csv(
-            save_in + f'{angle}.txt'
-            )
-        
-        
-# run_angles()
 
