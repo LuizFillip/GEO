@@ -65,33 +65,46 @@ def circle_range(
 def plot_square_area(
         ax, 
         lat_min = -12, 
-        lat_max = -2, 
-        lon_max = -32, 
-        lon_min = -42
+        lon_min = -42,
+        lat_max = None, 
+        lon_max = None, 
+        radius = 10, 
         ):
     
     
     """Plotting square area by coords limits"""
     
-    ax.plot([lon_min, lon_max, 
-             lon_max, lon_min, lon_min], 
-            [lat_min, lat_min, 
-             lat_max, lat_max, lat_min],
-             color='black', 
-             linewidth = 4, 
-             marker='.',
-             transform=ccrs.PlateCarree(), 
-             )
+    if lat_max is None:
+        lat_max = lat_min + radius
+    
+    if lon_max is None:
+        lon_max = lon_min + radius
+        
+    x_limits = [
+        lon_min, lon_max, 
+        lon_max, lon_min, lon_min
+        ]
+    
+    y_limits = [
+        lat_min, lat_min, 
+        lat_max, lat_max, lat_min
+        ]
+    
+    ax.plot(
+        x_limits, y_limits,
+        color = 'black', 
+        linewidth = 2, 
+        marker = '.',
+        transform=ccrs.PlateCarree() 
+        )
     
     
     center_lat = (lat_max + lat_min) / 2
     center_lon = (lon_max + lon_min) / 2
 
     ax.scatter(center_lon, center_lat)
-    return
-
-
-
+    
+    return center_lon, center_lat
 
 lat_min = -12 
 lat_max = -2 

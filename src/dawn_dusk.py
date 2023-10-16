@@ -37,8 +37,8 @@ def dawn_dusk(
 
 def sun_terminator(
         dn, 
-        twilight_angle = 0, 
-        site = 'saa'
+        site,
+        twilight_angle = 0
         ):
     glat, glon = gg.sites[site]['coords']
     
