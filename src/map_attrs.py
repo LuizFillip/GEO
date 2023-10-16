@@ -12,17 +12,25 @@ def find_range(x, y, clon, clat, radius = 500):
     down_y = clat - factor
     up_y = clat + factor
     
-    first = ((y < up_y) and (y > clat) and 
-             (x < right_x) and (x > clon))
+    first = (
+        (y < up_y) and (y > clat) and 
+        (x < right_x) and (x > clon)
+        )
         
-    second = ((y < up_y) and (y > clat) and 
-              (x > left_x) and (x < clon))
+    second = (
+        (y < up_y) and (y > clat) and 
+        (x > left_x) and (x < clon)
+        )
         
-    third = ((y > down_y) and (y < clat) and 
-             (x > left_x) and (x < clon))
+    third = (
+        (y > down_y) and (y < clat) and 
+        (x > left_x) and (x < clon)
+        )
     
-    quarter = ((y > down_y) and (y < clat) and 
-               (x < right_x) and (x > clon))
+    quarter = (
+        (y > down_y) and (y < clat) and 
+        (x < right_x) and (x > clon)
+        )
     
     return any([first, second, third, quarter])
 
@@ -37,19 +45,22 @@ def circle_range(
     
     gd = Geodesic()
 
-    cp = gd.circle(lon = longitude, 
-                   lat = latitude, 
-                   radius = radius * 1000.)
+    cp = gd.circle(
+        lon = longitude, 
+        lat = latitude, 
+        radius = radius * 1000.
+        )
     
     geoms = [sgeom.Polygon(cp)]
 
-    ax.add_geometries(geoms, crs=ccrs.PlateCarree(), 
-                      edgecolor = 'black', color = color,
-                      alpha = 0.2, label = 'radius')
-
-
-    
-
+    ax.add_geometries(
+        geoms, 
+        crs = ccrs.PlateCarree(), 
+        edgecolor = 'black', 
+        color = color,
+        alpha = 0.2, 
+        label = 'radius'
+        )
 
 def plot_square_area(
         ax, 
