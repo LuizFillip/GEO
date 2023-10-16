@@ -24,7 +24,7 @@ from .meridian_utils import (
     )
 from .dip import load_equator
 from .dawn_dusk import dawn_dusk, sun_terminator
-from .map_attrs import circle_range
+from .map_attrs import *
 from .split_regions import slip_array
 from .timezones import delta_timezone, location_timezone
 from .nearby_equator import stations_near_of_equator
