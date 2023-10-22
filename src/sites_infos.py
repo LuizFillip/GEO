@@ -1,5 +1,9 @@
+import os 
+import json 
+import numpy as np 
+
 sites = {
- 'cap': {'name': 'Cachoeira Paulista', 'coords': (-22.7038, -45.0093)},
+ 'cap': {'name': 'Cachoeira Paulista', 'coords': (-22.703, -45.00)},
  'car': {'name': 'Cariri', 'coords': (-7.38, -36.528)},
  'for': {'name': 'Fortaleza', 'coords': (-3.73, -38.522)},
  'caj': {'name': 'Cajazeiras', 'coords': (-6.89, -38.56)},
@@ -22,3 +26,27 @@ sites = {
  'pil': {'name': 'Pilar', 'coords': (-31.7, -63.89)},
  'ttb': {'name': 'Tatuoca', 'coords': (-1.205, -48.51)}
  }
+
+PATH_COORDS = 'database/GEO/coords/'
+
+def load_coords(year = 2021):
+    infile = os.path.join(
+        PATH_COORDS, 
+        f'{year}.json'
+        )
+    return json.load(open(infile))
+
+
+def arr_coords(year = 2021):
+    
+    sites = load_coords(year)
+    
+    arr = np.array(
+        list(sites.values())
+        )
+    
+    lon = arr[:, 0]
+    lat = arr[:, 1]
+    sits = list(sites.keys())
+    return sits, lon, lat
+
