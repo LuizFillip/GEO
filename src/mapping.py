@@ -11,7 +11,7 @@ class limits(object):
         self.stp = kwargs['stp']
          
 
-def map_features(ax, grid = False):
+def map_features(ax, grid = True):
     
     states = cf.NaturalEarthFeature(
         category = 'cultural',
@@ -45,20 +45,22 @@ def map_boundaries(ax, lon, lat):
         crs = ccrs.PlateCarree()
         )
 
-    ax.set_xticks(np.arange(
-        lon.min, 
-        lon.max + lon.stp, 
-        lon.stp
-        ), 
-        crs = ccrs.PlateCarree()
+    ax.set_xticks(
+        np.arange(
+            lon.min, 
+            lon.max + lon.stp, 
+            lon.stp
+            ), 
+            crs = ccrs.PlateCarree()
         ) 
 
-    ax.set_yticks(np.arange(
-        lat.min, 
-        lat.max + lat.stp, 
-        lat.stp
-        ), 
-        crs = ccrs.PlateCarree()
+    ax.set_yticks(
+        np.arange(
+            lat.min, 
+            lat.max + lat.stp, 
+            lat.stp
+            ), 
+            crs = ccrs.PlateCarree()
         )
     
     ax.set(ylabel = 'Latitude (°)',  
@@ -108,10 +110,11 @@ lon_lims = dict(min = -80, max = -35, stp = 5)
 def map_attrs(
         axs, 
         lon_lims, 
-        lat_lims
+        lat_lims,
+        grid = False
         ):
 
-    map_features(axs)
+    map_features(axs, grid)
     
     lat = limits(**lat_lims)
     lon = limits(**lon_lims)    
@@ -126,7 +129,8 @@ def quick_map(
         lon_lims = lon_lims,
         figsize = (8, 8),
         year = 2014,
-        degress = 10
+        degress = 10,
+        grid = False
         ):    
       
     fig, ax = plt.subplots(
@@ -136,7 +140,7 @@ def quick_map(
         {'projection': ccrs.PlateCarree()}
         )
          
-    map_attrs(ax, lon_lims, lat_lims)
+    map_attrs(ax, lon_lims, lat_lims, grid)
     
     mag_equator(ax, 
                 year = year, 

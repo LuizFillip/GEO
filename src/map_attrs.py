@@ -1,10 +1,12 @@
 import shapely.geometry as sgeom
 from cartopy.geodesic import Geodesic
 import cartopy.crs as ccrs
+import GEO as gg 
 
-def find_range(x, y, clon, clat, radius = 500):
+
+def find_range(x, y, clon, clat, radius = 12):
     
-    factor = radius / 111
+    factor = radius / 2 # in degrres
     
     left_x = clon - factor
     right_x = clon + factor
@@ -33,6 +35,7 @@ def find_range(x, y, clon, clat, radius = 500):
         )
     
     return any([first, second, third, quarter])
+
 
 def circle_range(
         ax, 
@@ -105,6 +108,17 @@ def plot_square_area(
     ax.scatter(center_lon, center_lat)
     
     return center_lon, center_lat
+
+
+def distance_from_equator(
+        lon, lat, year = 2013
+        ):
+    eq = gg.load_equator(year)
+    x, y = eq[:, 0], eq[:, 1]
+    min_x, min_y, min_d = gg.compute_distance(
+        x, y, lon, lat
+        )
+    return min_d
 
 lat_min = -12 
 lat_max = -2 
