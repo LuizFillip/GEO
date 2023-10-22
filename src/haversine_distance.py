@@ -1,4 +1,6 @@
 import math
+import numpy as np 
+
 
 def haversine_distance(lat1, lon1, lat2, lon2):
    
@@ -29,4 +31,13 @@ def example():
     print(f"Distance: {distance} kilometers")
     
     
-# example()
+def distance_circle(x, y, center, radius = 2):
+    
+    
+    dis = np.sqrt(
+        (x - center[0])**2 + 
+        (y - center[1])**2)
+    
+    cond = (dis <= radius)
+    
+    return x[cond], y[cond]
