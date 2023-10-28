@@ -120,7 +120,3 @@ def distance_from_equator(
         )
     return min_d
 
-lat_min = -12 
-lat_max = -2 
-lon_max = -32
-lon_min = -42
