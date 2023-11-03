@@ -121,15 +121,3 @@ def set_coords(
     return coords
 
 
-def filter_sectors(df, sector = -50, radius = 10):
-    
-    year  = df.index[0].year
-
-    coords = set_coords(year, radius, angle = 45)
-    
-    (x0, x1), (y0, y1) = coords[sector]
-    
-    return df.loc[
-        (df['lat'] > y0) & (df['lat'] < y1) &
-        (df['lon'] > x0) & (df['lon'] < x1)
-        ]
