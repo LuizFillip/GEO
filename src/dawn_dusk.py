@@ -2,23 +2,15 @@ import astral
 from astral.sun import sun
 import pandas as pd
 import GEO as gg
-from base import aware_dn
+import base as b
 import datetime as dt
 
 
-def dn2float(arr):
-    """Not sum an"""
-    return (arr.hour + 
-            arr.minute / 60 + 
-            arr.second / 3600)
-
-
-
-def dawn_dusk(
+def dusk_from_coords(
         dn,  
         lat = -2.53, 
         lon = -44.296, 
-        twilightAngle = 18
+        twilight = 18
         ):
 
     observer = astral.Observer(
@@ -28,29 +20,31 @@ def dawn_dusk(
     sun_phase = sun(
         observer, 
         dn, 
-        dawn_dusk_depression = twilightAngle
+        dawn_dusk_depression = twilight
         )
-    return aware_dn(sun_phase['dusk'])
+    
+    dusk = b.aware_dn(sun_phase['dusk'])
+    
+    if dusk < dn:
+        dusk += dt.timedelta(days = 1)
+
+    return dusk
 
 
-
-
-def sun_terminator(
+def dusk_from_site(
         dn, 
         site,
         twilight_angle = 0
         ):
     glat, glon = gg.sites[site]['coords']
     
-    dusk = dawn_dusk(
+    dusk = dusk_from_coords(
            dn,  
            lat = glat, 
            lon = glon, 
-           twilightAngle = twilight_angle
+           twilight = twilight_angle
            )
-    if dusk < dn:
-        dusk += dt.timedelta(days = 1)
-        
+   
     return dusk
 
 
@@ -74,7 +68,7 @@ def twilights(
     del times['noon']
     
     for key in times.keys():
-        times[key] = dn2float(times[key])
+        times[key] = b.dn2float(times[key])
     
     return pd.DataFrame(times, index = [dn])
 
