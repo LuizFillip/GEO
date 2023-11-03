@@ -23,7 +23,7 @@ from .meridian_utils import (
     find_closest
     )
 from .dip import load_equator
-from .dawn_dusk import dawn_dusk, sun_terminator
+from .dawn_dusk import dusk_from_site, dusk_time
 from .map_attrs import *
 from .split_regions import slip_array
 from .timezones import delta_timezone, location_timezone
