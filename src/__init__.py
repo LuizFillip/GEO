@@ -30,5 +30,5 @@ from .timezones import delta_timezone, location_timezone
 from .nearby_equator import stations_near_of_equator
 from .terminator import terminator
 from .haversine_distance import haversine_distance, distance_circle
-from .mag_longs_sectors import *
-from .map_sectors import filter_sectors
+from .geomag_sectors import *
+from .map_sectors import set_coords
