@@ -74,3 +74,39 @@ def get_limit_meridians(
         )
     
     return xx, yy
+
+
+def filter_ipp(df, dn):
+
+    x = df.lon
+    y = df.lat
+    
+    lons =  [-81., -73, -64.1, 
+             -52.6, -40, -33]
+    
+    i = 0
+    
+    xx, yy  = get_limit_meridians(
+        dn,
+        lons[i], 
+        lat_min = -30, 
+        lat_max = 10
+        )
+    
+    xx1, yy1 = get_limit_meridians(
+        dn,
+        lons[i + 1], 
+        lat_min = -30, 
+        lat_max = 10
+        )
+    
+    x, y = gg.filter_between_curves(
+        x, y, 
+        xx, yy, 
+        xx1, yy1
+        )
+    
+    return df.loc[
+        df['lon'].isin(x) & 
+        df['lat'].isin(y)
+        ]
