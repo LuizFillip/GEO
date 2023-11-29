@@ -31,4 +31,4 @@ from .nearby_equator import stations_near_of_equator
 from .terminator import terminator
 from .haversine_distance import haversine_distance, distance_circle
 from .geomag_sectors import *
-from .map_sectors import set_coords
+from .map_sectors import set_coords, corner_coords
