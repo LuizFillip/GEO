@@ -22,14 +22,6 @@ def longitudes(
     return np.arange(start, end, step)
 
 
-def equator_coords(year = 2013):
-
-    eq = gg.load_equator(year)
-    
-    return pd.DataFrame(
-        eq, columns = ['lon', 'lat']
-        )
-
         
 def corner_coords(
         year = 2013, 
@@ -38,8 +30,8 @@ def corner_coords(
         ax = None
         ):
     
-    df = equator_coords(year)
-
+    df = gg.load_equator(year)
+    
     x_coords = []
     y_coords = []
     

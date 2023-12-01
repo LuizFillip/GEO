@@ -161,15 +161,6 @@ def terminator(date, TwilightAngle):
         lon_terminus.append((lam/dg2rad) + center_lon)
         lat_terminus.append(phi/dg2rad)
 
-    # tck, u = interpolate.splprep([lon_terminus, lat_terminus], s=0, per=True)
-    # lon_terminus, lat_terminus = interpolate.splev(np.linspace(0, 1, 100), tck)
-
-    # zipped_lists = zip(lon_terminus, lat_terminus)
-    # sorted_pairs = sorted(zipped_lists)
-
-    # tuples = zip(*sorted_pairs)
-    # lon_terminus, lat_terminus = [list(tuple) for tuple in  tuples]
-
     delta_mask_lon = lon_terminus - np.roll(lon_terminus, -1)        
     delta_mask_lat = lat_terminus - np.roll(lat_terminus, -1)        
     

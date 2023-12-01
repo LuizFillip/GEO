@@ -89,8 +89,8 @@ def mag_equator(
     
     """Plotting geomagnetic equator"""
         
-    eq = g.load_equator(year)
-    x, y = eq[:, 0], eq[:, 1] 
+    x, y = g.load_equator(year, values = True)
+  
     ax.plot(x, y, color = 'r', lw = 2)
     
     if degress is not None:
@@ -104,8 +104,8 @@ def mag_equator(
     return x, y
 
 
-lat_lims = dict(min = -30, max = 15, stp = 5)
-lon_lims = dict(min = -90, max = -30, stp = 10) 
+lat_lims = dict(min = -90, max = 90, stp = 15)
+lon_lims = dict(min = -180, max = 180, stp = 30) 
 
 def map_attrs(
         axs, 
