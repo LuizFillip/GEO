@@ -104,15 +104,16 @@ def mag_equator(
     return x, y
 
 
-lat_lims = dict(min = -45, max = 15, stp = 5)
-lon_lims = dict(min = -80, max = -35, stp = 5) 
+lat_lims = dict(min = -30, max = 15, stp = 5)
+lon_lims = dict(min = -90, max = -30, stp = 10) 
 
 def map_attrs(
         axs, 
-        lon_lims, 
-        lat_lims,
-        grid = False,
-        year = None
+        year = None,
+        lon_lims = lon_lims, 
+        lat_lims = lat_lims,
+        grid = True,
+        
         ):
 
     map_features(axs, grid)

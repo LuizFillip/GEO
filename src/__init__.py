@@ -23,8 +23,8 @@ from .meridian_utils import (
     find_closest
     )
 from .dip import load_equator
-from .terminator_time import dusk_from_site, dusk_time
-from .map_attrs import *
+from .terminator_time import dusk_from_site, dusk_time, is_night
+from .mapping_attrs import *
 from .intersect import intersection
 from .split_regions import slip_array
 from .timezones import delta_timezone, location_timezone
