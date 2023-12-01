@@ -101,7 +101,7 @@ def mag_equator(
             alpha = 0.2, 
             color = 'tomato'
             )
-    return ax
+    return x, y
 
 
 lat_lims = dict(min = -45, max = 15, stp = 5)
@@ -111,7 +111,8 @@ def map_attrs(
         axs, 
         lon_lims, 
         lat_lims,
-        grid = False
+        grid = False,
+        year = None
         ):
 
     map_features(axs, grid)
@@ -120,9 +121,21 @@ def map_attrs(
     lon = limits(**lon_lims)    
     
     map_boundaries(axs, lon, lat)
-   
-    return axs
+    
+    if year is not None:
+        x, y = mag_equator(
+            axs,
+            year,
+            degress = None
+            )
+        
+        return x, y
 
+
+
+    
+    
+    
 
 def quick_map(
         lat_lims = lat_lims, 
