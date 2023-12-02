@@ -64,6 +64,20 @@ def circle_range(
         alpha = 0.2, 
         label = 'radius'
         )
+    
+    
+def marker_sites(axs, sites):
+ 
+    for key in sites.keys():
+        lat, lon = sites[key]["coords"]
+        axs.scatter(
+            lon, lat, 
+            c = 100, 
+            marker = "o")
+        
+        axs.text(lon, lat, key, 
+                 transform = ccrs.PlateCarree())
+        
 
 def plot_square_area(
         ax, 
