@@ -68,18 +68,7 @@ def map_boundaries(ax, lon, lat):
     
     return ax
 
-def marker_sites(axs, sites):
- 
-    for key in sites.keys():
-        lat, lon = sites[key]["coords"]
-        axs.scatter(
-            lon, lat, 
-            c = 100, 
-            marker = "o")
-        
-        axs.text(lon, lat, key, 
-                 transform = ccrs.PlateCarree())
-        
+
 
 def mag_equator(
         ax, 
@@ -104,8 +93,8 @@ def mag_equator(
     return x, y
 
 
-lat_lims = dict(min = -90, max = 90, stp = 15)
-lon_lims = dict(min = -180, max = 180, stp = 30) 
+lat_lims = dict(min = -45, max = 15, stp = 15)
+lon_lims = dict(min = -90, max = -30, stp = 30) 
 
 def map_attrs(
         axs, 
@@ -132,11 +121,6 @@ def map_attrs(
         
         return x, y
 
-
-
-    
-    
-    
 
 def quick_map(
         lat_lims = lat_lims, 
