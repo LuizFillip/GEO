@@ -175,3 +175,45 @@ def terminator(date, TwilightAngle):
         mc_lat[id_lat] = ma.masked
     
     return mc_lon, mc_lat
+
+
+
+def terminator2(date, TwilightAngle):
+    dg2rad = np.pi/180.
+
+    earthRadius = 6.371009e6
+    ra, sun_lat, sun_distance = epem(date)
+    t = Time(date.strftime("%Y-%m-%d %H:%M:%S%Z"), scale='utc')
+    lm_sidereal_time = np.array(t.sidereal_time(
+        'apparent', 'greenwich')
+        )
+
+    sun_lon = 15.0 * (ra - lm_sidereal_time)
+    scanAngle = np.arcsin(
+        (earthRadius / (sun_distance * 1.4956e11)
+         ) * np.sin(1.25663706))
+    arc_dist = np.pi - 1.57080 - scanAngle + TwilightAngle * 0.017453295
+    cdist = np.cos(arc_dist)		
+    sdist = np.sin(arc_dist)
+
+    azimuths = np.arange(0, 360, 1)
+    az = azimuths * dg2rad
+
+    sinll1 = np.sin(sun_lat * dg2rad)
+    cosll1 = np.cos(sun_lat * dg2rad)
+
+    phi = np.arcsin(sinll1 * cdist + cosll1 * sdist * np.cos(az))
+    lam = (sun_lon * dg2rad) + np.arctan2(
+        sdist * np.sin(az), cosll1 * cdist - sinll1 * sdist * np.cos(az)
+        )
+
+    # Handle angle wrapping
+    lam = np.degrees((lam + np.pi) % (2 * np.pi) - np.pi)
+    phi = np.degrees(phi)
+
+    lon_terminus = lam.tolist()
+    lat_terminus = phi.tolist()
+    
+   
+    return lon_terminus, lat_terminus
+
