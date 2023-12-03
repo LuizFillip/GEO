@@ -4,6 +4,9 @@ import numpy as np
 import GEO as g
 import matplotlib.pyplot as plt
 
+lat_lims = dict(min = -30, max = 15, stp = 5)
+lon_lims = dict(min = -90, max = -30, stp = 10) 
+
 class limits(object):
     def __init__(self, **kwargs):
         self.min = kwargs['min'] 
@@ -38,7 +41,8 @@ def map_features(ax, grid = True):
     
     
 def map_boundaries(ax, lon, lat):
-  
+    
+    """Plotting extensions and ticks"""
     ax.set_extent(
         [lon.min, lon.max, 
         lat.min, lat.max], 
@@ -63,11 +67,12 @@ def map_boundaries(ax, lon, lat):
             crs = ccrs.PlateCarree()
         )
     
-    ax.set(ylabel = 'Latitude (°)',  
-           xlabel = 'Longitude (°)') 
+    ax.set(
+        ylabel = 'Latitude (°)',  
+        xlabel = 'Longitude (°)'
+        ) 
     
     return ax
-
 
 
 def mag_equator(
@@ -92,29 +97,24 @@ def mag_equator(
             )
     return x, y
 
-
-lat_lims = dict(min = -45, max = 15, stp = 15)
-lon_lims = dict(min = -90, max = -30, stp = 30) 
-
 def map_attrs(
-        axs, 
+        ax, 
         year = None,
         lon_lims = lon_lims, 
         lat_lims = lat_lims,
-        grid = True,
-        
+        grid = True
         ):
 
-    map_features(axs, grid)
+    map_features(ax, grid)
     
     lat = limits(**lat_lims)
     lon = limits(**lon_lims)    
     
-    map_boundaries(axs, lon, lat)
+    map_boundaries(ax, lon, lat)
     
     if year is not None:
         x, y = mag_equator(
-            axs,
+            ax,
             year,
             degress = None
             )
