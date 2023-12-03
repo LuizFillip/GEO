@@ -29,7 +29,7 @@ from .intersect import intersection
 from .split_regions import slip_array
 from .timezones import delta_timezone, location_timezone
 from .nearby_equator import stations_near_of_equator
-from .terminator import terminator
+from .terminator import terminator, terminator2
 from .haversine_distance import haversine_distance, distance_circle
 from .geomag_sectors import *
-from .map_sectors import set_coords, corner_coords
+from .map_sectors import set_coords, corner_coords, longitudes

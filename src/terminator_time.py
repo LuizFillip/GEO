@@ -52,11 +52,25 @@ def dusk_from_site(
 
 
 def is_night(longitude, latitude, date_time):
+    '''
+    Check if is a region encounters nighttime period
+    '''
     tf = TimezoneFinder()
-    timezone_str = tf.timezone_at(lng=longitude, lat=latitude)
+    
+    timezone_str = tf.timezone_at(
+        lng = longitude, 
+        lat = latitude
+        )
     city_tz = pytz.timezone(timezone_str)
 
-    city = LocationInfo("City", "Country", timezone_str, latitude, longitude)
+    city = LocationInfo(
+        "City", 
+        "Country", 
+        timezone_str, 
+        latitude, 
+        longitude
+        )
+    
     s = sun(city.observer, date=date_time, tzinfo=city_tz)
 
     sunrise = s["sunrise"].astimezone(city_tz)
