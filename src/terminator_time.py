@@ -83,18 +83,31 @@ def is_night(longitude, latitude, date_time):
     else:
         return True  # It's night
 
-# Example usage
-
-# def main():
+def local_midnight(longitude, latitude, date_time):
     
-#     longitude = -46.6333  # Replace with the desired longitude
-#     latitude = -23.5505  # Replace with the desired latitude
-#     date_time_to_check = datetime(2023, 12, 1, 8, 0, 0)  # Replace with your desired date and time
+    tf = TimezoneFinder()
+    timezone_str = tf.timezone_at(lng=longitude, lat=latitude)
+    city_tz = pytz.timezone(timezone_str)
     
-#     night = is_night(longitude, latitude, date_time_to_check)
-#     if night:
-#         print("It's night.")
-#     else:
-#         print("It's day.")
+    # Finding the local midnight
+    current_date = date_time.date()
+    local_midnight = city_tz.localize(
+        datetime(current_date.year,
+                 current_date.month, 
+                 current_date.day, 0, 0, 0)
+        )
+    
+    return local_midnight.astimezone(pytz.utc)
 
-# main()
+
+def main():
+    
+    longitude = -46.6333  # Replace with the desired longitude
+    latitude = -23.5505  # Replace with the desired latitude
+    date_time_to_check = dt.datetime(2023, 12, 1, 8, 0, 0)  #
+    night = is_night(longitude, latitude, date_time_to_check)
+    if night:
+        print("It's night.")
+    else:
+        print("It's day.")
+

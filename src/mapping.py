@@ -4,7 +4,7 @@ import numpy as np
 import GEO as g
 import matplotlib.pyplot as plt
 
-lat_lims = dict(min = -30, max = 15, stp = 5)
+lat_lims = dict(min = -30, max = 15, stp = 10)
 lon_lims = dict(min = -90, max = -30, stp = 10) 
 
 class limits(object):

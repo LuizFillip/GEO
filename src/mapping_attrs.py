@@ -2,7 +2,8 @@ import shapely.geometry as sgeom
 from cartopy.geodesic import Geodesic
 import cartopy.crs as ccrs
 import GEO as gg 
-
+import numpy as np
+import base as b 
 
 def find_range(x, y, clon, clat, radius = 12):
     
@@ -65,6 +66,41 @@ def circle_range(
         label = 'radius'
         )
     
+def ellipse(
+        center, 
+        angle = 95, 
+        semi_major = 10.0, 
+        semi_minor = 1.0
+        ):
+     
+    
+    angle_rad = np.deg2rad(angle)
+    
+    t = np.linspace(0, 2 * np.pi, 100)
+ 
+    x = (center[0] + semi_major * np.cos(t) * 
+         np.cos(angle_rad) - semi_minor * np.sin(t) * 
+         np.sin(angle_rad))
+    
+    y = (center[1] + semi_major * np.cos(t) * 
+         np.sin(angle_rad) + semi_minor * 
+         np.sin(t) * np.cos(angle_rad))
+    
+    return x, y
+    
+def plot_ellipse(ax, year = 2014, lon = -60):
+    
+   
+    eq_lon, eq_lat  = gg.load_equator(
+        year, values = True)
+    
+    i = b.find_closest(eq_lon, lon)
+    
+    x, y = ellipse((eq_lon[i], eq_lat[i]))
+    
+    ax.plot(x, y)
+    
+    ax.fill(x, y, color = 'gray', alpha = 0.5)
     
 def marker_sites(axs, sites):
  
@@ -134,3 +170,8 @@ def distance_from_equator(
         )
     return min_d
 
+def middle_point(xlim, ylim):
+     clat = sum(list(set(ylim))) / 2
+     clon = sum(list(set(xlim))) / 2
+     
+     return clon, clat
