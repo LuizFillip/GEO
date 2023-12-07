@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Oct  9 12:03:45 2023
-
-@author: Luiz
-"""
-
 def find_closest_value(target, values):
     closest_value = min(values, key=lambda x: abs(x - target))
     return closest_value
