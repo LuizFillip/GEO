@@ -7,3 +7,4 @@ In this repository, you can find:
 - split and mapping with limited regions 
 - Compute geomagnetic meridians 
 - Locate points (longitude and latitude) over maps
+- Compute solar terminator over map (from date time)
