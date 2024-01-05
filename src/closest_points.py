@@ -1,5 +1,37 @@
 import numpy as np
 
+def find_range(x, y, clon, clat, radius = 12):
+    
+    factor = radius / 2 # in degrres
+    
+    left_x = clon - factor
+    right_x = clon + factor
+    
+    down_y = clat - factor
+    up_y = clat + factor
+    
+    first = (
+        (y < up_y) and (y > clat) and 
+        (x < right_x) and (x > clon)
+        )
+        
+    second = (
+        (y < up_y) and (y > clat) and 
+        (x > left_x) and (x < clon)
+        )
+        
+    third = (
+        (y > down_y) and (y < clat) and 
+        (x > left_x) and (x < clon)
+        )
+    
+    quarter = (
+        (y > down_y) and (y < clat) and 
+        (x < right_x) and (x > clon)
+        )
+    
+    return any([first, second, third, quarter])
+
 def find_closest_value(target, values):
     return min(values, key=lambda x: abs(x - target))
 
