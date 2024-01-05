@@ -2,40 +2,8 @@ import shapely.geometry as sgeom
 from cartopy.geodesic import Geodesic
 import cartopy.crs as ccrs
 import GEO as gg 
-import numpy as np
 import base as b 
-
-def find_range(x, y, clon, clat, radius = 12):
-    
-    factor = radius / 2 # in degrres
-    
-    left_x = clon - factor
-    right_x = clon + factor
-    
-    down_y = clat - factor
-    up_y = clat + factor
-    
-    first = (
-        (y < up_y) and (y > clat) and 
-        (x < right_x) and (x > clon)
-        )
-        
-    second = (
-        (y < up_y) and (y > clat) and 
-        (x > left_x) and (x < clon)
-        )
-        
-    third = (
-        (y > down_y) and (y < clat) and 
-        (x > left_x) and (x < clon)
-        )
-    
-    quarter = (
-        (y > down_y) and (y < clat) and 
-        (x < right_x) and (x > clon)
-        )
-    
-    return any([first, second, third, quarter])
+import matplotlib.colors as mcolors
 
 
 def circle_range(
@@ -66,28 +34,7 @@ def circle_range(
         label = 'radius'
         )
     
-def ellipse(
-        center, 
-        angle = 95, 
-        semi_major = 10.0, 
-        semi_minor = 1.0
-        ):
-     
-    
-    angle_rad = np.deg2rad(angle)
-    
-    t = np.linspace(0, 2 * np.pi, 100)
- 
-    x = (center[0] + semi_major * np.cos(t) * 
-         np.cos(angle_rad) - semi_minor * np.sin(t) * 
-         np.sin(angle_rad))
-    
-    y = (center[1] + semi_major * np.cos(t) * 
-         np.sin(angle_rad) + semi_minor * 
-         np.sin(t) * np.cos(angle_rad))
-    
-    return x, y
-    
+
 def plot_ellipse(ax, year = 2014, lon = -60):
     
    
@@ -96,7 +43,7 @@ def plot_ellipse(ax, year = 2014, lon = -60):
     
     i = b.find_closest(eq_lon, lon)
     
-    x, y = ellipse((eq_lon[i], eq_lat[i]))
+    x, y = b.ellipse((eq_lon[i], eq_lat[i]))
     
     ax.plot(x, y)
     
@@ -114,7 +61,31 @@ def marker_sites(axs, sites):
         axs.text(lon, lat, key, 
                  transform = ccrs.PlateCarree())
         
-
+markers = [
+    "o", "v", "^", "<", ">", "1", "2", "3", "4", "8", "s", "p", "P",
+    "*", "h", "H", "+", "x", "X", "D", "d", "|", "_"
+]
+        
+def plot_sites_markers(ax, sites, names):
+    
+    colors = ['g', 'b', 'red']
+    for i, site in enumerate(sites):
+    
+        glat, glon = gg.sites[site]['coords']
+        name =  names[i]
+        marker = markers[i]
+    
+        ax.scatter(
+            glon, glat,
+            s = 200, 
+            c = colors[i],
+            label = name, 
+            marker = marker
+            )
+        
+    return ax
+        
+        
 def plot_square_area(
         ax, 
         lat_min = -12, 
@@ -170,8 +141,9 @@ def distance_from_equator(
         )
     return min_d
 
-def middle_point(xlim, ylim):
-     clat = sum(list(set(ylim))) / 2
-     clon = sum(list(set(xlim))) / 2
-     
-     return clon, clat
+
+ 
+    
+colors = list(mcolors.CSS4_COLORS.keys())
+
+ 
