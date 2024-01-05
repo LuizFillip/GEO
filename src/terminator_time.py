@@ -91,13 +91,18 @@ def local_midnight(longitude, latitude, date_time):
     
     # Finding the local midnight
     current_date = date_time.date()
-    local_midnight = city_tz.localize(
+    local = city_tz.localize(
         datetime(current_date.year,
                  current_date.month, 
                  current_date.day, 0, 0, 0)
         )
     
-    return local_midnight.astimezone(pytz.utc)
+    dusk = b.aware_dn(local.astimezone(pytz.utc))
+    
+    if dusk < date_time:
+        dusk += dt.timedelta(days = 1)
+        
+    return dusk
 
 
 def main():

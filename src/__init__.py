@@ -25,7 +25,6 @@ from .meridian_utils import (
 from .dip import load_equator
 from .mapping_attrs import *
 from .intersect import intersection
-from .split_regions import slip_array
 from .timezones import delta_timezone, location_timezone
 from .nearby_equator import stations_near_of_equator
 from .terminator import terminator, terminator2
