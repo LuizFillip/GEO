@@ -92,37 +92,30 @@ def get_dip(date = 2013,
 def load_equator(year, values = False):
     infile = os.getcwd() + f'/database/GEO/dips/dip_{year}.txt'
     
-    eq = pd.read_csv(infile, index_col = 0).values
-    
+    df = pd.read_csv(infile, index_col = 0)
+
     if values:
-        return eq[:, 0], eq[:, 1] 
+        return df['lon'].values, df['lat'].values 
     else:
-        return pd.DataFrame(
-            eq, columns = ['lon', 'lat']
-            )
+        return df
 
-def build_dataframe():
-    out = {}
-    for site in ['car', 'caj', 'saa']:
-        out[gg.sites[site]["name"]] = dec_dip(2013, site, 300)
-        
-    return pd.DataFrame(out, index = ['Declinação', 'Inclinação'])
 
-def save_df(df, year):
 
-    name_to_save = f"database/GEO/dips/dip_{year}.txt"
-    df.to_csv(name_to_save,
-              sep = ",",
-              index = True, 
-              header = True)       
+def save_df(year = 2023):
     
-def main():
-  
-    year = 2023
     df = get_dip(year, 
                 step_lon = 0.1, 
                 step_lat = 0.1, 
                 alt = 300)
     
-    save_df(df, year)
+    name_to_save = f"database/GEO/dips/dip_{year}.txt"
+    
+    df.to_csv(name_to_save,
+              sep = ",",
+              index = True, 
+              header = True)       
+    
+    
+  
+    
             
