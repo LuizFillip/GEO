@@ -4,22 +4,26 @@ import cartopy.crs as ccrs
 import GEO as gg 
 import base as b 
 import matplotlib.colors as mcolors
+from shapely.geometry import Polygon
+import matplotlib.pyplot as plt
 
+markers = [
+    "o", "v", "^", "<", ">", "1", "2", "3", "4", "8", "s", "p", "P",
+    "*", "h", "H", "+", "x", "X", "D", "d", "|", "_"
+]
+    
 
-def circle_range(
+def plot_circle(
         ax, 
-        longitude, 
-        latitude, 
+        center_lon, 
+        center_lat, 
         radius = 500, 
         color = "gray"
         ):
              
-    
-    gd = Geodesic()
-
-    cp = gd.circle(
-        lon = longitude, 
-        lat = latitude, 
+    cp = Geodesic().circle(
+        lon = center_lon, 
+        lat = center_lat, 
         radius = radius * 1000.
         )
     
@@ -32,6 +36,19 @@ def circle_range(
         color = color,
         alpha = 0.2, 
         label = 'radius'
+        )
+    
+def plot_rectangle(ax, longitudes, latitudes):
+    
+    square = Polygon(zip(longitudes, latitudes))
+    
+    x, y = square.exterior.xy
+    
+    ax.add_patch(plt.Polygon(
+        list(zip(x, y)),
+        transform = ccrs.PlateCarree(), 
+        color = 'red', 
+        alpha = 0.5)
         )
     
 
@@ -61,11 +78,7 @@ def marker_sites(axs, sites):
         axs.text(lon, lat, key, 
                  transform = ccrs.PlateCarree())
         
-markers = [
-    "o", "v", "^", "<", ">", "1", "2", "3", "4", "8", "s", "p", "P",
-    "*", "h", "H", "+", "x", "X", "D", "d", "|", "_"
-]
-        
+    
 def plot_sites_markers(ax, sites, names):
     
     colors = ['g', 'b', 'red']
@@ -147,3 +160,22 @@ def distance_from_equator(
 colors = list(mcolors.CSS4_COLORS.keys())
 
  
+def plot_terminator_and_equator(
+        ax, dn, twilight = 18):
+ 
+    eq_lon, eq_lat  = gg.load_equator(
+        dn.year, values = True)
+    
+    term_lon, term_lat = gg.terminator2(
+        dn, twilight)
+    
+    ax.scatter(term_lon, term_lat, s = 10)
+    
+    inter_lon, inter_lat = gg.intersection(
+        eq_lon, eq_lat, term_lon, term_lat)
+    
+    
+    ax.scatter(inter_lon, inter_lat, s = 100, 
+               marker = 'X', color = 'r')
+    
+    return eq_lon, eq_lat

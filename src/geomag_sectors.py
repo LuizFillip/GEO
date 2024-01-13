@@ -106,7 +106,4 @@ def filter_ipp(df, dn):
         xx1, yy1
         )
     
-    return df.loc[
-        df['lon'].isin(x) & 
-        df['lat'].isin(y)
-        ]
+    return df.loc[ df['lon'].isin(x) & df['lat'].isin(y)]
