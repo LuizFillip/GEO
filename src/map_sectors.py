@@ -1,6 +1,5 @@
 import numpy as np 
 import GEO as gg 
-import pandas as pd
 import cartopy.crs as ccrs
 import matplotlib.pyplot as plt
 
@@ -42,9 +41,7 @@ def corner_coords(
         
         coords = df.loc[
             (df['lon'] > slon - radius) &
-            (df['lon'] < slon)
-            ].min()
-        
+            (df['lon'] < slon)].min()
         
         clon = coords['lon']
         clat = coords['lat']
@@ -77,7 +74,7 @@ def set_coords(
         angle = 45
         ):
     
-    x_coords, y_coords = corner_coords(
+    lons, lats = corner_coords(
         year, 
         radius, 
         angle 
@@ -85,7 +82,7 @@ def set_coords(
     
     coords = {}
     
-    for x, y in zip(x_coords, y_coords):
+    for x, y in zip(lons, lats):
         
         lon_set = sorted(tuple(set(x)))
         lat_set = sorted(tuple(set(y)))
@@ -102,21 +99,22 @@ def middle_point(arr):
 
 def plot_rectangles_regions(
         ax,
-        center = False, 
-        label_box = False
+        center = True, 
+        label_box = True
         ):
     
-    x_coords, y_coords = corner_coords(
+    lons, lats = corner_coords(
             year = 2013, 
             radius = 10,  
             angle = -45
             )
     
-    numbers = list(range(len(x_coords)))
+    numbers = list(range(len(lons)))
         
-    for i, (xlim, ylim) in enumerate(zip(x_coords, y_coords)):
+    for i, (xlim, ylim) in enumerate(zip(lons, lats)):
         
         index = numbers[i] + 1 
+        
         ax.plot(
             xlim, ylim,
             color = 'black', 
@@ -132,31 +130,78 @@ def plot_rectangles_regions(
         
         if label_box:
             ax.text(
-                clon, 
-                max(ylim) + 1, index, 
-                transform = ax.transData)
+                clon, max(ylim) + 1, index, 
+                transform = ax.transData
+                )
             
     return 
 
-fig, ax = plt.subplots(
-    dpi = 300,
-    sharex = True, 
-    figsize = (10,10),
-    subplot_kw = {'projection': ccrs.PlateCarree()}
-)
-
-year = 2013
-
-gg.map_attrs(ax, year = 2013, grid = False)
-
-plot_rectangles_regions(
-    ax,
+def plot_map():
+    fig, ax = plt.subplots(
+        dpi = 300,
+        sharex = True, 
+        figsize = (10,10),
+        subplot_kw = {'projection': ccrs.PlateCarree()}
+    )
+    
+    year = 2013
+    
+    gg.map_attrs(ax, year, grid = False)
+    
+    plot_rectangles_regions(
+        ax,
         center = True, 
         label_box = True
         )
 
-set_coords(
-        year = 2013, 
-        radius = 10, 
-        angle = 45
-        )
+def first_of_terminator(
+        ax_map, 
+        corners, 
+        eq_lon = None, 
+        eq_lat = None,
+        year = 2013
+        ):
+
+    '''
+    First intersection of terminator and the 
+    region square
+    '''
+    out = {}
+    for key in corners.keys():
+        xlim, ylim = corners[key]
+        ilon, ilat = gg.intersection(
+            eq_lon, eq_lat, 
+            [xlim[1], xlim[1]], ylim
+            )
+        out[key] = (ilon, ilat) 
+        
+        ax_map.scatter(ilon, ilat, color = 'k')
+        
+    return out
+
+
+
+out = []
+
+# df = gg.load_equator(year)
+
+# for key in corners.keys():
+#     xlim, ylim = corners[key]
+    
+#     ilon, ilat = gg.intersection(
+#         eq_lon, eq_lat, 
+#         [xlim[1], xlim[1]], ylim
+#         )
+#     out[key] = (ilon, ilat) 
+
+year = 2013
+import os
+import pandas as pd 
+
+infile = os.getcwd() + f'/database/GEO/dips/dip_{year}.txt'
+corners = set_coords(year)
+
+df = pd.read_csv(infile, index_col=0)
+
+
+lon 
