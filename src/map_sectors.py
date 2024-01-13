@@ -1,6 +1,9 @@
 import numpy as np 
 import GEO as gg 
 import pandas as pd
+import cartopy.crs as ccrs
+import matplotlib.pyplot as plt
+
 
 
 def longitude_sector(
@@ -14,46 +17,27 @@ def longitude_sector(
     
     return ds.loc[s & e].sort_index()
 
-def longitudes(
-        start = -80, 
-        end = -30, 
-        step = 10
-        ):
-    return np.arange(start, end, step)
-
-
         
 def corner_coords(
         year = 2013, 
         radius = 5,  
-        angle = -45,
-        ax = None
+        angle = -45
         ):
     
     df = gg.load_equator(year)
-    
-    x_coords = []
-    y_coords = []
-    
+
     if radius == 10:
         
         delta = 3
-        longs = longitudes(
-                start = -65,
-                end = -30, 
-                step = 10
-                )
+        longs = np.arange( -65, -30, radius)
         
     elif radius == 5:
         delta = 1.5
-    
-        longs = longitudes(
-                start = -70,
-                end = -35, 
-                step = 5
-                )
-        
-        
+        longs = np.arange( -70, -35, radius)
+     
+    x_coords = []
+    y_coords = []
+               
     for slon in longs:
         
         coords = df.loc[
@@ -84,11 +68,11 @@ def corner_coords(
         y_coords.append(y_limits)
     
     
-    return x_coords, y_coords
+    return x_coords[::-1], y_coords[::-1]
             
     
 def set_coords(
-        year, 
+        year = 2013, 
         radius = 10, 
         angle = 45
         ):
@@ -113,3 +97,66 @@ def set_coords(
     return coords
 
 
+def middle_point(arr):
+    return sum(list(set(arr))) / 2
+
+def plot_rectangles_regions(
+        ax,
+        center = False, 
+        label_box = False
+        ):
+    
+    x_coords, y_coords = corner_coords(
+            year = 2013, 
+            radius = 10,  
+            angle = -45
+            )
+    
+    numbers = list(range(len(x_coords)))
+        
+    for i, (xlim, ylim) in enumerate(zip(x_coords, y_coords)):
+        
+        index = numbers[i] + 1 
+        ax.plot(
+            xlim, ylim,
+            color = 'black', 
+            linewidth = 2, 
+            transform = ccrs.PlateCarree(),
+            )
+        
+        clon = middle_point(xlim)
+        clat = middle_point(ylim)
+        
+        if center:
+            ax.scatter(clon, clat, c = 'k', s = 100)
+        
+        if label_box:
+            ax.text(
+                clon, 
+                max(ylim) + 1, index, 
+                transform = ax.transData)
+            
+    return 
+
+fig, ax = plt.subplots(
+    dpi = 300,
+    sharex = True, 
+    figsize = (10,10),
+    subplot_kw = {'projection': ccrs.PlateCarree()}
+)
+
+year = 2013
+
+gg.map_attrs(ax, year = 2013, grid = False)
+
+plot_rectangles_regions(
+    ax,
+        center = True, 
+        label_box = True
+        )
+
+set_coords(
+        year = 2013, 
+        radius = 10, 
+        angle = 45
+        )
