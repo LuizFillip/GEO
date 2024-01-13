@@ -97,19 +97,42 @@ def set_coords(
 def middle_point(arr):
     return sum(list(set(arr))) / 2
 
+
+def first_edge(year = 2013):
+
+    '''
+    First intersection of terminator and the 
+    region square
+    '''
+    out = {}
+    
+    corners = set_coords(year)
+
+    eq_lon, eq_lat = gg.load_equator(year, values = True)
+
+
+    for key in corners.keys():
+        xlim, ylim = corners[key]
+        
+        ilon, ilat = gg.intersection(
+            eq_lon, eq_lat, [xlim[1], xlim[1]], ylim
+            )
+        out[key] = (ilon[0], ilat[0]) 
+        
+    return out
+
 def plot_rectangles_regions(
         ax,
-        center = True, 
-        label_box = True
+        year = 2013,
+        center_dot = True, 
+        index_box = True,
+        first_inter = True
         ):
     
-    lons, lats = corner_coords(
-            year = 2013, 
-            radius = 10,  
-            angle = -45
-            )
+    lons, lats = corner_coords(year)
     
     numbers = list(range(len(lons)))
+    
         
     for i, (xlim, ylim) in enumerate(zip(lons, lats)):
         
@@ -125,83 +148,25 @@ def plot_rectangles_regions(
         clon = middle_point(xlim)
         clat = middle_point(ylim)
         
-        if center:
+        if center_dot:
             ax.scatter(clon, clat, c = 'k', s = 100)
         
-        if label_box:
+        if index_box:
             ax.text(
                 clon, max(ylim) + 1, index, 
                 transform = ax.transData
                 )
             
+    if first_inter:
+        for (x, y) in first_edge(year).values():
+        
+            ax.scatter(x, y, c = 'k', s = 50, marker = 's')
+            
     return 
 
-def plot_map():
-    fig, ax = plt.subplots(
-        dpi = 300,
-        sharex = True, 
-        figsize = (10,10),
-        subplot_kw = {'projection': ccrs.PlateCarree()}
-    )
-    
-    year = 2013
-    
-    gg.map_attrs(ax, year, grid = False)
-    
-    plot_rectangles_regions(
-        ax,
-        center = True, 
-        label_box = True
-        )
-
-def first_of_terminator(
-        ax_map, 
-        corners, 
-        eq_lon = None, 
-        eq_lat = None,
-        year = 2013
-        ):
-
-    '''
-    First intersection of terminator and the 
-    region square
-    '''
-    out = {}
-    for key in corners.keys():
-        xlim, ylim = corners[key]
-        ilon, ilat = gg.intersection(
-            eq_lon, eq_lat, 
-            [xlim[1], xlim[1]], ylim
-            )
-        out[key] = (ilon, ilat) 
-        
-        ax_map.scatter(ilon, ilat, color = 'k')
-        
-    return out
 
 
 
-out = []
-
-# df = gg.load_equator(year)
-
-# for key in corners.keys():
-#     xlim, ylim = corners[key]
-    
-#     ilon, ilat = gg.intersection(
-#         eq_lon, eq_lat, 
-#         [xlim[1], xlim[1]], ylim
-#         )
-#     out[key] = (ilon, ilat) 
-
-year = 2013
-import os
-import pandas as pd 
-
-infile = os.getcwd() + f'/database/GEO/dips/dip_{year}.txt'
-corners = set_coords(year)
-
-df = pd.read_csv(infile, index_col=0)
 
 
-lon 
+
