@@ -89,15 +89,7 @@ def get_dip(date = 2013,
     return pd.DataFrame({"lon": v[:,0], "lat": v[:,1]})
 
 
-def load_equator(year, values = False):
-    infile = os.getcwd() + f'/database/GEO/dips/dip_{year}.txt'
-    
-    df = pd.read_csv(infile, index_col = 0)
 
-    if values:
-        return df['lon'].values, df['lat'].values 
-    else:
-        return df
 
 
 

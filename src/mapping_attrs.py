@@ -76,7 +76,8 @@ def marker_sites(axs, sites):
             marker = "o")
         
         axs.text(lon, lat, key, 
-                 transform = ccrs.PlateCarree())
+                 transform = ccrs.PlateCarree()
+                 )
         
     
 def plot_sites_markers(ax, sites, names):
@@ -143,39 +144,6 @@ def plot_square_area(
     
     return center_lon, center_lat
 
-
-def distance_from_equator(
-        lon, lat, year = 2013
-        ):
-    eq = gg.load_equator(year)
-    x, y = eq[:, 0], eq[:, 1]
-    min_x, min_y, min_d = gg.compute_distance(
-        x, y, lon, lat
-        )
-    return min_d
-
-
- 
-    
 colors = list(mcolors.CSS4_COLORS.keys())
 
- 
-def plot_terminator_and_equator(
-        ax, dn, twilight = 18):
- 
-    eq_lon, eq_lat  = gg.load_equator(
-        dn.year, values = True)
-    
-    term_lon, term_lat = gg.terminator2(
-        dn, twilight)
-    
-    ax.scatter(term_lon, term_lat, s = 10)
-    
-    inter_lon, inter_lat = gg.intersection(
-        eq_lon, eq_lat, term_lon, term_lat)
-    
-    
-    ax.scatter(inter_lon, inter_lat, s = 100, 
-               marker = 'X', color = 'r')
-    
-    return eq_lon, eq_lat
+

@@ -1,9 +1,6 @@
 import numpy as np 
 import GEO as gg 
 import cartopy.crs as ccrs
-import matplotlib.pyplot as plt
-
-
 
 def longitude_sector(
         ds, 
@@ -17,12 +14,16 @@ def longitude_sector(
     return ds.loc[s & e].sort_index()
 
         
-def corner_coords(
+def sectors_coords(
         year = 2013, 
-        radius = 5,  
+        radius = 10,  
         angle = -45
         ):
+    '''
+    Compute coordinates of sectors from a longitude 
+    range with an inclination  
     
+    '''
     df = gg.load_equator(year)
 
     if radius == 10:
@@ -74,7 +75,7 @@ def set_coords(
         angle = 45
         ):
     
-    lons, lats = corner_coords(
+    lons, lats = sectors_coords(
         year, 
         radius, 
         angle 
@@ -110,7 +111,6 @@ def first_edge(year = 2013):
 
     eq_lon, eq_lat = gg.load_equator(year, values = True)
 
-
     for key in corners.keys():
         xlim, ylim = corners[key]
         
@@ -129,7 +129,7 @@ def plot_rectangles_regions(
         first_inter = True
         ):
     
-    lons, lats = corner_coords(year)
+    lons, lats = sectors_coords(year)
     
     numbers = list(range(len(lons)))
     
@@ -154,7 +154,8 @@ def plot_rectangles_regions(
         if index_box:
             ax.text(
                 clon, max(ylim) + 1, index, 
-                transform = ax.transData
+                transform = ax.transData,
+                fontsize = 35
                 )
             
     if first_inter:

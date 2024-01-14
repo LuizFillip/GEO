@@ -106,7 +106,8 @@ def map_attrs(
         year = None,
         lon_lims = lon_lims, 
         lat_lims = lat_lims,
-        grid = True
+        grid = True, 
+        degress = None
         ):
 
     map_features(ax, grid)
@@ -120,7 +121,7 @@ def map_attrs(
         x, y = mag_equator(
             ax,
             year,
-            degress = None
+            degress = degress
             )
         
         return x, y
