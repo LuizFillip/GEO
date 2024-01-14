@@ -26,7 +26,6 @@ from .dip_calculus import *
 from .mapping_attrs import *
 from .intersect import intersection
 from .timezones import delta_timezone, location_timezone
-from .nearby_equator import stations_near_of_equator
 from .terminator import terminator, terminator2
 from .terminator_time import dusk_from_site, dusk_time, is_night, local_midnight
 from .haversine_distance import haversine_distance, distance_circle

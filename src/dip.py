@@ -3,7 +3,6 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import GEO as gg
-import os
 from tqdm import tqdm 
 
 
@@ -87,10 +86,6 @@ def get_dip(date = 2013,
     p = cs.collections[1].get_paths()[0]
     v = p.vertices
     return pd.DataFrame({"lon": v[:,0], "lat": v[:,1]})
-
-
-
-
 
 
 def save_df(year = 2023):

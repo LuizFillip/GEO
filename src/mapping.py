@@ -4,8 +4,8 @@ import numpy as np
 import GEO as g
 import matplotlib.pyplot as plt
 
-lat_lims = dict(min = -40, max = 15, stp = 10)
-lon_lims = dict(min = -90, max = -30, stp = 10) 
+lat_lims = dict(min = -20, max = 10, stp = 10)
+lon_lims = dict(min = -70, max = -30, stp = 10) 
 
 class limits(object):
     def __init__(self, **kwargs):
