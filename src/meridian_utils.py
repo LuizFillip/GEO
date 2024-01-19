@@ -47,10 +47,10 @@ def intersec_with_equator(x, y, year = 2013):
      Find intersection point between equator 
      and meridian line 
      """
-     eq = gg.load_equator(year)
+     e_x, e_y = gg.load_equator(year, values = True)
      
      nx, ny = intersection(
-         eq[:, 0], eq[:, 1], x, y
+         e_x, e_y, x, y
          )
      return nx.item(), ny.item()
 
