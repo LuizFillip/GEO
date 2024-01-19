@@ -1,6 +1,6 @@
 from .sites_infos import *
 from .conversions import year_fraction
-from .map_sectors import set_coords, sectors_coords, plot_rectangles_regions
+from .map_sectors import * 
 from .mapping import (
     limits,
     quick_map, 
