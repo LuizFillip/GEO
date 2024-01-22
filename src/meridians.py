@@ -37,7 +37,7 @@ def limit_hemisphere(
         set_y = y[start: eq_y + 1]
         
     else:
-        end = gg.find_closest(y, ny - rlat) + 1
+        end = gg.find_closest(y, ny - rlat) #+ 1
         start = gg.find_closest(y, ny + rlat)
         set_x = x[start: end]
         set_y = y[start: end]
@@ -185,11 +185,8 @@ def split_meridian(
         points = None
         ):
     
-    name = f'{site}_{year}.json'
-    nx, ny, x, y = gg.load_meridian(
-        MERIDIAN_PATH + name
-        )
-    
+    nx, ny, x, y = gg.load_meridian(year)
+        
     lon, lat = limit_hemisphere(
             x, y, nx, ny, 
             np.degrees(rlat), 
