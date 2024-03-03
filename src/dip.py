@@ -6,22 +6,7 @@ import GEO as gg
 from tqdm import tqdm 
 
 
-def dec_dip(
-        year = 2013, 
-        site = "car", 
-        alt = 250, 
-        ):
-         
-    lat, lon = gg.sites[site]["coords"]
-        
-    d, i, h, x, y, z, f = pyIGRF.igrf_value(
-        lat, 
-        lon, 
-        alt = alt, 
-        year = year
-        )
 
-    return d, i 
 
 
 def run_igrf(
@@ -105,4 +90,4 @@ def save_df(year = 2023):
     
   
     
-            
+# save_df(year = 2023)

@@ -4,7 +4,7 @@ import datetime as dt
 # from spacepy.time import Ticktock
 import time
 
-def year_fraction(date):
+def year_fraction(date, rd = 4):
     
     "Return years in fraction (like julian date) "
 
@@ -31,7 +31,7 @@ def year_fraction(date):
     duration = s(next_year) - s(start_year)
     fraction = elapsed / duration
     
-    return round(date.year + fraction, 2)
+    return round(date.year + fraction, rd)
 
 def colatitude(latitude):
     return (np.pi / 2) - latitude

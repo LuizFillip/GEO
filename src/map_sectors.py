@@ -1,6 +1,6 @@
 import numpy as np 
 import GEO as gg 
-import cartopy.crs as ccrs
+# import cartopy.crs as ccrs
 
 def longitude_sector(
         ds, 
@@ -138,18 +138,18 @@ def plot_rectangles_regions(
         
         index = numbers[i] + 1 
         
-        ax.plot(
-            xlim, ylim,
-            color = 'black', 
-            linewidth = 2, 
-            transform = ccrs.PlateCarree(),
-            )
+        # ax.plot(
+        #     xlim, ylim,
+        #     color = 'black', 
+        #     linewidth = 2, 
+        #     transform = ccrs.PlateCarree(),
+        #     )
         
         clon = middle_point(xlim)
         clat = middle_point(ylim)
         
         if center_dot:
-            ax.scatter(clon, clat, c = 'k', s = 100)
+            ax.scatter(clon, clat, c = 'b', s = 100)
         
         if index_box:
             ax.text(
@@ -164,11 +164,3 @@ def plot_rectangles_regions(
             ax.scatter(x, y, c = 'k', s = 50, marker = 's')
             
     return 
-
-
-
-
-
-
-
-# first_edge()

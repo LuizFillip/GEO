@@ -4,7 +4,7 @@ from __future__ import (
 import cmath
 import numpy as np
 from numpy import ma
-from astropy.time import Time
+# from astropy.time import Time
 
 
 def JulianDayFromDate(date, calendar='standard'):
@@ -183,7 +183,8 @@ def terminator2(date, TwilightAngle):
 
     earthRadius = 6.371009e6
     ra, sun_lat, sun_distance = epem(date)
-    t = Time(date.strftime("%Y-%m-%d %H:%M:%S%Z"), scale='utc')
+    # t = Time(, scale='utc')
+    t = date.strftime("%Y-%m-%d %H:%M:%S%Z")
     lm_sidereal_time = np.array(t.sidereal_time(
         'apparent', 'greenwich')
         )

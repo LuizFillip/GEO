@@ -1,4 +1,4 @@
-from intersect import intersection
+# from intersect import intersection
 from scipy.signal import argrelmin
 import numpy as np
 import json  
@@ -25,6 +25,31 @@ def load_meridian(year, site = 'saa'):
     return nx, ny, x, y
 
 
+def split_meridian(
+        rlat,
+        year,
+        points = None,
+        site = 'saa'
+        ):
+        
+    nx, ny, x, y = load_meridian(year, site)
+    
+    lon, lat = gg.limit_hemisphere(
+            x, 
+            y, 
+            nx, 
+            ny, 
+            np.degrees(rlat), 
+            hemisphere = 'both'
+            )
+    
+    lon = sorted(lon)
+    lon, lat = interpolate(
+        lon, lat, points = points
+        )
+
+    return lon, lat
+
 def compute_distance(x, y, x0, y0):
     
     dis = np.sqrt(pow(x - x0, 2) + 
@@ -49,7 +74,7 @@ def intersec_with_equator(x, y, year = 2013):
      """
      e_x, e_y = gg.load_equator(year, values = True)
      
-     nx, ny = intersection(
+     nx, ny = gg.intersection(
          e_x, e_y, x, y
          )
      return nx.item(), ny.item()
@@ -61,6 +86,7 @@ def interpolate(x, y, points = 30):
     ranges of meridians
     """
          
+    
     spl = CubicSpline(x, y)
     
     new_lon = np.linspace(x[0], x[-1], points)    

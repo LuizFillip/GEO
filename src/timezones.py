@@ -10,6 +10,7 @@ def location_timezone(
         latitude = 0
         ):
     tf = TimezoneFinder()
+    
     location = tf.timezone_at(
         lng = longitude, 
         lat = latitude
@@ -22,7 +23,7 @@ def location_timezone(
 def delta_timezone(
         dn, 
         longitude, 
-        latitude = 0
+        latitude
         ):
     
     if isinstance(dn, dt.date):
@@ -41,27 +42,23 @@ def delta_timezone(
 
 
 
-# def test():
-dn = dt.datetime(2017, 1, 2)
+# dn = dt.datetime(2017, 1, 1, 5, 0)
 
 
-
-# location = location_timezone(
-#     longitude, 
-#     latitude = 0
-#     )
-
-# delta = aware_dn(dn, tzinfo = pytz.utc)  - aware_dn(dn, tzinfo = location)
-
-# delta
-# import numpy as np 
-
-
-# for lon in np.arange(-80, -30, 10):
+def local_midnight(dn, lon):
     
-#     delta = delta_timezone(
-#             dn, 
-#             lon 
-#             )
+    hour = dn.hour 
+
+    if hour != 0:
+        dn -= dt.timedelta(hours = hour)
     
-#     print(lon, (dn - delta) - dn )
+    delta = dt.timedelta(hours = lon / 15)
+    
+    target = dn - delta
+    
+    return target 
+
+
+
+    
+    

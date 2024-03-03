@@ -57,9 +57,7 @@ class meridians:
             delta = 1
             ):
         
-        if isinstance(
-                dn, 
-                (dt.datetime, dt.date)):
+        if isinstance(dn, (dt.datetime, dt.date)):
             date = gg.year_fraction(dn)
         else:
             date = dn
@@ -169,35 +167,20 @@ def save_meridian(
         "ny": ny
         }
     
-    with open(
-            MERIDIAN_PATH + name, 'w'
-            ) as fp:
+    with open(MERIDIAN_PATH + name, 'w') as fp:
         json.dump(dic, fp)
         
     return dic
 
-        
-def split_meridian(
-        rlat,
-        site = 'jic',
-        year = 2013,
-        hemisphere = 'both',
-        points = None
-        ):
-    
-    nx, ny, x, y = gg.load_meridian(year)
-        
-    lon, lat = limit_hemisphere(
-            x, y, nx, ny, 
-            np.degrees(rlat), 
-            hemisphere = hemisphere
+
+def main():
+    date = dt.datetime(2023, 1, 1)
+    glat, glon = gg.sites['saa']['coords']
+            
+    save_meridian(
+            date, 
+            glon, 
+            glat, 
+            site = 'saa'
             )
     
-    if points is not None:
-        lon, lat =  gg.interpolate(
-            lon, lat, points = points
-            )
-
-    return lon, lat
-
-

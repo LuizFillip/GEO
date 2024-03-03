@@ -12,7 +12,6 @@ from .mapping import (
 from .meridians import (
     limit_hemisphere, 
     meridians,
-    split_meridian,
     save_meridian
     )
 from .meridian_utils import (
@@ -20,12 +19,13 @@ from .meridian_utils import (
     compute_distance,
     intersec_with_equator,
     load_meridian, 
-    find_closest
+    find_closest,
+    split_meridian
     )
 from .dip_calculus import *
 from .mapping_attrs import *
 from .intersect import intersection
-from .timezones import delta_timezone, location_timezone
+# from .timezones import delta_timezone, location_timezone, local_midnight
 from .terminator import terminator, terminator2
-from .terminator_time import dusk_from_site, dusk_time, is_night, local_midnight
+from .terminator_time import dusk_from_site, dusk_time
 from .haversine_distance import haversine_distance, distance_circle

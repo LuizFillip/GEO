@@ -5,7 +5,7 @@ import base as b
 import datetime as dt
 from datetime import datetime
 import pytz
-from timezonefinder import TimezoneFinder
+# from timezonefinder import TimezoneFinder
 from astral import LocationInfo
 
 def dusk_time(
@@ -51,68 +51,73 @@ def dusk_from_site(
     return dusk
 
 
-def is_night(longitude, latitude, date_time):
-    '''
-    Check if is a region encounters nighttime period
-    '''
-    tf = TimezoneFinder()
+# def is_night(longitude, latitude, date_time):
+#     '''
+#     Check if is a region encounters nighttime period
+#     '''
+#     tf = TimezoneFinder()
     
-    timezone_str = tf.timezone_at(
-        lng = longitude, 
-        lat = latitude
-        )
-    city_tz = pytz.timezone(timezone_str)
+#     timezone_str = tf.timezone_at(
+#         lng = longitude, 
+#         lat = latitude
+#         )
+#     city_tz = pytz.timezone(timezone_str)
 
-    city = LocationInfo(
-        "City", 
-        "Country", 
-        timezone_str, 
-        latitude, 
-        longitude
-        )
+#     city = LocationInfo(
+#         "City", 
+#         "Country", 
+#         timezone_str, 
+#         latitude, 
+#         longitude
+#         )
     
-    s = sun(city.observer, date=date_time, tzinfo=city_tz)
+#     s = sun(city.observer, date=date_time, tzinfo=city_tz)
 
-    sunrise = s["sunrise"].astimezone(city_tz)
-    sunset = s["sunset"].astimezone(city_tz)
+#     sunrise = s["sunrise"].astimezone(city_tz)
+#     sunset = s["sunset"].astimezone(city_tz)
     
-    date_time = date_time.astimezone(city_tz)
+#     date_time = date_time.astimezone(city_tz)
 
-    if sunrise < date_time < sunset:
-        return False  # It's day
-    else:
-        return True  # It's night
+#     if sunrise < date_time < sunset:
+#         return False  # It's day
+#     else:
+#         return True  # It's night
 
-def local_midnight(longitude, latitude, date_time):
+# def local_midnight(longitude, latitude, date_time):
     
-    tf = TimezoneFinder()
-    timezone_str = tf.timezone_at(lng=longitude, lat=latitude)
-    city_tz = pytz.timezone(timezone_str)
+#     tf = TimezoneFinder()
+#     timezone_str = tf.timezone_at(lng=longitude, lat=latitude)
+#     city_tz = pytz.timezone(timezone_str)
     
-    # Finding the local midnight
-    current_date = date_time.date()
-    local = city_tz.localize(
-        datetime(current_date.year,
-                 current_date.month, 
-                 current_date.day, 0, 0, 0)
-        )
+#     # Finding the local midnight
+#     current_date = date_time.date()
+#     local = city_tz.localize(
+#         datetime(current_date.year,
+#                  current_date.month, 
+#                  current_date.day, 0, 0, 0)
+#         )
     
-    dusk = b.aware_dn(local.astimezone(pytz.utc))
+#     dusk = b.aware_dn(local.astimezone(pytz.utc))
     
-    if dusk < date_time:
-        dusk += dt.timedelta(days = 1)
+#     if dusk < date_time:
+#         dusk += dt.timedelta(days = 1)
         
-    return dusk
+#     return dusk
 
 
-def main():
+# def main():
     
-    longitude = -46.6333  # Replace with the desired longitude
-    latitude = -23.5505  # Replace with the desired latitude
-    date_time_to_check = dt.datetime(2023, 12, 1, 8, 0, 0)  #
-    night = is_night(longitude, latitude, date_time_to_check)
-    if night:
-        print("It's night.")
-    else:
-        print("It's day.")
-
+#     longitude = -46.6333  # Replace with the desired longitude
+#     latitude = -23.5505  # Replace with the desired latitude
+#     date_time_to_check = dt.datetime(2023, 12, 1, 8, 0, 0)  #
+#     night = is_night(longitude, latitude, date_time_to_check)
+#     if night:
+#         print("It's night.")
+#     else:
+#         print("It's day.")
+# dn = dt.datetime(2015, 1, 6)
+# dusk_from_site(
+#         dn, 
+#         'jic',
+#         twilight_angle = 18
+#         )
