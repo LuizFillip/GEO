@@ -173,8 +173,8 @@ def save_meridian(
     return dic
 
 
-def main():
-    date = dt.datetime(2023, 1, 1)
+def main(year):
+    date = dt.datetime(year, 1, 1)
     glat, glon = gg.sites['saa']['coords']
             
     save_meridian(
@@ -184,3 +184,4 @@ def main():
             site = 'saa'
             )
     
+# main(2024)

@@ -11,8 +11,7 @@ from .mapping import (
     )
 from .meridians import (
     limit_hemisphere, 
-    meridians,
-    save_meridian
+    meridians
     )
 from .meridian_utils import (
     interpolate, 

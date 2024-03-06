@@ -1,4 +1,3 @@
-# from intersect import intersection
 from scipy.signal import argrelmin
 import numpy as np
 import json  
