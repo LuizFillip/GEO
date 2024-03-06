@@ -1,17 +1,6 @@
 import numpy as np 
 import GEO as gg 
-# import cartopy.crs as ccrs
-
-def longitude_sector(
-        ds, 
-        long_start, 
-        long_delta = 10
-        ):
-
-    s = (ds['lon'] >= long_start)
-    e = (ds['lon'] <= long_start + long_delta)
-    
-    return ds.loc[s & e].sort_index()
+import cartopy.crs as ccrs
 
         
 def sectors_coords(
@@ -28,7 +17,7 @@ def sectors_coords(
 
     if radius == 10:
         
-        delta = 3
+        delta = 5 #3
         longs = np.arange( -65, -30, radius)
         
     elif radius == 5:
@@ -138,12 +127,12 @@ def plot_rectangles_regions(
         
         index = numbers[i] + 1 
         
-        # ax.plot(
-        #     xlim, ylim,
-        #     color = 'black', 
-        #     linewidth = 2, 
-        #     transform = ccrs.PlateCarree(),
-        #     )
+        ax.plot(
+            xlim, ylim,
+            color = 'black', 
+            linewidth = 2, 
+            transform = ccrs.PlateCarree(),
+            )
         
         clon = middle_point(xlim)
         clat = middle_point(ylim)
