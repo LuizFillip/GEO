@@ -72,6 +72,10 @@ def set_coords(
     
     coords = {}
     
+    def round_up(x):
+        return int(np.ceil((x - 5) / 10.0)) * 10
+
+
     for x, y in zip(lons, lats):
         
         lon_set = sorted(tuple(set(x)))
@@ -79,7 +83,7 @@ def set_coords(
         
         lon_key = round(lon_set[0])
         
-        coords[lon_key] = (lon_set, lat_set)
+        coords[round_up(lon_key)] = (lon_set, lat_set)
     
     return coords
 
@@ -153,3 +157,6 @@ def plot_rectangles_regions(
             ax.scatter(x, y, c = 'k', s = 50, marker = 's')
             
     return 
+
+
+
