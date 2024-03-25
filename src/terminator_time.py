@@ -51,6 +51,39 @@ def dusk_from_site(
     return dusk
 
 
+def terminators_time(
+        dn, 
+        lons, 
+        twilight = 18, 
+        float_fmt = True
+        ):
+        
+    out = {}
+    lons = [int(i) for i in lons]
+    for i, col in enumerate(lons):
+        
+        lon, lat = gg.first_edge(dn.year)[col]
+        
+        try:
+            time_dn = gg.dusk_time(
+                    dn,  
+                    lat = lat, 
+                    lon = lon, 
+                    twilight = twilight
+                    )
+        except:
+            # junk terminator (not real)
+            delta = dt.timedelta(hours = i + 2)
+            time_dn = dn + delta
+        
+        if float_fmt:
+            out[col] = b.dn2float(time_dn)
+        else:
+            out[col] = time_dn
+            
+    return out 
+
+
 # def is_night(longitude, latitude, date_time):
 #     '''
 #     Check if is a region encounters nighttime period

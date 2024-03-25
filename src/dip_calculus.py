@@ -83,3 +83,4 @@ def stations_coordinates(year = 2013, distance = 5):
     arr = np.array([[lon, lat] for (lon, lat) in sites.values()])
     
     return arr[:, 0], arr[:, 1]
+
