@@ -52,19 +52,7 @@ def plot_rectangle(ax, longitudes, latitudes):
         )
     
 
-def plot_ellipse(ax, year = 2014, lon = -60):
-    
-   
-    eq_lon, eq_lat  = gg.load_equator(
-        year, values = True)
-    
-    i = b.find_closest(eq_lon, lon)
-    
-    x, y = b.ellipse((eq_lon[i], eq_lat[i]))
-    
-    ax.plot(x, y)
-    
-    ax.fill(x, y, color = 'gray', alpha = 0.5)
+
     
 def marker_sites(axs, sites):
  
@@ -131,8 +119,8 @@ def plot_square_area(
     ax.plot(
         x_limits, y_limits,
         color = 'black', 
-        linewidth = 4, 
-        marker = '.',
+        linewidth = 2, 
+        # marker = '.',
         transform=ccrs.PlateCarree() 
         )
     
