@@ -6,7 +6,8 @@ import cartopy.crs as ccrs
 def sectors_coords(
         year = 2013, 
         radius = 10,  
-        angle = -45
+        angle = -45,
+        delta1 = 3
         ):
     '''
     Compute coordinates of sectors from a longitude 
@@ -17,7 +18,7 @@ def sectors_coords(
 
     if radius == 10:
         
-        delta = 5 #3
+        delta = delta1 #3
         longs = np.arange( -65, -30, radius)
         
     elif radius == 5:
@@ -61,13 +62,15 @@ def sectors_coords(
 def set_coords(
         year = 2013, 
         radius = 10, 
-        angle = 45
+        angle = 45, 
+        delta1 = 3
         ):
     
     lons, lats = sectors_coords(
         year, 
         radius, 
-        angle 
+        angle, 
+        delta1 
         )
     
     coords = {}
@@ -92,7 +95,7 @@ def middle_point(arr):
     return sum(list(set(arr))) / 2
 
 
-def first_edge(year = 2013):
+def first_edge(year = 2013, delta1 = 3):
 
     '''
     First intersection of terminator and the 
@@ -100,7 +103,7 @@ def first_edge(year = 2013):
     '''
     out = {}
     
-    corners = set_coords(year)
+    corners = set_coords(year, delta1 = delta1)
 
     eq_lon, eq_lat = gg.load_equator(year, values = True)
 
@@ -119,10 +122,11 @@ def plot_rectangles_regions(
         year = 2013,
         center_dot = True, 
         index_box = True,
-        first_inter = True
+        first_inter = True,
+        delta1 = 3
         ):
     
-    lons, lats = sectors_coords(year)
+    lons, lats = sectors_coords(year, delta1 = delta1)
     
     numbers = list(range(len(lons)))
     

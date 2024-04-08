@@ -2,10 +2,11 @@ import shapely.geometry as sgeom
 from cartopy.geodesic import Geodesic
 import cartopy.crs as ccrs
 import GEO as gg 
-import base as b 
 import matplotlib.colors as mcolors
 from shapely.geometry import Polygon
 import matplotlib.pyplot as plt
+from matplotlib.patches import ConnectionPatch
+from matplotlib.patches import Circle
 
 markers = [
     "o", "v", "^", "<", ">", "1", "2", "3", "4", "8", "s", "p", "P",
@@ -18,7 +19,8 @@ def plot_circle(
         center_lon, 
         center_lat, 
         radius = 500, 
-        color = "gray"
+        edgecolor = "gray",
+        lw = 3
         ):
              
     cp = Geodesic().circle(
@@ -32,9 +34,10 @@ def plot_circle(
     ax.add_geometries(
         geoms, 
         crs = ccrs.PlateCarree(), 
-        edgecolor = 'black', 
-        color = color,
-        alpha = 0.2, 
+        edgecolor = edgecolor, 
+        lw = lw,
+        # alpha = 0.5,
+        facecolor='none',
         label = 'radius'
         )
     
@@ -50,7 +53,83 @@ def plot_rectangle(ax, longitudes, latitudes):
         color = 'red', 
         alpha = 0.5)
         )
+
+
+def connection_areas(
+        ax1, 
+        ax2, 
+        xy, 
+        color = 'b', 
+        radius = 0.1
+        ):
     
+  
+     # Radius of the circle
+    circle = Circle(
+        xy, 
+        radius, 
+        fill = False, 
+        edgecolor=color)
+    
+    
+    ax1.add_patch(circle)
+    
+    x_center, y_center = xy
+    
+    con1 = ConnectionPatch(
+        xyA = (x_center + radius, y_center), 
+        xyB = (0, 0),       
+        coordsA="data", 
+        coordsB="axes fraction",
+        arrowstyle='->', 
+        axesA=ax1, 
+        axesB=ax2, color=color, zorder=10)
+    
+    con2 = ConnectionPatch(
+        xyA=(x_center + radius, y_center), xyB=(0, 1),         
+        coordsA="data", 
+        coordsB="axes fraction",
+        axesA=ax1, axesB=ax2, 
+        color=color, zorder=10)
+    
+    ax2.add_artist(con1)
+    ax2.add_artist(con2)
+
+def plot_areas(ax, ax1, ax2, site):
+
+    lat, lon = gg.sites['car']['coords']
+    xy = (lon, lat)
+    connection_areas(
+        ax, ax1, xy, color = 'k', 
+                     radius = 5)
+    
+    gg.plot_circle(
+            ax, 
+            lon, 
+            lat, 
+            radius = 500, 
+            
+            edgecolor = "k"
+            )
+    
+    
+    if site[0] == 'S':
+        lat, lon = gg.sites['saa']['coords']
+    else:
+        lat, lon = gg.sites['fza']['coords']
+        
+    gg.plot_circle(
+            ax, 
+            lon, 
+            lat, 
+            radius = 230, 
+            edgecolor = "r"
+            )
+    
+        
+    xy = (lon, lat)
+    connection_areas(ax, ax2, xy, color = 'w')
+
 
 
     

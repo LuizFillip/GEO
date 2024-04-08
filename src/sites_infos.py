@@ -5,7 +5,7 @@ import numpy as np
 sites = {
  'cap': {'name': 'Cachoeira Paulista', 'coords': (-22.703, -45.00)},
  'car': {'name': 'Cariri', 'coords': (-7.38, -36.528)},
- 'for': {'name': 'Fortaleza', 'coords': (-3.73, -38.522)},
+ 'fza': {'name': 'Fortaleza', 'coords': (-3.73, -38.522)},
  'caj': {'name': 'Cajazeiras', 'coords': (-6.89, -38.56)},
  'saa': {'name': 'São Luis', 'coords': (-2.53, -44.296)},
  'boa': {'name': 'Boa Vista', 'coords': (2.8, -60.7)},
@@ -50,3 +50,4 @@ def arr_coords(year = 2021):
     sits = list(sites.keys())
     return sits, lon, lat
 
+# sites

@@ -24,7 +24,7 @@ from .meridian_utils import (
 from .dip_calculus import *
 from .mapping_attrs import *
 from .intersect import intersection
-from .timezones import delta_timezone, location_timezone, local_midnight
+from .timezones import local_midnight
 from .terminator import terminator, terminator2
 from .terminator_time import dusk_from_site, dusk_time
 from .haversine_distance import haversine_distance, distance_circle
