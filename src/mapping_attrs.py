@@ -174,6 +174,7 @@ def plot_square_area(
         lat_max = None, 
         lon_max = None, 
         radius = 10, 
+        center_dot = False
         ):
     
     
@@ -206,8 +207,9 @@ def plot_square_area(
     
     center_lat = (lat_max + lat_min) / 2
     center_lon = (lon_max + lon_min) / 2
-
-    ax.scatter(center_lon, center_lat)
+    
+    if center_dot:
+        ax.scatter(center_lon, center_lat)
     
     return center_lon, center_lat
 
