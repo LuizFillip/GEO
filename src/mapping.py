@@ -73,8 +73,8 @@ def map_boundaries(
         )
     
     ax.set(
-        ylabel = 'Latitude (°)',  
-        xlabel = 'Longitude (°)'
+        ylabel = 'Geographic latitude (°)',  
+        xlabel = 'Geographic longitude (°)'
         ) 
     
     return ax

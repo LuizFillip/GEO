@@ -72,7 +72,7 @@ def terminators_time(
                     twilight = twilight
                     )
         except:
-            # junk terminator (not real)
+           
             delta = dt.timedelta(hours = i + 2)
             time_dn = dn + delta
         
@@ -83,7 +83,23 @@ def terminators_time(
             
     return out 
 
-
+def terminator(lon, dn, float_fmt = True):
+    
+    lon, lat = gg.first_edge(dn.year)[int(lon)]
+    
+    time_dn = dusk_time(
+            dn,  
+            lat = lat, 
+            lon = lon, 
+            twilight = 18
+            )
+    
+    if float_fmt:
+        return b.dn2float(time_dn)
+    else:
+        return time_dn
+    
+    
 # def is_night(longitude, latitude, date_time):
 #     '''
 #     Check if is a region encounters nighttime period
