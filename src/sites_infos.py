@@ -3,12 +3,12 @@ import json
 import numpy as np 
 
 sites = {
- 'cap': {'name': 'Cachoeira Paulista', 'coords': (-22.703, -45.00)},
- 'car': {'name': 'Cariri', 'coords': (-7.38, -36.528)},
+ 'cp': {'name': 'Cachoeira Paulista', 'coords': (-22.703, -45.00)},
+ 'ca': {'name': 'Cariri', 'coords': (-7.38, -36.528)},
  'fza': {'name': 'Fortaleza', 'coords': (-3.73, -38.522)},
- 'caj': {'name': 'Cajazeiras', 'coords': (-6.89, -38.56)},
+ 'caz': {'name': 'Cajazeiras', 'coords': (-6.89, -38.56)},
  'saa': {'name': 'São Luis', 'coords': (-2.53, -44.296)},
- 'boa': {'name': 'Boa Vista', 'coords': (2.8, -60.7)},
+ 'bvj': {'name': 'Boa Vista', 'coords': (2.8, -60.7)},
  'ccb': {'name': 'Cachimbo', 'coords': (-9.5, -54.8)},
  'cgg': {'name': 'Campo Grande', 'coords': (-20.5, -54.7)},
  'jic': {'name': 'Jicamarca', 'coords': (-11.95, -76.87)},
@@ -24,7 +24,8 @@ sites = {
  'eus': {'name': 'Eusébio', 'coords': (-3.89, -38.45)},
  'slz': {'name': 'São Luis', 'coords': (-2.53, -44.3)},
  'pil': {'name': 'Pilar', 'coords': (-31.7, -63.89)},
- 'ttb': {'name': 'Tatuoca', 'coords': (-1.205, -48.51)}
+ 'ttb': {'name': 'Tatuoca', 'coords': (-1.205, -48.51)}, 
+ 'bjl': {'name': 'Bom Jesus da Lapa', 'coords': (-13.250, -43.540)}
  }
 
 PATH_COORDS = 'database/GEO/coords/'

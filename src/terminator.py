@@ -121,60 +121,60 @@ def epem(date):
     app_ra = app_ra/15
     return app_ra, dec, dist
 
-def terminator(date, TwilightAngle):
+# def terminator_map(date, TwilightAngle):
 
-    dg2rad = np.pi/180.
+#     dg2rad = np.pi/180.
 
-    earthRadius = 6.371009e6
-    ra, sun_lat, sun_distance = epem(date)
-    t = Time(date.strftime("%Y-%m-%d %H:%M:%S%Z"), scale='utc')
-    lm_sidereal_time = np.array(t.sidereal_time(
-        'apparent', 'greenwich')
-        )
+#     earthRadius = 6.371009e6
+#     ra, sun_lat, sun_distance = epem(date)
+#     t = Time(date.strftime("%Y-%m-%d %H:%M:%S%Z"), scale='utc')
+#     lm_sidereal_time = np.array(t.sidereal_time(
+#         'apparent', 'greenwich')
+#         )
 
-    sun_lon = 15.0 * (ra - lm_sidereal_time)
-    scanAngle = np.arcsin(
-        (earthRadius / (sun_distance * 1.4956e11)
-         ) * np.sin(1.25663706))
-    arc_dist = np.pi - 1.57080 - scanAngle + TwilightAngle * 0.017453295
-    cdist = np.cos(arc_dist)		
-    sdist = np.sin(arc_dist)
+#     sun_lon = 15.0 * (ra - lm_sidereal_time)
+#     scanAngle = np.arcsin(
+#         (earthRadius / (sun_distance * 1.4956e11)
+#          ) * np.sin(1.25663706))
+#     arc_dist = np.pi - 1.57080 - scanAngle + TwilightAngle * 0.017453295
+#     cdist = np.cos(arc_dist)		
+#     sdist = np.sin(arc_dist)
 
-    lon_terminus = []
-    lat_terminus = []
-    for j in range(36):
-        count = j
-        azimuth =  count * 10.0
-        az = azimuth * dg2rad
-        sinll1 = np.sin(sun_lat * dg2rad)
-        cosll1 = np.cos(sun_lat * dg2rad)
+#     lon_terminus = []
+#     lat_terminus = []
+#     for j in range(36):
+#         count = j
+#         azimuth =  count * 10.0
+#         az = azimuth * dg2rad
+#         sinll1 = np.sin(sun_lat * dg2rad)
+#         cosll1 = np.cos(sun_lat * dg2rad)
 
-        phi = np.arcsin(sinll1 * cdist + cosll1 * sdist * np.cos(az))
-        lam = (sun_lon * dg2rad) + np.arctan2(
-            sdist * np.sin(az), 
-            cosll1*cdist - sinll1 * sdist * np.cos(az))
+#         phi = np.arcsin(sinll1 * cdist + cosll1 * sdist * np.cos(az))
+#         lam = (sun_lon * dg2rad) + np.arctan2(
+#             sdist * np.sin(az), 
+#             cosll1*cdist - sinll1 * sdist * np.cos(az))
 
-        while lam < -np.pi: lam = lam + 2 * np.pi
-        while lam > np.pi: lam = lam - 2 * np.pi
+#         while lam < -np.pi: lam = lam + 2 * np.pi
+#         while lam > np.pi: lam = lam - 2 * np.pi
 
-        center_lon = 0.0
-        lon_terminus.append((lam/dg2rad) + center_lon)
-        lat_terminus.append(phi/dg2rad)
+#         center_lon = 0.0
+#         lon_terminus.append((lam/dg2rad) + center_lon)
+#         lat_terminus.append(phi/dg2rad)
 
-    delta_mask_lon = lon_terminus - np.roll(lon_terminus, -1)        
-    delta_mask_lat = lat_terminus - np.roll(lat_terminus, -1)        
+#     delta_mask_lon = lon_terminus - np.roll(lon_terminus, -1)        
+#     delta_mask_lat = lat_terminus - np.roll(lat_terminus, -1)        
     
-    id_lon = np.where(abs(delta_mask_lon) > 180.)
-    id_lat = np.where(abs(delta_mask_lat) > 90.)
+#     id_lon = np.where(abs(delta_mask_lon) > 180.)
+#     id_lat = np.where(abs(delta_mask_lat) > 90.)
 
-    mc_lon = ma.array(lon_terminus)
-    mc_lat = ma.array(lat_terminus)
-    if id_lon:
-        mc_lon[id_lon] = ma.masked
-    if id_lat:
-        mc_lat[id_lat] = ma.masked
+#     mc_lon = ma.array(lon_terminus)
+#     mc_lat = ma.array(lat_terminus)
+#     if id_lon:
+#         mc_lon[id_lon] = ma.masked
+#     if id_lat:
+#         mc_lat[id_lat] = ma.masked
     
-    return mc_lon, mc_lat
+#     return mc_lon, mc_lat
 
 
 
