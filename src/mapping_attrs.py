@@ -199,7 +199,7 @@ def plot_square_area(
     ax.plot(
         x_limits, y_limits,
         color = 'black', 
-        linewidth = 2, 
+        linewidth = 4, 
         # marker = '.',
         transform=ccrs.PlateCarree() 
         )

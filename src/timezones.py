@@ -42,7 +42,7 @@ def delta_timezone(
 
 
 
-# dn = dt.datetime(2017, 1, 1, 5, 0)
+dn = dt.datetime(2017, 1, 1, 5, 0)
 
 
 def local_midnight(dn, lon, delta_day = None):
@@ -63,5 +63,4 @@ def local_midnight(dn, lon, delta_day = None):
 
 
 
-    
     

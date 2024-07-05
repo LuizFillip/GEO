@@ -4,15 +4,13 @@ import GEO as gg
 import base as b
 import datetime as dt
 from datetime import datetime
-import pytz
-# from timezonefinder import TimezoneFinder
-from astral import LocationInfo
 
 def dusk_time(
         dn,  
         lat = -2.53, 
         lon = -44.296, 
-        twilight = 18
+        twilight = 18,
+        suni = 'dusk'
         ):
 
     observer = astral.Observer(
@@ -25,7 +23,7 @@ def dusk_time(
         dawn_dusk_depression = twilight
         )
     
-    dusk = b.aware_dn(sun_phase['dusk'])
+    dusk = b.aware_dn(sun_phase[suni])
     
     if dusk < dn:
         dusk += dt.timedelta(days = 1)
@@ -99,74 +97,27 @@ def terminator(lon, dn, float_fmt = True):
     else:
         return time_dn
     
-    
-# def is_night(longitude, latitude, date_time):
-#     '''
-#     Check if is a region encounters nighttime period
-#     '''
-#     tf = TimezoneFinder()
-    
-#     timezone_str = tf.timezone_at(
-#         lng = longitude, 
-#         lat = latitude
-#         )
-#     city_tz = pytz.timezone(timezone_str)
 
-#     city = LocationInfo(
-#         "City", 
-#         "Country", 
-#         timezone_str, 
-#         latitude, 
-#         longitude
-#         )
-    
-#     s = sun(city.observer, date=date_time, tzinfo=city_tz)
 
-#     sunrise = s["sunrise"].astimezone(city_tz)
-#     sunset = s["sunset"].astimezone(city_tz)
+def plot_sunrise_sunset(ax, dn, site = 'saa'):
     
-#     date_time = date_time.astimezone(city_tz)
-
-#     if sunrise < date_time < sunset:
-#         return False  # It's day
-#     else:
-#         return True  # It's night
-
-# def local_midnight(longitude, latitude, date_time):
+    glat, glon = gg.sites[site]['coords']
     
-#     tf = TimezoneFinder()
-#     timezone_str = tf.timezone_at(lng=longitude, lat=latitude)
-#     city_tz = pytz.timezone(timezone_str)
-    
-#     # Finding the local midnight
-#     current_date = date_time.date()
-#     local = city_tz.localize(
-#         datetime(current_date.year,
-#                  current_date.month, 
-#                  current_date.day, 0, 0, 0)
-#         )
-    
-#     dusk = b.aware_dn(local.astimezone(pytz.utc))
-    
-#     if dusk < date_time:
-#         dusk += dt.timedelta(days = 1)
+    colors = ['k', 'b']
+    out = []
+    for i, suni in enumerate(['dusk', 'dawn']):
         
-#     return dusk
-
-
-# def main():
+        time = dusk_time(
+                dn,  
+                lat = glat, 
+                lon = glon, 
+                twilight = 18,
+                suni = suni
+            )
+        out.append(time)
+        ax.axvline(
+            time, lw = 2, 
+            color = colors[i], 
+            linestyle = '--')
     
-#     longitude = -46.6333  # Replace with the desired longitude
-#     latitude = -23.5505  # Replace with the desired latitude
-#     date_time_to_check = dt.datetime(2023, 12, 1, 8, 0, 0)  #
-#     night = is_night(longitude, latitude, date_time_to_check)
-#     if night:
-#         print("It's night.")
-#     else:
-#         print("It's day.")
-# dn = dt.datetime(2015, 1, 6)
-# dusk_from_site(
-#         dn, 
-#         'jic',
-#         twilight_angle = 18
-#         )
+    return out

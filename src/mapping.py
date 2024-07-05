@@ -72,9 +72,10 @@ def map_boundaries(
             crs = ccrs.PlateCarree()
         )
     
+
     ax.set(
-        ylabel = 'Geographic latitude (°)',  
-        xlabel = 'Geographic longitude (°)'
+        ylabel = 'Latitude (°)',  
+        xlabel = 'Longitude (°)'
         ) 
     
     return ax
@@ -144,7 +145,7 @@ def quick_map(
         {'projection': ccrs.PlateCarree()}
         )
          
-    map_attrs(ax, lon_lims, lat_lims, grid)
+    map_attrs(ax, year , lon_lims, lat_lims, grid)
     
     mag_equator(ax, 
                 year = year, 
