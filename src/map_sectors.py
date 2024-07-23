@@ -120,7 +120,7 @@ def first_edge(year = 2013, delta1 = 3):
 def plot_rectangles_regions(
         ax,
         year = 2013,
-        center_dot = True, 
+        center_dot = False, 
         index_box = True,
         first_inter = True,
         delta1 = 3
