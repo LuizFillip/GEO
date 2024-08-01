@@ -158,7 +158,7 @@ def plot_rectangles_regions(
     if first_inter:
         for (x, y) in first_edge(year).values():
         
-            ax.scatter(x, y, c = 'k', s = 50, marker = 's')
+            ax.scatter(x, y, c = 'k', s = 400, marker = '*')
             
     return 
 

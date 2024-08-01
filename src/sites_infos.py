@@ -4,7 +4,7 @@ import numpy as np
 
 sites = {
  'cp': {'name': 'Cachoeira Paulista', 'coords': (-22.703, -45.00)},
- 'ca': {'name': 'Cariri', 'coords': (-7.38, -36.528)},
+ 'ca': {'name': 'São João do Cariri', 'coords': (-7.38, -36.528)},
  'fza': {'name': 'Fortaleza', 'coords': (-3.73, -38.522)},
  'caz': {'name': 'Cajazeiras', 'coords': (-6.89, -38.56)},
  'saa': {'name': 'São Luis', 'coords': (-2.53, -44.296)},
