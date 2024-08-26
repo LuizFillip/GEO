@@ -116,6 +116,7 @@ def first_edge(year = 2013, delta1 = 3):
         out[key] = (ilon[0], ilat[0]) 
         
     return out
+import matplotlib.patches as patches
 
 def plot_rectangles_regions(
         ax,
@@ -130,6 +131,8 @@ def plot_rectangles_regions(
     
     numbers = list(range(len(lons)))
     
+    colors = ['k', '#0C5DA5', '#00B945', 
+     '#FF9500']
         
     for i, (xlim, ylim) in enumerate(zip(lons, lats)):
         
@@ -141,6 +144,14 @@ def plot_rectangles_regions(
             linewidth = 2, 
             transform = ccrs.PlateCarree(),
             )
+   
+        polygon = patches.Polygon(
+            list(zip(xlim, ylim)), closed=True, 
+            linewidth=2, edgecolor='k',
+            alpha = 0.6, 
+            facecolor= colors[i])
+
+        ax.add_patch(polygon)
         
         clon = middle_point(xlim)
         clat = middle_point(ylim)
