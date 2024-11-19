@@ -1,6 +1,7 @@
 import numpy as np 
 import GEO as gg 
 import cartopy.crs as ccrs
+import matplotlib.patches as patches
 
         
 def sectors_coords(
@@ -116,7 +117,6 @@ def first_edge(year = 2013, delta1 = 3):
         out[key] = (ilon[0], ilat[0]) 
         
     return out
-import matplotlib.patches as patches
 
 def plot_rectangles_regions(
         ax,
@@ -124,7 +124,8 @@ def plot_rectangles_regions(
         center_dot = False, 
         index_box = True,
         first_inter = True,
-        delta1 = 3
+        delta1 = 3,
+        color = 'black'
         ):
     
     lons, lats = sectors_coords(year, delta1 = delta1)
@@ -140,18 +141,18 @@ def plot_rectangles_regions(
         
         ax.plot(
             xlim, ylim,
-            color = 'black', 
+            color = color, 
             linewidth = 2, 
             transform = ccrs.PlateCarree(),
             )
    
-        polygon = patches.Polygon(
-            list(zip(xlim, ylim)), closed=True, 
-            linewidth=2, edgecolor='k',
-            alpha = 0.6, 
-            facecolor= colors[i])
+        # polygon = patches.Polygon(
+        #     list(zip(xlim, ylim)), closed=True, 
+        #     linewidth=2, edgecolor='k',
+        #     alpha = 0.6, 
+        #     facecolor= colors[i])
 
-        ax.add_patch(polygon)
+        # ax.add_patch(polygon)
         
         clon = middle_point(xlim)
         clat = middle_point(ylim)
@@ -163,7 +164,8 @@ def plot_rectangles_regions(
             ax.text(
                 clon, max(ylim) + 1, index, 
                 transform = ax.transData,
-                fontsize = 35
+                fontsize = 35, 
+                color = color
                 )
             
     if first_inter:
