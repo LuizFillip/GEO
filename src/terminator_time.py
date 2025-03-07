@@ -85,13 +85,16 @@ def terminator(lon, dn, float_fmt = True):
     
     lon, lat = gg.first_edge(dn.year)[int(lon)]
     
-    time_dn = dusk_time(
-            dn,  
-            lat = lat, 
-            lon = lon, 
-            twilight = 18
-            )
-    
+    try:
+        time_dn = dusk_time(
+                dn,  
+                lat = lat, 
+                lon = lon, 
+                twilight = 18
+                )
+    except:
+        time_dn = dn + dt.timedelta(hours = 2)
+        
     if float_fmt:
         return b.dn2float(time_dn)
     else:

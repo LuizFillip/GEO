@@ -8,7 +8,8 @@ def sectors_coords(
         year = 2013, 
         radius = 10,  
         angle = -45,
-        delta1 = 3
+        delta1 = 3, 
+        lat_ext = 20
         ):
     '''
     Compute coordinates of sectors from a longitude 
@@ -44,7 +45,7 @@ def sectors_coords(
         for i in range(4):
             angle_corner = np.radians(angle) + i * np.pi / 2  
             x = clon + (radius - delta) * np.cos(angle_corner)
-            y = clat + 10 * np.sin(angle_corner) 
+            y = clat + lat_ext * np.sin(angle_corner) 
             
             x_limits.append(round(x, 4))
             y_limits.append(round(y, 4))
@@ -78,8 +79,7 @@ def set_coords(
     
     def round_up(x):
         return int(np.ceil((x - 5) / 10.0)) * 10
-
-
+    
     for x, y in zip(lons, lats):
         
         lon_set = sorted(tuple(set(x)))
@@ -125,19 +125,23 @@ def plot_rectangles_regions(
         index_box = True,
         first_inter = True,
         delta1 = 3,
-        color = 'black'
+        color = 'black', 
+        stop_index = 4
         ):
     
     lons, lats = sectors_coords(year, delta1 = delta1)
     
     numbers = list(range(len(lons)))
     
-    colors = ['k', '#0C5DA5', '#00B945', 
-     '#FF9500']
+    # colors = ['k', '#0C5DA5', '#00B945', '#FF9500']
         
     for i, (xlim, ylim) in enumerate(zip(lons, lats)):
         
+        
         index = numbers[i] + 1 
+        
+        if index == stop_index:
+            break
         
         ax.plot(
             xlim, ylim,
