@@ -49,15 +49,13 @@ def sectors_coords(
             
             x_limits.append(round(x, 4))
             y_limits.append(round(y, 4))
-        
-        
+              
         x_limits.append(x_limits[0])
         y_limits.append(y_limits[0])
         
         x_coords.append(x_limits)
         y_coords.append(y_limits)
-    
-    
+      
     return x_coords[::-1], y_coords[::-1]
             
     
@@ -126,10 +124,12 @@ def plot_rectangles_regions(
         first_inter = True,
         delta1 = 3,
         color = 'black', 
-        stop_index = 4
+        stop_index = 4, 
+        lat_ext = 10
         ):
     
-    lons, lats = sectors_coords(year, delta1 = delta1)
+    lons, lats = sectors_coords(year, delta1 = delta1, 
+    lat_ext = lat_ext)
     
     numbers = list(range(len(lons)))
     

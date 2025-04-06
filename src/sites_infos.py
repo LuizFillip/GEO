@@ -3,6 +3,7 @@ import json
 import numpy as np 
 
 sites = {
+ 'blj': {'name': 'Belem', 'coords': (-1.4563, -48.5013)},
  'caj': {'name': 'Cachoeira Paulista', 'coords': (-22.703, -45.00)},
  'ca': {'name': 'São João do Cariri', 'coords': (-7.38, -36.528)},
  'fza': {'name': 'Fortaleza', 'coords': (-3.73, -38.522)},
@@ -10,7 +11,7 @@ sites = {
  'saa': {'name': 'São Luis', 'coords': (-2.53, -44.296)},
  'bvj': {'name': 'Boa Vista', 'coords': (2.8, -60.7)},
  'ccb': {'name': 'Cachimbo', 'coords': (-9.5, -54.8)},
- 'cgg': {'name': 'Campo Grande', 'coords': (-20.5, -54.7)},
+ 'cgk': {'name': 'Campo Grande', 'coords': (-20.5, -54.7)},
  'jic': {'name': 'Jicamarca', 'coords': (-11.95, -76.87)},
  'rga': {'name': 'Rio Grande', 'coords': (-53.78, -67.7)},
  'sms': {'name': 'São Martinho da Serra', 'coords': (-29.53, -53.85)},
