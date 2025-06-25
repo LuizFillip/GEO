@@ -174,6 +174,7 @@ def plot_square_area(
         lat_max = None, 
         lon_max = None, 
         radius = 10, 
+        color = 'black',
         center_dot = False
         ):
     
@@ -198,7 +199,7 @@ def plot_square_area(
     
     ax.plot(
         x_limits, y_limits,
-        color = 'black', 
+        color = color, 
         linewidth = 4, 
         # marker = '.',
         transform=ccrs.PlateCarree() 

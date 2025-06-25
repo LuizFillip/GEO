@@ -145,12 +145,19 @@ def quick_map(
         {'projection': ccrs.PlateCarree()}
         )
          
-    map_attrs(ax, year , lon_lims, lat_lims, grid)
+    map_attrs(
+        ax, 
+        year, 
+        lon_lims, 
+        lat_lims, 
+        grid
+        )
     
-    mag_equator(ax, 
-                year = year, 
-                degress = degress
-                )
+    mag_equator(
+        ax, 
+        year = year, 
+        degress = degress
+        )
             
     return fig, ax 
 
