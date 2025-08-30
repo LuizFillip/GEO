@@ -100,7 +100,8 @@ def plot_areas(ax, ax1, ax2, site):
     lat, lon = gg.sites['car']['coords']
     xy = (lon, lat)
     connection_areas(
-        ax, ax1, xy, color = 'k', 
+        ax, ax1, xy, 
+        color = 'k', 
                      radius = 5)
     
     gg.plot_circle(
@@ -129,7 +130,8 @@ def plot_areas(ax, ax1, ax2, site):
         
     xy = (lon, lat)
     connection_areas(ax, ax2, xy, color = 'w')
-
+    
+    return None 
 
 
     
@@ -166,20 +168,13 @@ def plot_sites_markers(ax, sites, names):
         
     return ax
         
-        
-def plot_square_area(
-        ax, 
+def square_area(
         lat_min = -12, 
         lon_min = -42,
         lat_max = None, 
         lon_max = None, 
         radius = 10, 
-        color = 'black',
-        center_dot = False
         ):
-    
-    
-    """Plotting square area by coords limits"""
     
     if lat_max is None:
         lat_max = lat_min + radius
@@ -197,8 +192,33 @@ def plot_square_area(
         lat_max, lat_max, lat_min
         ]
     
+    return x_limits, y_limits 
+    
+        
+def plot_square_area(
+        ax, 
+        lat_min = -12, 
+        lon_min = -42,
+        lat_max = None, 
+        lon_max = None, 
+        radius = 10, 
+        color = 'black',
+        center_dot = False
+        ):
+    
+    
+    """Plotting square area by coords limits"""
+    
+    x_lims, y_lims = square_area(
+            lat_min, 
+            lon_min,
+            lat_max, 
+            lon_max, 
+            radius, 
+            )
+    
     ax.plot(
-        x_limits, y_limits,
+        x_lims, y_lims,
         color = color, 
         linewidth = 4, 
         # marker = '.',
@@ -212,8 +232,8 @@ def plot_square_area(
     if center_dot:
         ax.scatter(center_lon, center_lat)
     
-    return center_lon, center_lat
+    return None
 
-colors = list(mcolors.CSS4_COLORS.keys())
+# colors = list(mcolors.CSS4_COLORS.keys())
 
 
