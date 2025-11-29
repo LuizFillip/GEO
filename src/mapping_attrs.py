@@ -22,7 +22,10 @@ def plot_circle(
         edgecolor = "gray",
         lw = 3
         ):
-             
+    
+    """
+    
+    """
     cp = Geodesic().circle(
         lon = center_lon, 
         lat = center_lat, 
@@ -41,6 +44,7 @@ def plot_circle(
         label = 'radius'
         )
     
+    return None 
 def plot_rectangle(ax, longitudes, latitudes):
     
     square = Polygon(zip(longitudes, latitudes))
@@ -144,8 +148,9 @@ def marker_sites(axs, sites):
             c = 100, 
             marker = "o")
         
-        axs.text(lon, lat, key, 
-                 transform = ccrs.PlateCarree()
+        axs.text(
+            lon, lat, key, 
+            transform = ccrs.PlateCarree()
                  )
         
     
@@ -225,12 +230,12 @@ def plot_square_area(
         transform=ccrs.PlateCarree() 
         )
     
-    
-    center_lat = (lat_max + lat_min) / 2
-    center_lon = (lon_max + lon_min) / 2
-    
-    if center_dot:
-        ax.scatter(center_lon, center_lat)
+    def plot_center():
+        center_lat = (lat_max + lat_min) / 2
+        center_lon = (lon_max + lon_min) / 2
+        
+        if center_dot:
+            ax.scatter(center_lon, center_lat)
     
     return None
 

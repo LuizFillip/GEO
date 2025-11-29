@@ -2,7 +2,6 @@ import pyIGRF
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-import GEO as gg
 from tqdm import tqdm 
 
 
@@ -91,3 +90,13 @@ def save_df(year = 2023):
   
     
 # save_df(year = 2024)
+# d, i, _, _, _, _, _ = pyIGRF.igrf_value(
+#     -7, -40, 
+#     alt = 300, 
+#     year = 2013
+#     )
+
+
+# # print(d, i)
+
+# np.sin(np.radians(i))

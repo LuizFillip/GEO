@@ -117,10 +117,13 @@ def plot_sunrise_sunset(ax, dn, site = 'saa'):
                 twilight = 18,
                 suni = suni
             )
+        
         out.append(time)
+        
         ax.axvline(
             time, lw = 2, 
             color = colors[i], 
-            linestyle = '--')
+            linestyle = '--'
+            )
     
     return out
