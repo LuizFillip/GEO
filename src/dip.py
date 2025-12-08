@@ -89,14 +89,14 @@ def save_df(year = 2023):
     
   
     
-# save_df(year = 2024)
-# d, i, _, _, _, _, _ = pyIGRF.igrf_value(
-#     -7, -40, 
-#     alt = 300, 
-#     year = 2013
-#     )
+# save_df(year = 2002)
+d, i, _, _, _, _, _ = pyIGRF.igrf_value(
+    -2.3, -44.2, 
+    alt = 300, 
+    year = 2015
+    )
 
 
-# # print(d, i)
+print(d, i)
 
 # np.sin(np.radians(i))
