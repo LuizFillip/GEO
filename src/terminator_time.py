@@ -53,7 +53,7 @@ def terminators_time(
         dn, 
         lons, 
         twilight = 18, 
-        float_fmt = True
+        float_fmt = False
         ):
         
     out = {}
@@ -81,7 +81,7 @@ def terminators_time(
             
     return out 
 
-def terminator(lon, dn, float_fmt = True):
+def terminator(dn, lon = -50, float_fmt = False):
     
     lon, lat = gg.first_edge(dn.year)[int(lon)]
     
