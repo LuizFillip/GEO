@@ -2,7 +2,6 @@ import shapely.geometry as sgeom
 from cartopy.geodesic import Geodesic
 import cartopy.crs as ccrs
 import GEO as gg 
-import matplotlib.colors as mcolors
 from shapely.geometry import Polygon
 import matplotlib.pyplot as plt
 from matplotlib.patches import ConnectionPatch

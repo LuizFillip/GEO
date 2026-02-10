@@ -40,7 +40,8 @@ def run_igrf(
 
  
 
-def get_dip(date = 2013, 
+def get_dip(
+        date = 2013, 
             step_lon = 0.1, 
             step_lat = 0.1, 
             alt = 300
@@ -74,10 +75,12 @@ def get_dip(date = 2013,
 
 def save_df(year = 2023):
     
-    df = get_dip(year, 
-                step_lon = 0.1, 
-                step_lat = 0.1, 
-                alt = 300)
+    df = get_dip(
+        year, 
+        step_lon = 0.1, 
+        step_lat = 0.1, 
+        alt = 300
+        )
     
     name_to_save = f"database/GEO/dips/dip_{year}.txt"
     
@@ -88,17 +91,45 @@ def save_df(year = 2023):
         header = True
         )       
     
+
+def dip_angle_xyz(X, Y, Z, degrees=True):
+    """
+    Calcula o ângulo de dip magnético a partir dos componentes do campo.
     
-  
+    Parâmetros
+    ----------
+    X : float ou array
+        Componente norte (nT)
+    Y : float ou array
+        Componente leste (nT)
+    Z : float ou array
+        Componente vertical (nT, positivo para baixo)
+    degrees : bool
+        Retorna em graus (True) ou radianos (False)
+    
+    Retorno
+    -------
+    I : float ou array
+        Ângulo de dip magnético
+    """
+    H = np.sqrt(X**2 + Y**2)
+    I = np.arctan2(Z, H)  # mais robusto que arctan(Z/H)
+
+    if degrees:
+        I = np.degrees(I)
+
+    return I
+
     
 # save_df(year = 2002)
-d, i, _, _, _, _, _ = pyIGRF.igrf_value(
-    -2.6, -44.2, 
-    alt = 300, 
+d, i, h, x, y, z, f = pyIGRF.igrf_value(
+    -2.33, -44.2, 
+    alt = 350, 
     year = 2023
+    
     )
 
 
-print(d, i)
+# dip_angle_xyz(x, y, z, degrees=True)
 
-# np.sin(np.radians(i))
+i
