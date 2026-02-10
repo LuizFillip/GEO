@@ -81,19 +81,21 @@ def save_df(year = 2023):
     
     name_to_save = f"database/GEO/dips/dip_{year}.txt"
     
-    df.to_csv(name_to_save,
-              sep = ",",
-              index = True, 
-              header = True)       
+    df.to_csv(
+        name_to_save,
+        sep = ",",
+        index = True, 
+        header = True
+        )       
     
     
   
     
 # save_df(year = 2002)
 d, i, _, _, _, _, _ = pyIGRF.igrf_value(
-    -2.3, -44.2, 
+    -2.6, -44.2, 
     alt = 300, 
-    year = 2015
+    year = 2023
     )
 
 

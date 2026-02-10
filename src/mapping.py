@@ -84,14 +84,16 @@ def map_boundaries(
 def mag_equator(
         ax, 
         year = 2013, 
-        degress = None
+        degress = None, 
+        color = 'r', 
+        label = ''
         ):
     
     """Plotting geomagnetic equator"""
         
     x, y = g.load_equator(year, values = True)
   
-    ax.plot(x, y, color = 'r', lw = 2)
+    ax.plot(x, y, color = color, lw = 2, label = label)
     
     if degress is not None:
         ax.fill_between(
