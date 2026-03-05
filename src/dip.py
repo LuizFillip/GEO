@@ -1,135 +1,198 @@
-import pyIGRF
+import os
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from tqdm import tqdm 
+from tqdm import tqdm
+import pyIGRF
 
+out_dir = "database/GEO/dips"
 
-
-
-
-def run_igrf(
-        year, 
-        step_lon = 5, 
-        step_lat = 1, 
-        alt = 250,
-        cols = ["lat", "lon", "d", "i"]
-        ):
-    
-    longitudes = np.arange(
-        -180, 180 + step_lon, step_lon
-        )
-    latitudes = np.arange(
-        -90, 90 + step_lat, step_lat
-        )
-    
-    out = []
-    for lat in latitudes:
-        for lon in tqdm(longitudes, str(lat)):
-            
-            d, i, _, _, _, _, _ = pyIGRF.igrf_value(
-                lat, lon, 
-                alt = alt, 
-                year = year
-                )
-            
-            out.append([lat, lon, d, i])
-            
-    return pd.DataFrame(out, columns = cols)
- 
-
- 
-
-def get_dip(
-        date = 2013, 
-            step_lon = 0.1, 
-            step_lat = 0.1, 
-            alt = 300
-            ):   
-    
-    print('[compute_dip]', date)
-     
-    df = run_igrf(
-        date, 
-        step_lon = step_lon, 
-        step_lat = step_lat, 
-        alt = alt
-        )
-    
-    pivot = pd.pivot_table(
-        df, 
-        columns = "lon", 
-        index = "lat", 
-        values = "i"
-        )
-    cs = plt.contour(
-        pivot.columns, 
-        pivot.index, 
-        pivot.values, 
-        levels = 0)
-    
-    p = cs.collections[1].get_paths()[0]
-    v = p.vertices
-    return pd.DataFrame({"lon": v[:,0], "lat": v[:,1]})
-
-
-def save_df(year = 2023):
-    
-    df = get_dip(
-        year, 
-        step_lon = 0.1, 
-        step_lat = 0.1, 
-        alt = 300
-        )
-    
-    name_to_save = f"database/GEO/dips/dip_{year}.txt"
-    
-    df.to_csv(
-        name_to_save,
-        sep = ",",
-        index = True, 
-        header = True
-        )       
-    
-
-def dip_angle_xyz(X, Y, Z, degrees=True):
+def run_igrf(year, step_lon=5.0, step_lat=1.0, alt=250.0, cols=("lat", "lon", "d", "i")):
     """
-    Calcula o ângulo de dip magnético a partir dos componentes do campo.
-    
-    Parâmetros
+    Calcula declinação (d) e inclinação/dip (i) em uma grade lat/lon.
+    Retorna DataFrame com colunas [lat, lon, d, i].
+    """
+    lons = np.arange(-180.0, 180.0 + step_lon, step_lon, dtype=float)
+    lats = np.arange(-90.0, 90.0 + step_lat, step_lat, dtype=float)
+
+    n = len(lats) * len(lons)
+    out = np.empty((n, 4), dtype=float)
+
+    k = 0
+    for lat in tqdm(lats, desc=f"Computing IGRF (dip/decl): {year}"):
+        for lon in lons:
+            d, i, *_ = pyIGRF.igrf_value(lat, lon, alt=alt, year=year)
+            out[k, :] = (lat, lon, d, i)
+            k += 1
+
+    return pd.DataFrame(out, columns=list(cols))
+
+
+def _largest_contour_segment(contour_set) -> np.ndarray:
+    """
+    Retorna os vértices do maior segmento (maior número de pontos)
+    do contorno gerado pelo matplotlib.
+    """
+    # contour_set.allsegs é uma lista por nível; como usamos 1 nível, pega [0]
+    segs = contour_set.allsegs[0]
+    if not segs:
+        return np.empty((0, 2), dtype=float)
+    # escolhe o segmento com mais vértices
+    return max(segs, key=lambda a: a.shape[0])
+
+
+def get_dip_equator(year=2013, step_lon=0.5, step_lat=0.5, alt=300.0):
+    """
+    Calcula a linha dip=0° (equador magnético) numericamente,
+    detectando mudança de sinal da inclinação para cada longitude.
+    """
+
+    df = run_igrf(year, step_lon=step_lon, step_lat=step_lat, alt=alt)
+
+    # grade organizada
+    pivot = df.pivot(index="lat", columns="lon", values="i").sort_index()
+
+    lats = pivot.index.to_numpy()
+    lons = pivot.columns.to_numpy()
+
+    eq_lon = []
+    eq_lat = []
+
+    for lon in lons:
+        dip = pivot[lon].to_numpy()
+
+        # detectar mudança de sinal
+        sign_change = np.where(np.diff(np.sign(dip)) != 0)[0]
+
+        if len(sign_change) == 0:
+            continue
+
+        idx = sign_change[0]  # pega o primeiro cruzamento
+
+        # interpolação linear
+        lat1, lat2 = lats[idx], lats[idx + 1]
+        dip1, dip2 = dip[idx], dip[idx + 1]
+
+        if dip2 != dip1:
+            lat_zero = lat1 - dip1 * (lat2 - lat1) / (dip2 - dip1)
+        else:
+            lat_zero = lat1
+
+        eq_lon.append(lon)
+        eq_lat.append(lat_zero)
+
+    return pd.DataFrame({"lon": eq_lon, "lat": eq_lat})
+
+
+def save_df(
+        year=2023, 
+        step_lon=0.5, 
+        step_lat=0.5, alt=300.0):
+    """
+    Salva a linha dip=0 (equador magnético) em CSV.
+    """
+    os.makedirs(out_dir, exist_ok=True)
+
+    df = get_dip_equator(year, step_lon=step_lon, step_lat=step_lat, alt=alt)
+
+    fn = os.path.join(out_dir, f"dip_{year}.txt")
+    df.to_csv(fn, sep=",", index=False, header=True)
+
+    return fn
+
+
+
+import numpy as np
+from scipy.interpolate import UnivariateSpline
+
+
+def interpolate_lon_lat(
+    df,
+    step=0.1,
+    method="linear",
+    spline_order=3,
+    smoothing=0
+):
+    """
+    Interpola curva lon → lat para nova resolução.
+
+    Parameters
     ----------
-    X : float ou array
-        Componente norte (nT)
-    Y : float ou array
-        Componente leste (nT)
-    Z : float ou array
-        Componente vertical (nT, positivo para baixo)
-    degrees : bool
-        Retorna em graus (True) ou radianos (False)
-    
-    Retorno
+    df : DataFrame
+        Pode estar:
+        - com índice = lon e coluna 'lat'
+        - ou colunas ['lon','lat']
+    step : float
+        Novo passo em longitude.
+    method : str
+        'linear' ou 'spline'
+    spline_order : int
+        Ordem da spline (se method='spline')
+    smoothing : float
+        Fator de suavização da spline
+
+    Returns
     -------
-    I : float ou array
-        Ângulo de dip magnético
+    DataFrame com colunas ['lon','lat']
     """
-    H = np.sqrt(X**2 + Y**2)
-    I = np.arctan2(Z, H)  # mais robusto que arctan(Z/H)
 
-    if degrees:
-        I = np.degrees(I)
+    # Detecta formato
+    if "lon" in df.columns:
+        lon = df["lon"].values
+        lat = df["lat"].values
+    else:
+        lon = df.index.values
+        lat = df.iloc[:, 0].values
 
-    return I
+    # Ordena
+    order = np.argsort(lon)
+    lon = lon[order]
+    lat = lat[order]
 
+    # Remove duplicatas
+    lon_unique, idx = np.unique(lon, return_index=True)
+    lat_unique = lat[idx]
+
+    # Novo grid
+    new_lon = np.arange(lon_unique.min(), lon_unique.max() + step, step)
+
+    # Interpolação
+    if method == "linear":
+        new_lat = np.interp(new_lon, lon_unique, lat_unique)
+
+    elif method == "spline":
+        spline = UnivariateSpline(
+            lon_unique,
+            lat_unique,
+            k=spline_order,
+            s=smoothing
+        )
+        new_lat = spline(new_lon)
+
+    else:
+        raise ValueError("method deve ser 'linear' ou 'spline'")
+
+    return pd.DataFrame({"lon": new_lon, "lat": new_lat})
+
+def load_equator(year = 2013, values = False):
+    infile = os.getcwd() + f'/{out_dir}/dip_{year}.txt'
     
-# save_df(year = 2002)
-d, i, h, x, y, z, f = pyIGRF.igrf_value(
-    -2.33, -44.2, 
-    alt = 350, 
-    year = 2023
+    df = pd.read_csv(infile, index_col = 0)
+
+    if values:
+        return df['lon'].values, df['lat'].values 
+    else:
+        return df
+
+def interpolated():
+    for year in range(2010, 2026):
+        
+        infile = os.getcwd() + f'/{out_dir}/dip_{year}.txt'
+        
+        df = load_equator(year = 2013, values = False)
+        
+        df_interp = interpolate_lon_lat(df, step=0.1)
+        
+        df_interp.to_csv(infile)
     
-    )
 
-
-# dip_angle_xyz(x, y, z, degrees=True)
-
-i
