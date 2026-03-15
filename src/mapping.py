@@ -16,7 +16,7 @@ class limits(object):
          
 
 def map_features(ax, grid = True):
-    
+    import cartopy.feature as cf
     states = cf.NaturalEarthFeature(
         category = 'cultural',
         name = 'admin_1_states_provinces_lines',
@@ -31,13 +31,7 @@ def map_features(ax, grid = True):
     ax.add_feature(
         cf.BORDERS, linestyle = '-', **args)
     
-    if grid:
-    
-        ax.gridlines(
-            color = 'grey', 
-            linestyle = '--', 
-            crs = ccrs.PlateCarree()
-            )
+  
     return ax
     
     

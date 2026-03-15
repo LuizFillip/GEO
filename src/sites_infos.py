@@ -1,6 +1,7 @@
 import os 
 import json 
 import numpy as np 
+import pandas as pd 
 
 sites = {
  'blj': {'name': 'Belem', 'coords': (-1.4563, -48.5013)},
@@ -52,4 +53,14 @@ def arr_coords(year = 2021):
     sits = list(sites.keys())
     return sits, lon, lat
 
-# sites
+def filter_stations_by_latitude(latitude = -15, year = 2022):
+ 
+    sites = load_coords(year)
+
+    df = pd.DataFrame(sites).T
+
+    df.columns = ['lon', 'lat', 'alt']
+    
+    return df.loc[df.lat > latitude].index
+
+ 

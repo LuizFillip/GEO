@@ -3,11 +3,27 @@ import pandas as pd
 import GEO as gg 
 import numpy as np
 
+out_dir = "database/GEO/dips"
 
+
+def dip_angle_xyz(X, Y, Z, degrees=True):
+    """
+    Calcula o ângulo de dip magnético a partir dos componentes do campo.
+    X: norte, Y: leste, Z: vertical (positivo para baixo).
+    """
+    X = np.asarray(X, dtype=float)
+    Y = np.asarray(Y, dtype=float)
+    Z = np.asarray(Z, dtype=float)
+
+    H = np.sqrt(X**2 + Y**2)
+    I = np.arctan2(Z, H)
+
+    if degrees:
+        I = np.degrees(I)
+    return I
             
-    
 def load_equator(year = 2013, values = False):
-    infile = os.getcwd() + f'/database/GEO/dips/dip_{year}.txt'
+    infile = os.getcwd() + f'/{out_dir}/dip_{year}.txt'
     
     df = pd.read_csv(infile, index_col = 0)
 
@@ -16,10 +32,11 @@ def load_equator(year = 2013, values = False):
     else:
         return df
 
+
 def distance_from_equator(
         lon, lat, year = 2013
         ):
-    x, y = load_equator(year, values = True)
+    x, y = gg.load_equator(year, values = True)
 
     min_x, min_y, min_d = gg.compute_distance(x, y, lon, lat)
     return min_d
@@ -31,7 +48,7 @@ def term_eq_intersect(dn, twilight = 18):
     the solar terminator (by date)
     """
  
-    eq_lon, eq_lat = load_equator(dn.year, values = True)
+    eq_lon, eq_lat = gg.load_equator(dn.year, values = True)
     
     te_lon, te_lat = gg.terminator2(dn, twilight)
         

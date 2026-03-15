@@ -1,7 +1,7 @@
 import os
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
+from scipy.interpolate import UnivariateSpline
 from tqdm import tqdm
 import pyIGRF
 
@@ -102,8 +102,6 @@ def save_df(
 
 
 
-import numpy as np
-from scipy.interpolate import UnivariateSpline
 
 
 def interpolate_lon_lat(
@@ -174,25 +172,17 @@ def interpolate_lon_lat(
 
     return pd.DataFrame({"lon": new_lon, "lat": new_lat})
 
-def load_equator(year = 2013, values = False):
+
+
+def interpolated(year):
+   
     infile = os.getcwd() + f'/{out_dir}/dip_{year}.txt'
     
     df = pd.read_csv(infile, index_col = 0)
-
-    if values:
-        return df['lon'].values, df['lat'].values 
-    else:
-        return df
-
-def interpolated():
-    for year in range(2010, 2026):
-        
-        infile = os.getcwd() + f'/{out_dir}/dip_{year}.txt'
-        
-        df = load_equator(year = 2013, values = False)
-        
-        df_interp = interpolate_lon_lat(df, step=0.1)
-        
-        df_interp.to_csv(infile)
     
+    df_interp = interpolate_lon_lat(df, step=0.1)
+    
+    df_interp.to_csv(infile)
+        
 
+# interpolated(2009)

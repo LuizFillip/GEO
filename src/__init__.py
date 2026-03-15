@@ -5,8 +5,6 @@ import os
 os.environ['PROJ_LIB'] = 'C:\\Users\\Luiz\\anaconda3\\\anaconda3\\envs\\sai\\Library\\share\\proj'
 os.environ['GDAL_DATA'] = 'C:\\Users\\Luiz\\anaconda3\\envs\sai\\Library\\share'
 
-# import gdal
-
 
 from .map_sectors import * 
 from .mapping import (
@@ -19,7 +17,7 @@ from .mapping import (
     )
 from .meridians import (
     limit_hemisphere, 
-    meridians
+    Meridians
     )
 from .meridian_utils import (
     interpolate, 

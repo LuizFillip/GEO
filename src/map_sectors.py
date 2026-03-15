@@ -99,7 +99,7 @@ def first_edge(year = 2013, delta1 = 3):
     
     corners = set_coords(year, delta1 = delta1)
 
-    eq_lon, eq_lat = load_equator(year, values = True)
+    eq_lon, eq_lat = gg.load_equator(year, values = True)
 
     for key in corners.keys():
         xlim, ylim = corners[key]
@@ -183,3 +183,6 @@ def plot_rectangles_regions(
 
 
 
+# df = gg.load_equator(2010)
+
+# df 
