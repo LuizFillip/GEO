@@ -226,7 +226,7 @@ def plot_square_area(
         color = color, 
         linewidth = 4, 
         # marker = '.',
-        transform=ccrs.PlateCarree() 
+        # transform=ccrs.PlateCarree() 
         )
     
     def plot_center():

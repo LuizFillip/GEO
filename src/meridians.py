@@ -238,5 +238,3 @@ def main(year: int = 2024, site: str = 'saa'):
 # # # if __name__ == "__main__":
 # main(2024, site = 'jic')
  
-dn = dt.datetime(2013, 1, 1)
-Meridians(dn)

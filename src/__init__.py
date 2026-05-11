@@ -30,7 +30,7 @@ from .meridian_utils import (
 from .dip_calculus import *
 from .mapping_attrs import *
 from .intersect import intersection
-from .timezones import local_midnight
+# from .timezones import local_midnight
 from .terminator import terminator2
 from .terminator_time import *
 from .haversine_distance import haversine_distance, distance_circle
